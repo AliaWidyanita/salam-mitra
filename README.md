@@ -14,7 +14,7 @@
 <br />
 <div align="center">
 <a href="https://gitlab.cs.ui.ac.id/propensi-2023-2024-genap/kelas-d/D07-PropenSist/salam-mitra">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo" width="100" height="100">
 </a>
 
 <h3 align="center">Salam Mitra - Sistem Informasi Yayasan Salam Setara</h3>
@@ -23,10 +23,10 @@
 Yayasan Salam Setara adalah lembaga amal milik publik yang hadir untuk menciptakan standar baru dalam pengelolaan dana amal dengan menggabungkan nilai filantropi islam dan teknologi. Salam Setara memfasilitasi program pemberdayaan masyarakat berbasis kolaborasi dalam upaya mengurangi kemiskinan, kesenjangan dan kerentanan yang ada di masyarakat. Oleh karena itu, Salam Setara berinvestasi pada inisiatif publik atau wirausaha sosial yang sejalan dengan visi yayasan.
 <br />
 <a href="https://gitlab.cs.ui.ac.id/propensi-2023-2024-genap/kelas-d/D07-PropenSist/salam-mitra"><strong>Explore
-the docs n</strong></a>
+the docs »</strong></a>
 <br/>
 <br/>
-<a href="https://gitlab.cs.ui.ac.id/propensi-2023-2024-genap/kelas-d/D07-PropenSist/salam-mitra/issues"Report Bug</a>
+<a href="https://gitlab.cs.ui.ac.id/propensi-2023-2024-genap/kelas-d/D07-PropenSist/salam-mitra/issues">Report Bug</a>
 </p>
 </div>
 
