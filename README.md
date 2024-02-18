@@ -1,46 +1,34 @@
 # Salam Mitra
 
 
+## Authors
 
-## Getting started
+*  **Alia Widyanita Puspaningrum** - *2106751625*
+*  **Amanda Christie Tarigan** - *2106751322*
+*  **Jihan Syafa Kamila** - *2106751303*
+*  **Made Indri Maharani Natiadewi** - *2106704295*
+*  **Nadhira Shahnaz Zain** - *2106701186*
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## About The Client
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+<br />
+<div align="center">
+<a href="https://gitlab.cs.ui.ac.id/propensi-2023-2024-genap/kelas-d/D07-PropenSist/salam-mitra">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+</a>
 
-## Add your files
+<h3 align="center">Salam Mitra - Sistem Informasi Yayasan Salam Setara</h3>
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.cs.ui.ac.id/propensi-2023-2024-genap/kelas-d/D07-PropenSist/salam-mitra.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.cs.ui.ac.id/propensi-2023-2024-genap/kelas-d/D07-PropenSist/salam-mitra/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+<p align="center">
+Yayasan Salam Setara adalah lembaga amal milik publik yang hadir untuk menciptakan standar baru dalam pengelolaan dana amal dengan menggabungkan nilai filantropi islam dan teknologi. Salam Setara memfasilitasi program pemberdayaan masyarakat berbasis kolaborasi dalam upaya mengurangi kemiskinan, kesenjangan dan kerentanan yang ada di masyarakat. Oleh karena itu, Salam Setara berinvestasi pada inisiatif publik atau wirausaha sosial yang sejalan dengan visi yayasan.
+<br />
+<a href="https://gitlab.cs.ui.ac.id/propensi-2023-2024-genap/kelas-d/D07-PropenSist/salam-mitra"><strong>Explore
+the docs n</strong></a>
+<br/>
+<br/>
+<a href="https://gitlab.cs.ui.ac.id/propensi-2023-2024-genap/kelas-d/D07-PropenSist/salam-mitra/issues"Report Bug</a>
+</p>
+</div>
 
 ***
 
