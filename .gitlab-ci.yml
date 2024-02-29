@@ -9,10 +9,10 @@ build:
   stage: build
   script:
     - for service in $SERVICE_NAMES; do
-        cd $service
+        - cd $service
         # Build the specific microservice using Nixpack
-        nix-build ...
-        nix-env -f .
+        - nix-build ...
+        - nix-env -f .
         # Run tests (optional)
         # ...
       done
