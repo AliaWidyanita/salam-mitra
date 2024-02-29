@@ -1,8 +1,13 @@
 stages:
   - build
   - deploy
+  
+variables:
+    IMAGE_OPENJDK_GRADLE: gradle:7.3.3-jdk17-alpine
 
 build:
+    image: $IMAGE_OPENJDK_GRADLE
+
   stage: build
   script:
     - cd user
