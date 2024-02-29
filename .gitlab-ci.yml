@@ -1,50 +1,31 @@
 stages:
+  - build
   - deploy
 
-deploy-user:
-  stage: deploy
-  image: ubuntu
-  only:
-    - pushes
-    - main
-  script:
-    - cd user
-    - apt-get update && apt-get install -y curl
-    - curl -fsSL https://railway.app/install.sh | sh
-    - railway up --service=$RAILWAY_SERVICE_NAME -d
+variables:
+  SERVICE_NAMES: ["user", "program", "kerjasama", "frontend"]
 
-deploy-program:
-  stage: deploy
-  image: ubuntu
-  only:
-    - pushes
-    - main
+build:
+  stage: build
   script:
-    - cd program
-    - apt-get update && apt-get install -y curl
-    - curl -fsSL https://railway.app/install.sh | sh
-    - railway up --service=$RAILWAY_SERVICE_NAME -d
+    - for service in $SERVICE_NAMES; do
+        cd $service
+        # Build the specific microservice using Nixpack
+        nix-build ...
+        nix-env -f .
+        # Run tests (optional)
+        # ...
+      done
 
-deploy-kerjasama:
+deploy-railway:
   stage: deploy
   image: ubuntu
   only:
     - pushes
     - main
   script:
-    - cd kerjasama
     - apt-get update && apt-get install -y curl
     - curl -fsSL https://railway.app/install.sh | sh
-    - railway up --service=$RAILWAY_SERVICE_NAME -d
-
-deploy-frontend:
-  stage: deploy
-  image: ubuntu
-  only:
-    - pushes
-    - main
-  script:
-    - cd frontend
-    - apt-get update && apt-get install -y curl
-    - curl -fsSL https://railway.app/install.sh | sh
+    - railway set-project $RAILWAY_SERVICE_NAME
+    - railway set-env --env $RAILWAY_SERVICE_NAME
     - railway up --service=$RAILWAY_SERVICE_NAME -d
