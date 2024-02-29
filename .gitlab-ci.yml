@@ -2,28 +2,27 @@ stages:
   - build
   - deploy
 
-before_script:
-  - apk add --no-cache nix
-
 build:
   stage: build
   script:
     - cd user
-    - nix-build -o result
-    - nix-env -i ./result
+    - sh gradlew clean build -x check -x test
     - cd ..
     - cd program
-    - nix-build -o result
-    - nix-env -i ./result
+    - sh gradlew clean build -x check -x test
     - cd ..
     - cd kerjasama
-    - nix-build -o result
-    - nix-env -i ./result
+    - sh gradlew clean build -x check -x test
     - cd ..
     - cd frontend
-    - nix-build -o result
-    - nix-env -i ./result
+    - sh gradlew clean build -x check -x test
     - cd ..
+  artifacts:
+      paths:
+          - user/build/libs/user-0.0.1-SNAPSHOT.jar
+          - program/build/libs/program-0.0.1-SNAPSHOT.jar
+          - kerjasama/build/libs/kerjasama-0.0.1-SNAPSHOT.jar
+          - frontend/build/libs/frontend-0.0.1-SNAPSHOT.jar
 
 deploy-railway:
   stage: deploy
