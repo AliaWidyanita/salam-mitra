@@ -1,5 +1,33 @@
 stages:
+  - build
   - deploy
+
+variables:
+    IMAGE_OPENJDK_GRADLE: gradle:7.3.3-jdk17-alpine
+
+build:
+    image: $IMAGE_OPENJDK_GRADLE
+    stage: build
+    script:
+        - echo "Compiling the code..."
+        - cd $CI_PROJECT_DIR/frontend
+        - sh gradlew clean assemble
+        - cd .. 
+        - cd $CI_PROJECT_DIR/kerjasama
+        - sh gradlew clean assemble
+        - cd ..
+        - cd $CI_PROJECT_DIR/program
+        - sh gradlew clean assemble
+        - cd ..
+        - cd $CI_PROJECT_DIR/user
+        - sh gradlew clean assemble
+        - cd ..
+    artifacts:
+        paths:
+            - frontend/build/libs/frontend-0.0.1-SNAPSHOT.jar
+            - kerjasama/build/libs/kerjasama-0.0.1-SNAPSHOT.jar
+            - program/build/libs/program-0.0.1-SNAPSHOT.jar
+            - user/build/libs/user-0.0.1-SNAPSHOT.jar
 
 deploy-railway:
   stage: deploy
