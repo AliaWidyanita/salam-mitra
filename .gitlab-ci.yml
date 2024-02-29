@@ -2,22 +2,25 @@ stages:
   - build
   - deploy
 
-variables:
-  SERVICE_NAMES: ["user", "program", "kerjasama", "frontend"]
-
 build:
   stage: build
   script:
-    - for service in $SERVICE_NAMES; do
-        cd $service
-        # Build the specific microservice using Nixpack (replace with your actual build commands)
-        nix-build -o result
-        # Install the built service
-        nix-env -i ./result
-        # Run tests (optional)
-        # ...
-        cd ..
-      done
+    - cd user
+    - nix-build -o result
+    - nix-env -i ./result
+    - cd ..
+    - cd program
+    - nix-build -o result
+    - nix-env -i ./result
+    - cd ..
+    - cd kerjasama
+    - nix-build -o result
+    - nix-env -i ./result
+    - cd ..
+    - cd frontend
+    - nix-build -o result
+    - nix-env -i ./result
+    - cd ..
 
 deploy-railway:
   stage: deploy
