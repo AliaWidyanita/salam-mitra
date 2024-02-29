@@ -9,12 +9,14 @@ build:
   stage: build
   script:
     - for service in $SERVICE_NAMES; do
-        - cd $service
-        # Build the specific microservice using Nixpack
-        - nix-build ...
-        - nix-env -f .
+        cd $service
+        # Build the specific microservice using Nixpack (replace with your actual build commands)
+        nix-build -o result
+        # Install the built service
+        nix-env -i ./result
         # Run tests (optional)
         # ...
+        cd ..
       done
 
 deploy-railway:
