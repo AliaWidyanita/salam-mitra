@@ -3,11 +3,10 @@ stages:
   - deploy
   
 variables:
-    IMAGE_OPENJDK_GRADLE: gradle:7.3.3-jdk17-alpine
+  IMAGE_OPENJDK_GRADLE: gradle:7.3.3-jdk17-alpine
 
 build:
-    image: $IMAGE_OPENJDK_GRADLE
-
+  image: $IMAGE_OPENJDK_GRADLE
   stage: build
   script:
     - cd user
@@ -23,11 +22,11 @@ build:
     - sh gradlew clean build -x check -x test
     - cd ..
   artifacts:
-      paths:
-          - user/build/libs/user-0.0.1-SNAPSHOT.jar
-          - program/build/libs/program-0.0.1-SNAPSHOT.jar
-          - kerjasama/build/libs/kerjasama-0.0.1-SNAPSHOT.jar
-          - frontend/build/libs/frontend-0.0.1-SNAPSHOT.jar
+    paths:
+      - user/build/libs/user-0.0.1-SNAPSHOT.jar
+      - program/build/libs/program-0.0.1-SNAPSHOT.jar
+      - kerjasama/build/libs/kerjasama-0.0.1-SNAPSHOT.jar
+      - frontend/build/libs/frontend-0.0.1-SNAPSHOT.jar
 
 deploy-railway:
   stage: deploy
