@@ -36,7 +36,7 @@ build:
 
 deploy-railway:
   stage: deploy
-  image: ubuntu
+  image: $IMAGE_DOCKER_DIND
   only:
     - pushes
     - main
