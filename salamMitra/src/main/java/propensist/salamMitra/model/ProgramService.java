@@ -1,4 +1,4 @@
-package propensist.salamMitra.model.user;
+package propensist.salamMitra.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,9 +15,9 @@ import jakarta.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "manajemen")
-@SQLDelete(sql = "UPDATE manajemen SET is_deleted = true WHERE id=?")
-public class Manajemen extends UserModel {
+@DiscriminatorValue("program_service")
+@SQLDelete(sql = "UPDATE program_service SET is_deleted = true WHERE id=?")
+public class ProgramService extends Pengguna {
     @NotNull
     @Column(name = "fullName", nullable = false)
     private String fullName;
