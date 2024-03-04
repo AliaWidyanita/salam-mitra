@@ -1,10 +1,9 @@
-package propensist.salamMitra.model.user;
+package propensist.salamMitra.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -16,9 +15,12 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-@MappedSuperclass
-public class UserModel implements Serializable {
+@Entity
+@Table(name = "pengguna")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
+public class Pengguna implements Serializable {
+    
     @Id
     private UUID id = UUID.randomUUID();
 
@@ -37,10 +39,10 @@ public class UserModel implements Serializable {
     private String password;
 
     @NotNull
-    @Column(name="role", nullable = false)
-    private String role;
-
-    @NotNull
     @Column(name="is_deleted", nullable = false)
-    private boolean isDeleted;
+    private boolean isDeleted = false;
+
+    public String getRole() {
+        return this.getClass().getAnnotation(DiscriminatorValue.class).value();
+    }
 }
