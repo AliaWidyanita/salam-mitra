@@ -87,6 +87,4 @@ public class PenggunaController {
         // Mengarahkan pengguna kembali ke halaman "/pengguna"
         return "redirect:/pengguna";
     }
-
 }
-
