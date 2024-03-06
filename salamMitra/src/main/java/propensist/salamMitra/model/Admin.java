@@ -1,9 +1,11 @@
-package propensist.salamMitra.model.user;
+package propensist.salamMitra.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Objects;
 
 import org.hibernate.annotations.SQLDelete;
 
@@ -15,9 +17,9 @@ import jakarta.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "admin")
+@DiscriminatorValue("admin")
 @SQLDelete(sql = "UPDATE admin SET is_deleted = true WHERE id=?")
-public class Admin extends UserModel {
+public class Admin extends Pengguna {
     @NotNull
     @Column(name = "fullName", nullable = false)
     private String fullName;
@@ -35,18 +37,20 @@ public class Admin extends UserModel {
     private Long contact;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "adminRole", nullable = false)
     private AdminRole adminRole;
 
     public enum AdminRole {
-        PROGRAM, FINANCE
-    }
-
-    public AdminRole getAdminRole() {
-        return adminRole;
-    }
-
-    public void setAdminRole(AdminRole adminRole) {
-        this.adminRole = adminRole;
+        FINANCE, PROGRAM;
+    
+        public static AdminRole fromString(String value) {
+            for (AdminRole role : AdminRole.values()) {
+                if (Objects.equals(role.name(), value)) {
+                    return role;
+                }
+            }
+            throw new IllegalArgumentException("Invalid AdminRole: " + value);
+        }
     }
 }

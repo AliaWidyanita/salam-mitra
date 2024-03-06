@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+	<head>
+		<object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
+		<object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
+        <title>Daftar Pengguna</title>
+        <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/css/datatables.css">
+	</head>
+<body>
+<!-- <nav th:replace="~{fragments/navbar :: navbar('barang')}"></nav> -->
+    <div class="container">
+    <div class="card m-4">
+      <div class="card-header p-4">
+        <h2 class="text-center"> Tambah Admin </h2>
+      </div>
+      <div class="card-body p-4">
+        <div class="justify-content-center">
+          <form th:action="@{/pengguna/tambah-admin}" th:object="${adminDTO}" method="POST">
+            Username: <br>
+            <input class="form-control" type="text" th:field="*{username}" required/>
+            <br><br>
+
+            Email: <br>
+            <input class="form-control" type="text" th:field="*{email}" required/>
+            <br><br>
+
+            Password: <br>
+            <input class="form-control" type="text" th:field="*{password}" required/>
+            <br><br>
+
+            Nama Lengkap: <br>
+            <input class="form-control" type="text" th:field="*{fullName}" required/>
+            <br><br>
+
+            Alamat: <br>
+            <input class="form-control" type="text" th:field="*{address}" required/>
+            <br><br>
+
+            Jenis Kelamin: <br>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <select class="form-control form-select" th:field="*{gender}">
+                        <option value="Laki-Laki">Laki-Laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </tr>
+                </tbody>
+            </table>
+            <br><br>
+
+            Kontak: <br>
+            <input class="form-control" type="number" th:field="*{contact}" required/>
+            <br><br>
+
+            Admin Role: <br>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <select class="form-control form-select" th:field="*{adminRole}">
+                        <option value="PROGRAM">Program</option>
+                        <option value="FINANCE">Finance</option>
+                    </select>
+                </tr>
+                </tbody>
+            </table>
+            <br><br>
+
+            <div class="text-center m-4">
+              <a class="btn btn-danger " href="/pengguna">Batal</a>
+              <button class="btn btn-primary" type="submit">Simpan</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
