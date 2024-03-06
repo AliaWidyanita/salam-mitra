@@ -14,7 +14,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.AdminMapper;
+import propensist.salamMitra.dto.MitraMapper;
 import propensist.salamMitra.dto.request.CreateAdminRequestDTO;
+import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
 import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.service.PenggunaService;
 
@@ -79,6 +81,4 @@ public class PenggunaController {
         // Mengarahkan pengguna kembali ke halaman "/pengguna"
         return "redirect:/pengguna";
     }
-
 }
-

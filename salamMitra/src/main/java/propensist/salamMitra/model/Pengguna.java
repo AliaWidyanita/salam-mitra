@@ -34,7 +34,6 @@ public class Pengguna implements Serializable {
     private String email;
 
     @NotNull
-    @Lob
     @Column(name = "password", nullable = false)
     private String password;
 

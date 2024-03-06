@@ -18,6 +18,8 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 @Controller
 public class BaseController {
@@ -31,7 +33,7 @@ public class BaseController {
     FrontEndService frontEndService;
 
     @Autowired
-    PenggunaService penggunaService;
+    private PenggunaService penggunaService;
 
     @GetMapping("/")
     public String home(Model model, @CookieValue(value = "jwtToken", defaultValue = "") String jwtToken, HttpServletRequest request, RedirectAttributes redirectAttrs) {
