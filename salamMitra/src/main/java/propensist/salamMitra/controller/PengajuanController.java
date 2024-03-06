@@ -85,7 +85,9 @@ public class PengajuanController {
         for (KebutuhanDana kebutuhanDana : listKebutuhanDana) {
             System.out.println("Asnaf: " + kebutuhanDana.getAsnaf() + ", Pilar: " + kebutuhanDana.getPilar());
         }
-        System.out.println("CAPEK");        
+        System.out.println("CAPEK");  
+        
+        
         // Set pengajuan untuk setiap kebutuhan dana
         if (listKebutuhanDana != null) {
             for (KebutuhanDana kebutuhanDana : listKebutuhanDana) {

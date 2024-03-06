@@ -302,14 +302,15 @@
 		function formatCurrency(input) {
 			// Menghapus karakter selain angka
 			let value = input.value.replace(/[^\d]/g, '');
-		
-			// Menambahkan "Rp." di depan nilai
-			value = "Rp " + new Intl.NumberFormat().format(value);
-		
+			
+			// Menambahkan pemisah ribuan
+			value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
+
 			// Menetapkan nilai yang sudah diformat kembali ke input
 			input.value = value;
 		}
-		</script>
+	</script>
+
 
 <script>
     function validatePhoneNumber(input) {
@@ -398,7 +399,6 @@
             '</select>' +
             '</td>' +
 			'<td><input placeholder="Jumlah Penerima" class="form-control" type="number" name="listKebutuhanDana[0].jumlahPenerima" required></td>' +
-
 
             '<td>' +
             '<select class="form-control" name="listKebutuhanDana[0].pilar" required>' +
