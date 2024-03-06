@@ -72,6 +72,12 @@ public class PenggunaController {
                     model.addAttribute("errors", errors);
         }
 
+        // Generate random password
+        String randomPassword = PasswordGenerator.generateRandomPassword(12);
+
+        // Set the hashed password to the admin DTO
+        adminDTO.setPassword(randomPassword);
+
         var admin = adminMapper.createAdminRequestDTOToAdmin(adminDTO);
         penggunaService.saveAdmin(admin);
 

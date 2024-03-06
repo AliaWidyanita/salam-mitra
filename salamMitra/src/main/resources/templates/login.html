@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Log In</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"> </script>
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap/js/bootstrap-modal.js"></script>
+    <script src="bootstrap/js/bootstrap-transition.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</head>
+<body>
+
+        <div class="row justify-content-center mx-auto">
+            <div class="col-md-6">
+                <div class="card shadow" style="border-radius: 5%;">
+                    <div class="mt-4">
+                        <h4 class="font-weight-bold text-center">Log In</h4>
+                    </div>
+                    <div class="card-body col-7 mx-auto">
+                        <form th:action="@{/login}" th:object="${loginRequest}" method="POST">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Username</label>
+                                <input type="username" class="form-control input-sm" name="username" placeholder="Username" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-bold">Password</label>
+                                <div class="input-group mb-3">
+                                    <input type="password" id="password-field" class="form-control input-sm" name="password" placeholder="Password" required>
+                                    <div class="input-group-append">
+                                      <span class="input-group-text" id="basic-addon2"><i class="far fa-eye" id="togglePassword" style="cursor: pointer;"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if ="${param.error}">
+                                <span class="text-danger">Email atau Password Anda salah, mohon input kembali.</span>
+                            </div>
+                            <div th:if ="${param.accessDenied}">
+                                <span class="text-danger">Mohon maaf, Anda sudah tidak memiliki akses pada sistem.</span>
+                            </div>
+                            <div class="form-group text-center mt-5">
+                                <button type="submit" class="btn" style="background:#7698F0;color:white;border-radius: 10px;padding-inline:20%;">Masuk</button>
+                            </div>
+                            <div class="text-center mt-4">
+                                Belum memiliki akun? <a th:href="@{/registrasi}" style="color:#7698F0">Daftar sekarang</a>
+                            </div>
+                            <br><br>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    <script>
+        var passwordField = document.querySelector("input[name=password]");
+
+
+        passwordField.addEventListener("invalid", function(){
+        this.setCustomValidity('');
+        if (!this.validity.valid) {
+            this.setCustomValidity('Mohon mengisi Password Anda');  
+            }
+        });
+    </script>
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password-field');
+
+        togglePassword.addEventListener('click', function (e) {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
+</body>
+</html>

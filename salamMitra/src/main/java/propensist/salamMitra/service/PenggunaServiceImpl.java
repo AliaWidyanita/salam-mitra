@@ -60,6 +60,9 @@ public class PenggunaServiceImpl implements PenggunaService{
         } else {
             throw new IllegalArgumentException("Mitra cannot be null");
         }
+
+        // String hashedPass = encrypt(mitra.getPassword());
+        // mitra.setPassword(hashedPass);
     }
 
     // @Override
@@ -67,6 +70,12 @@ public class PenggunaServiceImpl implements PenggunaService{
     //     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     //     return passwordEncoder.encode(password);
     // }
+
+    @Override
+    public Pengguna getAkunByEmail(String email){
+        Pengguna akun = penggunaDb.findByEmail(email);
+        return akun;
+    }
 
     @Override
     public Pengguna authenticate(String username) {

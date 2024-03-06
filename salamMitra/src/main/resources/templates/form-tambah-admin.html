@@ -3,12 +3,11 @@
 	<head>
 		<object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
 		<object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
-        <title>Daftar Pengguna</title>
+        <title>Tambah Admin</title>
         <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="/css/datatables.css">
 	</head>
 <body>
-<!-- <nav th:replace="~{fragments/navbar :: navbar('barang')}"></nav> -->
     <div class="container">
     <div class="card m-4">
       <div class="card-header p-4">
@@ -25,10 +24,6 @@
             <input class="form-control" type="text" th:field="*{email}" required/>
             <br><br>
 
-            Password: <br>
-            <input class="form-control" type="text" th:field="*{password}" required/>
-            <br><br>
-
             Nama Lengkap: <br>
             <input class="form-control" type="text" th:field="*{fullName}" required/>
             <br><br>
@@ -42,8 +37,8 @@
                 <tbody>
                 <tr>
                     <select class="form-control form-select" th:field="*{gender}">
-                        <option value="Laki-Laki">Laki-Laki</option>
-                        <option value="Perempuan">Perempuan</option>
+                        <option value="Laki-Laki">Pria</option>
+                        <option value="Perempuan">Wanita</option>
                     </select>
                 </tr>
                 </tbody>

@@ -19,6 +19,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.springframework.ui.Model;
 
+
 @Controller
 public class BaseController {
 
@@ -56,4 +57,6 @@ public class BaseController {
 
         return "landing-page";
     }
+
+    
 }

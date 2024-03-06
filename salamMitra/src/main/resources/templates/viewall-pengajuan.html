@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Daftar Pengajuan</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="text-center pt-5">
+            <h2>Daftar pengajuan</h2>
+        </div>
+        <div class="text-center m-3">
+            <a type="button" class="btn btn-md btn-primary" href="/pengajuan/tambah">+ Tambah pengajuan</a>
+        </div>
+        <br><br>
+        <table id="tabelpengajuan" class="table table-bordered">
+            <thead class="bg-primary text-white text-center">
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Nama Mitra</th>
+                    <th class="text-center">Nama Program</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pengajuan, iterationStatus : ${listPengajuan}">
+                    <td class="text-center" th:text="${iterationStatus.count}"></td>
+                    <td class="text-center" th:text="${pengajuan.id}"></td>
+                    <td class="text-center" th:text="${pengajuan.namaMitra}"></td>
+                    <td class="text-center" th:text="${pengajuan.namaProgram}"></td>
+
+                    
+                    
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#tabelpengajuan').DataTable({
+                "lengthMenu": [5, 10, 20],
+                "columnDefs": [
+                    { "orderable": false, "targets": 4 } // Adjusted the target column index
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

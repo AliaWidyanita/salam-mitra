@@ -9,7 +9,7 @@ import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengguna;
 
 public interface PenggunaService { 
-    
+  
     void saveAdmin(Admin admin);
 
     List<Pengguna> getAllPengguna();
@@ -17,6 +17,8 @@ public interface PenggunaService {
     void saveMitra(Mitra mitra);
 
     //String encrypt(String password);
+
+    Pengguna getAkunByEmail(String email);
 
     Pengguna authenticate(String username);
 
