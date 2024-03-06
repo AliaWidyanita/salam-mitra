@@ -33,7 +33,7 @@ public class UserController {
     @Autowired
     private PenggunaService penggunaService;
 
-    @RequestMapping("/")
+    @RequestMapping("/home")
     public String home (Principal principal, Model model){
         String role = penggunaService.getAkunByEmail(principal.getName()).getRole();
         model.addAttribute("role",role);
