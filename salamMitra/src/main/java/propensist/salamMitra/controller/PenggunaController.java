@@ -1,7 +1,7 @@
 package propensist.salamMitra.controller;
 
 import java.util.List;
-import java.util.ArrayList;
+
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import propensist.salamMitra.dto.AdminMapper;
 import propensist.salamMitra.dto.request.CreateAdminRequestDTO;
 import propensist.salamMitra.model.Pengguna;
+import propensist.salamMitra.service.PasswordGenerator;
 import propensist.salamMitra.service.PenggunaService;
 
 import org.springframework.ui.Model;
@@ -69,6 +70,12 @@ public class PenggunaController {
 
                     model.addAttribute("errors", errors);
         }
+
+        // Generate random password
+        String randomPassword = PasswordGenerator.generateRandomPassword(12);
+
+        // Set the hashed password to the admin DTO
+        adminDTO.setPassword(randomPassword);
 
         var admin = adminMapper.createAdminRequestDTOToAdmin(adminDTO);
         penggunaService.saveAdmin(admin);
