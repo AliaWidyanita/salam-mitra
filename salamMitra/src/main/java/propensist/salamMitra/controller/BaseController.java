@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import propensist.salamMitra.dto.request.PenggunaDTO;
+import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.service.FrontEndService;
 import propensist.salamMitra.service.JwtService;
 import propensist.salamMitra.service.PenggunaService;
@@ -18,8 +18,6 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 @Controller
 public class BaseController {
@@ -37,7 +35,7 @@ public class BaseController {
 
     @GetMapping("/")
     public String home(Model model, @CookieValue(value = "jwtToken", defaultValue = "") String jwtToken, HttpServletRequest request, RedirectAttributes redirectAttrs) {
-        PenggunaDTO userDTO = null;
+        Pengguna pengguna = null;
 
         if (!frontEndService.validateCookieJwt(request, jwtToken)) {
             logger.info("Not logged in");
@@ -45,7 +43,7 @@ public class BaseController {
             UUID id = jwtService.getIdFromJwtToken(jwtToken);
 
             try {
-                userDTO = penggunaService.getUser(id, jwtToken);
+                pengguna = penggunaService.getUserById(id);
             } catch (RuntimeException e) {
                 redirectAttrs.addFlashAttribute("error", "Your session has expired. Please log in again");
                 return "redirect:/logout";
@@ -54,8 +52,7 @@ public class BaseController {
             logger.info("Pengguna logged in: " + jwtToken);
         }
         
-
-        model.addAttribute("user", userDTO);
+        model.addAttribute("pengguna", pengguna);
 
         return "landing-page";
     }
