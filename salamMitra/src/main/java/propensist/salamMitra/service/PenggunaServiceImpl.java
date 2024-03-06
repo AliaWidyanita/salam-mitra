@@ -1,17 +1,25 @@
 package propensist.salamMitra.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import propensist.salamMitra.dto.request.LoginJwtRequestDTO;
 import propensist.salamMitra.model.Admin;
+import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.repository.AdminDb;
+import propensist.salamMitra.repository.MitraDb;
 import propensist.salamMitra.repository.PenggunaDb;
 
 @Service
 public class PenggunaServiceImpl implements PenggunaService{
+
+    @Autowired
+    MitraDb mitraDb;
     
     @Autowired
     AdminDb adminDb;
@@ -33,4 +41,34 @@ public class PenggunaServiceImpl implements PenggunaService{
         return penggunaDb.findAll();
     }
 
+    @Override
+    public void saveMitra(Mitra mitra) {
+        if (mitra != null) {
+            mitraDb.save(mitra);
+        } else {
+            throw new IllegalArgumentException("Mitra cannot be null");
+        }
+
+        // String hashedPass = encrypt(mitra.getPassword());
+        // mitra.setPassword(hashedPass);
+    }
+
+    // @Override
+    // public String encrypt(String password){
+    //     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    //     return passwordEncoder.encode(password);
+    // }
+
+    @Override
+    public Pengguna getAkunByEmail(String email){
+        Pengguna akun = penggunaDb.findByEmail(email);
+        return akun;
+    }
+
+    @Override
+    public Pengguna authenticate(String username) {
+        return penggunaDb.findByUsername(username);
+    }
+
+   
 }
