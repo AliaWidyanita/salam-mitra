@@ -1,7 +1,7 @@
 package propensist.salamMitra.service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,6 +26,18 @@ public class PenggunaServiceImpl implements PenggunaService{
 
     @Autowired
     PenggunaDb penggunaDb;
+
+    @Autowired
+    AdminService adminService;
+
+    @Autowired
+    ManajemenService manajemenService;
+
+    @Autowired
+    MitraService mitraService;
+
+    @Autowired
+    ProgramUserService programUserService;
 
     @Override
     public void saveAdmin(Admin admin) {
@@ -70,5 +82,23 @@ public class PenggunaServiceImpl implements PenggunaService{
         return penggunaDb.findByUsername(username);
     }
 
-   
+    @Override
+    public Pengguna getUserById(UUID id) {
+        var admin = adminService.getAdminById(id);
+        var manajemen = manajemenService.getManajemenById(id);
+        var mitra = mitraService.getMitraById(id);
+        var programService = programUserService.getProgramUserServiceById(id);
+
+        if (admin == null && manajemen == null && mitra == null && programService == null) {
+            return null;
+        } else if (admin != null) {
+            return admin;
+        } else if (manajemen != null) {
+            return manajemen;
+        } else if (mitra != null) {
+            return mitra;
+        } else {
+            return programService;
+        }
+    }
 }

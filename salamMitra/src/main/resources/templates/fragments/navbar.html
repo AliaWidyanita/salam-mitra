@@ -49,16 +49,31 @@
                     <!-- menu start -->
                     <nav class="main-menu">
                         <ul>
-                            <li class="current-list-item"><a th:href="@{/}">Home</a></li>
-                            
-                            <li><a th:href="@{/}">Program</a></li>
-                            <li><a th:href="@{/}">Profile</a></li>
+                            <ul>
+                                <li th:if="${user == null || user == 'mitra'}" class="current-list-item"><a th:href="@{/}">Home</a></li>
+                                <li th:if="${user == null || user == 'mitra'}"><a th:href="@{/}">Program</a></li>
+                                <li th:if="${user == 'mitra'}"><a th:href="@{/}">Ajuan Saya</a></li>
+
+                                <li th:if="${user == 'admin' || user == 'manajemen' || user == 'programService'}" class="current-list-item"><a th:href="@{/}">Dashboard</a></li>
+                                <li th:if="${user == 'admin' || user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Program</a></li>
+                                <li th:if="${user == 'admin' || user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Ajuan Kerja Sama</a></li>
+                                <li th:if="${user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Daftar Pengguna</a></li>
+                                <li th:if="${user == 'admin' || user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Pencairan</a></li>
+                                <li th:if="${user == 'mitra' || user == 'admin' || user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Profile</a></li>
+                            </ul>                            
+
                             <li>
                                 <div class="header-icons">
 
                                 <div class="header-icons pull-right">
-                                    <span><a th:href="@{/}" class="boxed-btn">Login</a>
-                                    <a th:href="@{/}" class="bordered-btn">Sign Up</a></span>
+                                    <div th:if="${user == null}">
+                                        <span><a th:href="@{/}" class="boxed-btn">Login</a>
+                                        <a th:href="@{/}" class="bordered-btn">Sign Up</a></span>
+                                    </div>
+
+                                    <div th:unless="${user == null}">
+                                        <a th:href="@{/}" class="boxed-btn">Logout</a>
+                                    </div>
                                 </div>
 
                                 </div>
