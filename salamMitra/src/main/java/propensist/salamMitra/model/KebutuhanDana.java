@@ -1,9 +1,9 @@
 package propensist.salamMitra.model;
 
 
+import java.util.UUID;
+
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,24 +16,24 @@ import lombok.Setter;
 @Entity
 @Table(name = "kebutuhanDana")
 public class KebutuhanDana {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idKebutuhan;
+    private UUID id = UUID.randomUUID();
 
     @Column(name = "asnaf", nullable = false)
     private String asnaf;
 
-    // @Column(name = "jumlahPenerima", nullable = false)
-    // private Long jumlahPenerima;
+    @Column(name = "jumlahPenerima", nullable = false)
+    private Long jumlahPenerima;
 
     @Column(name = "pilar", nullable = false)
     private String pilar;
 
-    // @Column(name = "jenisBantuan", nullable = false)
-    // private String jenisBantuan;
+    @Column(name = "jenisBantuan", nullable = false)
+    private String jenisBantuan;
     
-    // @Column(name = "jumlahDana", nullable = false)
-    // private Long jumlahDana;
+    @Column(name = "jumlahDana", nullable = false)
+    private Long jumlahDana;
 
 
     @ManyToOne(fetch = FetchType.EAGER)
