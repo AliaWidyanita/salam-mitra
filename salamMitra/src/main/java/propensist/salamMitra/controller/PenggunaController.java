@@ -1,7 +1,6 @@
 package propensist.salamMitra.controller;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +13,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.AdminMapper;
-import propensist.salamMitra.dto.MitraMapper;
 import propensist.salamMitra.dto.request.CreateAdminRequestDTO;
-import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
 import propensist.salamMitra.model.Pengguna;
+import propensist.salamMitra.service.PasswordGenerator;
 import propensist.salamMitra.service.PenggunaService;
 
 import org.springframework.ui.Model;
