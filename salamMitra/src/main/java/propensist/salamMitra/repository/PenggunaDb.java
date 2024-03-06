@@ -9,5 +9,7 @@ import propensist.salamMitra.model.Pengguna;
 
 @Repository
 public interface PenggunaDb extends JpaRepository<Pengguna, UUID> {
-    
+    Pengguna findByUsername(String username);
+    Pengguna findByEmail(String email);
+
 }
