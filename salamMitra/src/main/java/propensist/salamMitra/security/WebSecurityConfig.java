@@ -49,7 +49,7 @@ public class WebSecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/assets/webfonts/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
-                        // .requestMatchers(new AntPathRequestMatcher("/logout")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/logout")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                         .anyRequest().authenticated()
                 ) 

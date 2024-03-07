@@ -65,10 +65,10 @@
                                 <div class="header-icons">
                                     <div class="header-icons pull-right">
                                         <div th:if="${user == null}">
-                                            <span><a th:href="@{/}" class="boxed-btn">Login</a></span>
+                                            <span><a th:href="@{/login}" class="boxed-btn">Login</a></span>
                                         </div>
                                         <div th:unless="${user == null}">
-                                            <a th:href="@{/}" class="boxed-btn">Logout</a>
+                                            <a th:href="@{/logout}" class="boxed-btn">Logout</a>
                                         </div>
                                     </div>
                                 </div>

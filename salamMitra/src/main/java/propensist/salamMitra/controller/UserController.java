@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.MitraMapper;
 import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
 import propensist.salamMitra.model.Pengguna;
+import propensist.salamMitra.service.FrontEndService;
 import propensist.salamMitra.service.PenggunaService;
 
 import org.springframework.ui.Model;
@@ -32,6 +34,9 @@ public class UserController {
 
     @Autowired
     private PenggunaService penggunaService;
+
+    @Autowired
+    FrontEndService frontEndService;
 
     @RequestMapping("/home")
     public String home (Principal principal, Model model){
@@ -104,6 +109,9 @@ public class UserController {
         
     }
     
-    
-    
+    @RequestMapping("/logout")
+    public String logout(HttpServletResponse response) {
+        frontEndService.setCookie(response, null);
+        return "redirect:/";
+    }
 }
