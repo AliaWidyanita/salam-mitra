@@ -38,9 +38,7 @@ public class BaseController {
     public String home(Model model, @CookieValue(value = "jwtToken", defaultValue = "") String jwtToken, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         Pengguna pengguna = null;
 
-        if (!frontEndService.validateCookieJwt(request, jwtToken)) {
-            logger.info("Not logged in");
-        } else {
+        if (frontEndService.validateCookieJwt(request, jwtToken)) {
             UUID id = jwtService.getIdFromJwtToken(jwtToken);
 
             try {
@@ -52,11 +50,9 @@ public class BaseController {
 
             logger.info("Pengguna logged in: " + jwtToken);
         }
-        
-        model.addAttribute("pengguna", pengguna);
+
+        model.addAttribute("user", pengguna);
 
         return "landing-page";
     }
-
-    
 }

@@ -1,44 +1,69 @@
-// package propensist.salamMitra.security;
+package propensist.salamMitra.security;
 
-// import java.io.IOException;
+import java.io.IOException;
 
-// import jakarta.servlet.ServletException;
-// import jakarta.servlet.http.HttpServletRequest;
-// import jakarta.servlet.http.HttpServletResponse;
-// //import apap.tutorial.bacabaca.security.jwt.JwtTokenFilter;
-// import jakarta.websocket.OnError;
-// //import propensist.salamMitra.security.jwt.JwtTokenFilter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+//import apap.tutorial.bacabaca.security.jwt.JwtTokenFilter;
+import jakarta.websocket.OnError;
+//import propensist.salamMitra.security.jwt.JwtTokenFilter;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.core.annotation.Order;
-// import org.springframework.security.authentication.BadCredentialsException;
-// import org.springframework.security.authentication.DisabledException;
-// import org.springframework.security.config.Customizer;
-// import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-// import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-// import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-// import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-// import org.springframework.security.core.AuthenticationException;
-// import org.springframework.security.config.http.SessionCreationPolicy;
-// import org.springframework.security.core.userdetails.UserDetailsService;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-// import org.springframework.security.web.SecurityFilterChain;
-// import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-// import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-// import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-// import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-// @Configuration
-// @EnableWebSecurity
-// public class WebSecurityConfig {
+@Configuration
+@EnableWebSecurity
+public class WebSecurityConfig {
 //     @Autowired
 //     private UserDetailsService userDetailsService;
 
 //     // @Autowired
 //     // private JwtTokenFilter jwtTokenFilter;
-
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+        http
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers(new AntPathRequestMatcher("/assets/css/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/assets/js/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/assets/bootstrap/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/assets/img/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/assets/webfonts/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
+                        // .requestMatchers(new AntPathRequestMatcher("/logout")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
+                        .anyRequest().authenticated()
+                ) 
+                .formLogin((form) -> form
+                        .loginPage("/login")
+                        .permitAll()
+                        .defaultSuccessUrl("/")
+                );
+                // .logout((logout) -> logout
+                //         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                //         .logoutSuccessUrl("/")
+                // );
+        return http.build();
+    }
 
 //     // @Bean
 //     // @Order(1)
@@ -100,4 +125,4 @@
 //             }
 //         };
 //     }
-// }
+}
