@@ -10,6 +10,7 @@ import propensist.salamMitra.model.Pengajuan;
 
 @Repository
 public interface PengajuanDb extends JpaRepository<Pengajuan, Long> {
+    @SuppressWarnings("null")
     Optional<Pengajuan> findById(Long id);
 
 }

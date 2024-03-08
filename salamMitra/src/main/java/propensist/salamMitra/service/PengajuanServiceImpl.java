@@ -19,8 +19,12 @@ public class PengajuanServiceImpl implements PengajuanService{
 
     @Override
     public void savePengajuan(Pengajuan pengajuan) {
+        if (pengajuan != null){
+            pengajuanDb.save(pengajuan);
+        } else {
+            throw new IllegalArgumentException("Pengajuan tidak boleh kosong.");
+        }
         
-        pengajuanDb.save(pengajuan);
     }
     
     @Override

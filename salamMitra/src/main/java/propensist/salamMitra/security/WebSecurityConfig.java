@@ -30,8 +30,8 @@ public class WebSecurityConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/tambah-admin")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/pengajuan/**")).hasAuthority("mitra")
                                 .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                                // .anyRequest().authenticated()
                         ) 
                         .formLogin((form) -> form
                                 .loginPage("/login")
