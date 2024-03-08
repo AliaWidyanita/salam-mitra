@@ -17,7 +17,7 @@
 		<div class="wizard-heading">Ajukan Kerja Sama</div>
 		<div class="wizard-v7-content">
 			<div class="wizard-form">
-		        <form class="form-register" th:action="@{/pengajuan/tambah}" th:object="${pengajuanDTO}" method="POST" enctype="multipart/form-data">
+		        <form class="form-register" th:action="@{/pengajuan/tambah}" th:object="${listPengajuanKebutuhanDanaDTO}" method="POST" enctype="multipart/form-data">
 		        	<div id="form-total">
 		        		<!-- SECTION 1 -->
 			            <h2>
@@ -35,20 +35,21 @@
 								<div class="form-row">
 									<div class="form-holder form-holder-2">
 										<label for="nama_mitra">Nama Mitra</label>
-										<input type="text" name="nama_mitra" id="nama_mitra" placeholder="Nama Mitra" class="form-control"  th:field="*{namaMitra}" required>
+										<input type="text" name="nama_mitra" id="nama_mitra" placeholder="Nama Mitra" class="form-control"  th:field="*{pengajuanDTO.namaMitra}" required>
 									</div>
 								</div>
                 <div class="form-row">
 									<div class="form-holder form-holder-2">
 										<label for="nama_program">Nama Program</label>
-										<input type="text" name="nama_program" id="nama_program" placeholder="Nama Program" class="form-control"  th:field="*{namaProgram}" required>
+										<input type="text" name="nama_program" id="nama_program" placeholder="Nama Program" class="form-control"  th:field="*{pengajuanDTO.namaProgram}" required>
 									</div>
 								</div>
                 <div class="form-row">
                   <div class="form-holder form-holder-2">
                       <label for="kategori">Kategori</label>
-                      <select name="kategori" id="kategori" class="form-control"  th:field="*{kategori}" required>
-                          <option value="Pendidikan">Pendidikan</option>
+                      <select name="kategori" id="kategori" class="form-control"  th:field="*{pengajuanDTO.kategori}" required>
+						<option value="" disabled selected>--Pilih Kategori Program--</option>
+						<option value="Pendidikan">Pendidikan</option>
                           <option value="Kesehatan">Kesehatan</option>
                           <option value="Kesejahteraan">Kesejahteraan</option>
                       </select>
@@ -57,19 +58,19 @@
               <div class="form-row">
                 <div class="form-holder form-holder-2">
                   <label for="nama_pic">Nama Person In Charge (PIC)</label>
-                  <input type="text" name="nama_pic" id="nama_pic" placeholder="Nama Person In Charge (PIC)" class="form-control"  th:field="*{namaPIC}" required>
+                  <input type="text" name="nama_pic" id="nama_pic" placeholder="Nama Person In Charge (PIC)" class="form-control"  th:field="*{pengajuanDTO.namaPIC}" required>
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-holder form-holder-2">
                   <label for="kontak_pic">Kontak Person In Charge (PIC)</label>
-				  <input type="number" name="kontak_pic" id="kontak_pic" placeholder="08XXXXXXXXX" class="form-control" th:field="*{kontakPIC}" required oninput="validatePhoneNumber(this)">
+				  <input type="number" name="kontak_pic" id="kontak_pic" placeholder="08XXXXXXXXX" class="form-control" th:field="*{pengajuanDTO.kontakPIC}" required oninput="validatePhoneNumber(this)">
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-holder form-holder-2">
                   <label for="alamat">Alamat</label>
-                  <input type="text" name="alamat" id="alamat" placeholder="Alamat Kantor atau Rumah" class="form-control"  th:field="*{alamatKantor}" required>
+                  <input type="text" name="alamat" id="alamat" placeholder="Alamat Kantor atau Rumah" class="form-control"  th:field="*{pengajuanDTO.alamatKantor}" required>
                 </div>
               </div>
               <div class="form-row">
@@ -94,58 +95,85 @@
 			                	<div class="wizard-header">
 									<h3 class="heading">Kebutuhan</h3>
 								</div>
+						
+								<div>
+									<table class="table table-bordered" id="dataTable">
+										<thead class="bg-primary text-white text-center">
+											<tr>
+												<th scope="col">#</th>
+												<th scope="col">Asnaf</th>
+												<th scope="col">Jumlah Penerima</th>
+												<th scope="col">Pilar</th>
+												<th scope="col">Jenis Bantuan</th>
+												<th scope="col"></th>
+												<th scope="col">Jumlah Dana</th>
+												<th scope="col"></th>
+
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="kDana, iterationStatus : *{listKebutuhanDanaDTO}">
+												<td><span th:text="${iterationStatus.index + 1}"></span></td>
+												<td>
+													<select th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].asnaf}" class="form-control">
+														<option value="Fakir">Fakir</option>
+														<option value="Miskin">Miskin</option>
+														<option value="Mualaf">Mualaf</option>
+														<option value="Riqab">Riqab</option>
+														<option value="Gharimin">Gharimin</option>
+														<option value="Fi Sabilillah">Fi Sabilillah</option>
+														<option value="Ibnu Sabil">Ibnu Sabil</option>
+														
+													</select>
+												</td>				
+												<td>
+													<input type="number" placeholder="Jumlah Penerima" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jumlahPenerima}" class="form-control" required>
+												</td>
+												<td>
+													<select th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].pilar}" class="form-control" required>
+														<option value="" disabled selected>--Pilih Pilar--</option>
+														<option value="Pendidikan">Pendidikan</option>
+														<option value="Kesehatan">Kesehatan</option>
+														<option value="Ekonomi - Pemberdayaan">Ekonomi - Pemberdayaan</option>
+														<option value="Dakwah - Advokasi">Dakwah - Advokasi</option>
+														<option value="Bantuan Sosial - Kemanusiaan">Bantuan Sosial - Kemanusiaan</option>
+													</select>
+												</td>
+												<td>
+													<input type="text" placeholder="Jenis Bantuan" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jenisBantuan}" class="form-control" required>
+												</td>
+												<td>
+													<label for="Rp" class="sr-only">Rp.</label>
+												</td>
+												<td>
+													<input type="number" placeholder="Jumlah Dana" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jumlahDana}" class="form-control" required>
+												</td>	
+												<td>
+													<button type="button" class="btn btn-danger btn-sm removeRow">Hapus</button>
+												</td>
+											</tr>
+										</tbody>
+										<button type="button" class="btn btn-success mt-3" id="addRow">Tambah Kebutuhan Dana</button>
+									</table>
+								</div>
 								<div class="form-row">
 									<div class="form-holder form-holder-2">
-										<label for="jumlah_kebutuhan">Jumlah Kebutuhan Operasional</label>
-										<input type="number" name="jumlah_kebutuhan" id="jumlah_kebutuhan" placeholder="Jumlah Kebutuhan Operasional" class="form-control" th:field="*{jumlahKebutuhanOperasional}" required min="1">
+										<label for="jumlah_kebutuhan" id="label_jumlah_kebutuhan">Jumlah Kebutuhan Operasional : </label>
 									</div>
 								</div>
-                <div class="form-row">
-                  <div class="form-holder form-holder-2">
-                      <label for="nominal_kebutuhan">Nominal Kebutuhan Dana</label>
-					  <input type="text" name="nominal_kebutuhan" id="nominal_kebutuhan" placeholder="Rp 10.000.000" class="form-control" th:field="*{nominalKebutuhanDana}" required oninput="formatCurrency(this)">
-					</div>
-              </div>
-			  <div class="form-row">
-				<div class="form-holder form-holder-2">
-					<label for="kebutuhan_dana">Kebutuhan Dana</label>
-					<table class="table" id="kebutuhanDanaTable">
-						<thead>
-							<th>Asnaf</th>
-							<th>Jumlah Penerima</th>
-							<th>Pilar</th>
-							<th>Jenis Bantuan</th>
-							<th>Jumlah Dana</th>
-							<th><button class="btn btn-primary" type="button" id="addRowBtn">Tambah Row</button></th>
-						</thead>
-						<tbody>
-							<!-- Baris default jika data ada -->
-							<tr th:each="kebutuhanDana, iterationStatus : *{listKebutuhanDana}">
-								<td>
-									<input placeholder="Asnaf" class="form-control" type="text" th:field="*{listKebutuhanDana[__${iterationStatus.index}__].asnaf}" >
-								</td>
-								<td>
-									<input placeholder="Jumlah Penerima" class="form-control" type="text" th:field="*{listKebutuhanDana[__${iterationStatus.index}__].jumlahPenerima}" >
-								</td>
-								<td>
-									<input  placeholder="Pilar" class="form-control" type="text" th:field="*{listKebutuhanDana[__${iterationStatus.index}__].pilar}" >
-								</td>
-								<td>
-									<input  placeholder="Jenis Bantuan" class="form-control" type="text" th:field="*{listKebutuhanDana[__${iterationStatus.index}__].jenisBantuan}" >
-								</td>
-								<td>
-									<input  placeholder="Jumlah Dana" class="form-control" type="text" th:field="*{listKebutuhanDana[__${iterationStatus.index}__].jumlahDana}" >
-								</td>
-								<td>
-									<button class="btn btn-danger delete-row">Hapus</button>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				  </div>
-				  
+								
+								<div class="form-row">
+									<div class="form-holder form-holder-2">
+										<label for="nominal_kebutuhan">Nominal Kebutuhan Dana : </label>
+										<div class="input-group">
+											<span class="input-group-prepend">
+												<span class="input-group-text">Rp</span>
+											</span>
+											<span id="nominal_kebutuhan" class="form-control">0</span>
+										</div>
+									</div>
+								</div>
 
-			</div>
 			
 			
 	
@@ -167,7 +195,7 @@
 			            <section>
 			                <div class="inner">
 			                	<div class="wizard-header">
-									<h3 class="heading">Dokuemn</h3>
+									<h3 class="heading">Dokumen</h3>
 								</div>
 								<div class="form-row">
 									<div class="form-holder form-holder-2">
@@ -200,19 +228,19 @@
 								<div class="form-row">
 									<div class="form-holder form-holder-2">
 										<label for="tanggal_mulai">Tanggal Mulai Implementasi</label>
-										<input type="date" name="tanggal_mulai" id="tanggal_mulai" placeholder="Tanggal Mulai Implementasi" class="form-control" th:field="*{tanggalMulai}" required>
+										<input type="date" name="tanggal_mulai" id="tanggal_mulai" placeholder="Tanggal Mulai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalMulai}" required>
 									</div>
 								</div>
                 				<div class="form-row">
 									<div class="form-holder form-holder-2">
 										<label for="tanggal_selesai">Tanggal Selesai Implementasi</label>
-										<input type="date" name="tanggal_selesai" id="tanggal_selesai" placeholder="Tanggal Selesai Implementasi" class="form-control" th:field="*{tanggalSelesai}" required>
+										<input type="date" name="tanggal_selesai" id="tanggal_selesai" placeholder="Tanggal Selesai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalSelesai}" required>
 									</div>
 								</div>
                 				<div class="form-row">
 									<div class="form-holder form-holder-2">
 										<label for="tanggal_laporan">Tanggal Selesai Laporan</label>
-										<input type="date" name="tanggal_laporan" id="tanggal_laporan" placeholder="Tanggal Selesai Laporan" class="form-control" th:field="*{tanggalLaporan}" required>
+										<input type="date" name="tanggal_laporan" id="tanggal_laporan" placeholder="Tanggal Selesai Laporan" class="form-control" th:field="*{pengajuanDTO.tanggalLaporan}" required>
 									</div>
 								</div>
 								<fieldset class="lokasi-penyaluran-dana">
@@ -221,7 +249,7 @@
 										<div class="form-holder form-holder-2">
 											<label for="provinsi">Provinsi</label>
 											<!-- Dropdown untuk provinsi -->
-											<select name="provinsi" id="provinsi" class="form-control" th:field="*{provinsi}" required>
+											<select name="provinsi" id="provinsi" class="form-control" th:field="*{pengajuanDTO.provinsi}" required>
 												<option value="">--Pilih Provinsi--</option>
 												<!-- Iterasi melalui daftar provinsi dari model -->
 												<option th:each="provinsi : ${daftarProvinsi}" th:value="${provinsi}" th:text="${provinsi}"></option>
@@ -231,7 +259,7 @@
 									<div class="form-row">
 										<div class="form-holder form-holder-2">
 											<label for="kabupatenKota">Kabupaten/Kota</label>
-											<select name="kabupatenKota" id="kabupatenKota" class="form-control" th:field="*{kabupatenKota}" required>
+											<select name="kabupatenKota" id="kabupatenKota" class="form-control" th:field="*{pengajuanDTO.kabupatenKota}" required>
 												<option value="">--Pilih Kabupaten/Kota--</option>
 												<option th:each="kabupatenKota : ${daftarKabupatenKota}" th:value="${kabupatenKota}" th:text="${kabupatenKota}"></option>
 											</select>
@@ -240,7 +268,7 @@
 									<div class="form-row">
 										<div class="form-holder form-holder-2">
 											<label for="kecamatan">Kecamatan</label>
-											<select name="kecamatan" id="kecamatan" class="form-control" th:field="*{kecamatan}" required>
+											<select name="kecamatan" id="kecamatan" class="form-control" th:field="*{pengajuanDTO.kecamatan}" required>
 												<option value="">--Pilih Kecamatan--</option>
 												<option th:each="kecamatan : ${daftarKecamatan}" th:value="${kecamatan}" th:text="${kecamatan}"></option>
 											</select>
@@ -249,7 +277,7 @@
 									<div class="form-row">
 										<div class="form-holder form-holder-2">
 										  <label for="alamatLengkap">Alamat Lengkap</label>
-										  <input type="text" name="alamatLengkap" id="alamatLengkap" placeholder="Alamat Lengkap" class="form-control"  th:field="*{alamatLengkap}" required>
+										  <input type="text" name="alamatLengkap" id="alamatLengkap" placeholder="Alamat Lengkap" class="form-control"  th:field="*{pengajuanDTO.alamatLengkap}" required>
 										</div>
 									</div>
 								</fieldset>
@@ -298,18 +326,8 @@
 	<script src = "" th:src="@{js/jquery-3.3.1.min.js}"></script>
 	<script src = "" th:src="@{js/jquery.steps.js}"></script>
 	<script src = "" th:src="@{js/main.js}"></script>
-	<script>
-		function formatCurrency(input) {
-			// Menghapus karakter selain angka
-			let value = input.value.replace(/[^\d]/g, '');
-			
-			// Menambahkan pemisah ribuan
-			value = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
 
-			// Menetapkan nilai yang sudah diformat kembali ke input
-			input.value = value;
-		}
-	</script>
+
 
 
 <script>
@@ -379,65 +397,125 @@
         });
     });
 </script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-	
     $(document).ready(function () {
-        // Fungsi untuk menambahkan baris
-        function addRow() {
-            var newRow = '<tr>' +
-				'<td>' +
-            '<select class="form-control" name="listKebutuhanDana[0].asnaf" required>' +
-			'<option value="" disabled selected>--Pilih Asnaf--</option>' +
-            '<option value="Fakir">Fakir</option>' +
-            '<option value="Miskin">Miskin</option>' +
-            '<option value="Mualaf">Mualaf</option>' +
-            '<option value="Riqab">Riqab</option>' +
-            '<option value="Gharimin">Gharimin</option>' +
-            '<option value="Fi Sabilillah">Fi Sabilillah</option>' +
-            '<option value="Ibnu Sabil">Ibnu Sabil</option>' +
-            '</select>' +
-            '</td>' +
-			'<td><input placeholder="Jumlah Penerima" class="form-control" type="number" name="listKebutuhanDana[0].jumlahPenerima" required></td>' +
+        // Fungsi untuk menambahkan baris kebutuhan dana
+        
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        // Menghitung total nominal kebutuhan dana saat halaman dimuat
+        updateTotal();
 
-            '<td>' +
-            '<select class="form-control" name="listKebutuhanDana[0].pilar" required>' +
-			'<option value="" disabled selected>--Pilih Pilar--</option>' +
-            '<option value="Pendidikan">Pendidikan</option>' +
-            '<option value="Kesehatan">Kesehatan</option>' +
-            '<option value="Ekonomi - Pemberdayaan">Ekonomi - Pemberdayaan</option>' +
-            '<option value="Dakwah - Advokasi">Dakwah - Advokasi</option>' +
-            '<option value="Bantuan Sosial - Kemanusiaan">Bantuan Sosial - Kemanusiaan</option>' +
-            '</select>' +
-            '</td>' +
+        // Menghitung total nominal kebutuhan dana saat ada perubahan pada input jumlah dana di setiap baris
+        $(document).on("input", "input[name^='listKebutuhanDanaDTO'][name$='jumlahDana']", function () {
+            updateTotal();
+        });
 
-			'<td><input placeholder="Jenis Bantuan" class="form-control" type="text" name="listKebutuhanDana[0].jenisBantuan" required></td>' +
-			'<td><input placeholder="Jumlah Dana" class="form-control" type="number" name="listKebutuhanDana[0].jumlahDana" required></td>' +
-
-            '<td><button class="btn btn-danger delete-row">Hapus</button></td>' +
-            '</tr>';
-            $('#kebutuhanDanaTable tbody').append(newRow);
+        // Fungsi untuk menghitung dan memperbarui total nominal kebutuhan dana
+        function updateTotal() {
+            var total = 0;
+            $("input[name^='listKebutuhanDanaDTO'][name$='jumlahDana']").each(function () {
+                var value = parseFloat($(this).val());
+                if (!isNaN(value)) {
+                    total += value;
+                }
+            });
+            $("#nominal_kebutuhan").text(total.toLocaleString());
         }
 
-        // Tambahkan baris pertama saat halaman dimuat
+        // Menghitung ulang total nominal kebutuhan dana saat baris dihapus
+        $(document).on("click", ".removeRow", function () {
+            $(this).closest('tr').remove();
+            updateTotal();
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        // Tambahkan baris permanen saat halaman dimuat
         addRow();
 
-        // Tambahkan baris saat tombol "Tambah Row" diklik
-        $('#addRowBtn').click(function (e) {
-            e.preventDefault();
+        // Fungsi untuk menambahkan baris kebutuhan dana
+        function addRow() {
+            var rowCount = $("#dataTable tbody tr").length;
+            var newRow = '<tr>' +
+                '<td>' + (rowCount + 1) + '</td>' +
+                '<td>' +
+                '<select name="listKebutuhanDanaDTO[' + rowCount + '].asnaf" class="form-control" required>' +
+                '<option value="" disabled selected>--Pilih Asnaf--</option>' +
+                '<option value="Fakir">Fakir</option>' +
+                '<option value="Miskin">Miskin</option>' +
+                '<option value="Mualaf">Mualaf</option>' +
+                '<option value="Riqab">Riqab</option>' +
+                '<option value="Gharimin">Gharimin</option>' +
+                '<option value="Fi Sabilillah">Fi Sabilillah</option>' +
+                '<option value="Ibnu Sabil">Ibnu Sabil</option>' +
+                '</select>' +
+                '</td>' +
+                '<td><input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahPenerima" class="form-control" required min="1"></td>' +
+                '<td><select name="listKebutuhanDanaDTO[' + rowCount + '].pilar" class="form-control" required>' +
+                '<option value="" disabled selected>--Pilih Pilar--</option>' +
+                '<option value="Pendidikan">Pendidikan</option>' +
+                '<option value="Kesehatan">Kesehatan</option>' +
+                '<option value="Ekonomi - Pemberdayaan">Ekonomi - Pemberdayaan</option>' +
+                '<option value="Dakwah - Advokasi">Dakwah - Advokasi</option>' +
+                '<option value="Bantuan Sosial - Kemanusiaan">Bantuan Sosial - Kemanusiaan</option>' +
+                '</select></td>' +
+                '<td><input type="text" name="listKebutuhanDanaDTO[' + rowCount + '].jenisBantuan"  class="form-control" required></td>' +
+                '<td>Rp.</td>' +
+                '<td><input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahDana" class="form-control" required min="1"></td>' +
+                '<td><button type="button" class="btn btn-danger btn-sm removeRow">Hapus</button></td>' +
+                '</tr>';
+            $("#dataTable tbody").append(newRow);
+            // Disable tombol hapus jika hanya ada satu baris
+            if ($("#dataTable tbody tr").length === 1) {
+                $("#dataTable tbody tr .removeRow").prop("disabled", true);
+            }
+            // Update jumlah kebutuhan operasional label
+            updateJumlahKebutuhanOperasional();
+        }
+
+        // Tambah baris kebutuhan dana saat tombol "Tambah Kebutuhan Dana" ditekan
+        $("#addRow").click(function () {
+            // Tambahkan baris
             addRow();
         });
 
-        // Delete row button click event
-        $('#kebutuhanDanaTable').on('click', '.delete-row', function (e) {
-            e.preventDefault();
-            if ($('#kebutuhanDanaTable tbody tr').length === 1) {
-                alert("Minimal harus ada satu Kebutuhan Dana.");
-                return;
-            }
+        // Fungsi untuk memperbarui label jumlah kebutuhan operasional
+        function updateJumlahKebutuhanOperasional() {
+            var rowCount = $("#dataTable tbody tr").length;
+            $("#label_jumlah_kebutuhan").text("Jumlah Kebutuhan Operasional: " + rowCount);
+        }
+
+        // Remove row when delete button is clicked (starting from the second row)
+        $(document).on("click", ".removeRow", function () {
             $(this).closest('tr').remove();
+            // Enable delete button if more than one row exists
+            if ($("#dataTable tbody tr").length > 1) {
+                $("#dataTable tbody tr .removeRow").prop("disabled", false);
+            }
+            // Update jumlah kebutuhan operasional label after removing row
+            updateJumlahKebutuhanOperasional();
+        });
+
+        // Submit form
+        $("#pengajuanForm").submit(function (event) {
+            event.preventDefault();
+            // Lakukan submit form ke server di sini
+            console.log("Form submitted");
         });
     });
-</script>		
+</script>
+
+
+
+
+
+
+
+
 </body>
 </html>

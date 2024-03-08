@@ -7,7 +7,6 @@ import lombok.Setter;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import java.util.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -59,7 +58,7 @@ public class Pengajuan {
     private Long nominalKebutuhanDana;
 
     @OneToMany(mappedBy = "pengajuan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<KebutuhanDana> listKebutuhanDana = new ArrayList<>();
+    private List<KebutuhanDana> listKebutuhanDana;
 
 
     

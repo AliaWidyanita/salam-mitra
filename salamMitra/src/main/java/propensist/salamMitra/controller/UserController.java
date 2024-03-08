@@ -1,24 +1,17 @@
 package propensist.salamMitra.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import java.security.Principal;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import propensist.salamMitra.dto.MitraMapper;
 import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
 import propensist.salamMitra.dto.request.LoginJwtRequestDTO;
 import propensist.salamMitra.model.Pengguna;
@@ -28,15 +21,9 @@ import propensist.salamMitra.service.PenggunaService;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-
-
 
 @Controller
 public class UserController {
-
-    @Autowired
-    private MitraMapper mitraMapper;
 
     @Autowired
     private PenggunaService penggunaService;
@@ -47,11 +34,12 @@ public class UserController {
     @Autowired
     JwtService jwtUtils;
 
-    @RequestMapping("/home")
-    public String home (Principal principal, Model model){
-        String role = penggunaService.getAkunByEmail(principal.getName()).getRole();
-        model.addAttribute("role",role);
-        return "home";
+    @GetMapping("/")
+    public String home (Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        model.addAttribute("user", role);
+        return "landing-page";
     }
 
     // @GetMapping("/register")
@@ -81,7 +69,6 @@ public class UserController {
                 redirectAttributes.addFlashAttribute("successMessage", "Selamat, anda berhasil mendaftarkan akun!");
             }
         }
-
         return "redirect:/login";
     }
 
@@ -89,7 +76,6 @@ public class UserController {
     public String getLoginPage(Model model) {
         model.addAttribute("loginRequest", new LoginJwtRequestDTO());
         model.addAttribute("mitraDTO", new CreateMitraRequestDTO());
-        System.out.println("masuk login");
         return "login";
     }
 
@@ -98,45 +84,19 @@ public class UserController {
         System.out.println("login request: " + usersModel);
         Pengguna authenticated = penggunaService.authenticate(usersModel.getUsername());
         if (authenticated != null){
-            model.addAttribute("userLogin", authenticated.getUsername());
-            
             String role = authenticated.getRole();
             System.out.println("ini role: " + role);
+
+            model.addAttribute("userLogin", authenticated.getUsername());
             model.addAttribute("role",role);
-            if (role.equals("admin")) {
-                return "redirect:/pengguna";
-            } else if (role.equals("mitra")) {
-                return "personal-page";
+            
+            if (role.equals("mitra")) {
+                return "landing-page";
+            } else {
+                return "dashboard";
             }
         } 
             return "error-page";
-        
-    }
-
-    @PostMapping("/login")
-    public String authenticateAndGetToken(@ModelAttribute LoginJwtRequestDTO loginRequest, RedirectAttributes redirectAttributes, HttpServletResponse response) {
-        
-        System.out.println("ada apaaa");
-        try {
-            System.out.println("masuk");
-            Pengguna authenticated = penggunaService.authenticate(loginRequest.getUsername());
-            if (authenticated == null || authenticated.isDeleted() == true) {
-                System.out.println("masuk2");
-                redirectAttributes.addFlashAttribute("error", "Username salah!");
-            }
-            System.out.println("masuk3");
-            String jwt = jwtUtils.generateToken(loginRequest.getUsername(), authenticated.getId(), authenticated.getRole());
-            System.out.println(jwt);
-
-            // set cookie
-            frontEndService.setCookie(response, jwt);
-
-            return "redirect:/";
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            System.out.println("masuk4");
-            return "redirect:/login";
-        } 
     }
     
     @RequestMapping("/logout")
