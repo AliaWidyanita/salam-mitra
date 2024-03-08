@@ -25,12 +25,7 @@ public class CreatePengajuanRequestDTO {
 
     private String alamatKantor;
 
-    private Long jumlahKebutuhanOperasional;
-
-    private String nominalKebutuhanDana;
-
     private List<KebutuhanDana> listKebutuhanDana = new ArrayList<>();
-
 
     @DateTimeFormat(pattern = "yyyy-MM-dd") // Specify the format here
     private Date tanggalMulai;

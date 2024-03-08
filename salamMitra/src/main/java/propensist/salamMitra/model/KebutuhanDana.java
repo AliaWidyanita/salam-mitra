@@ -18,7 +18,8 @@ import lombok.Setter;
 public class KebutuhanDana {
 
     @Id
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "asnaf", nullable = false)
     private String asnaf;

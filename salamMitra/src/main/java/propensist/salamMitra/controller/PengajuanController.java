@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import jakarta.validation.Valid;
+import propensist.salamMitra.dto.KebutuhanDanaMapper;
 import propensist.salamMitra.dto.PengajuanMapper;
+import propensist.salamMitra.dto.request.CreateKebutuhanDanaDTO;
+import propensist.salamMitra.dto.request.CreateListPengajuanKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.CreatePengajuanRequestDTO;
 import propensist.salamMitra.model.KebutuhanDana;
 import propensist.salamMitra.model.Pengajuan;
+import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;
 import propensist.salamMitra.service.PengajuanService;
 
@@ -27,130 +31,68 @@ public class PengajuanController {
     private PengajuanMapper pengajuanMapper;
 
     @Autowired
+    private KebutuhanDanaMapper kebutuhanDanaMapper;
+
+    @Autowired
     private PengajuanService pengajuanService;
+
+    
+    @Autowired
+    private KebutuhanDanaService kebutuhanDanaService;
     
     @Autowired
     private LokasiService lokasiService;
 
     @GetMapping("/pengajuan/tambah")
     public String formTambahPengajuan(Model model) {
-        var pengajuanDTO = new CreatePengajuanRequestDTO();
-        model.addAttribute("pengajuanDTO", pengajuanDTO);
+        var listPengajuanKebutuhanDanaDTO = new CreateListPengajuanKebutuhanDanaDTO();
+        model.addAttribute("listPengajuanKebutuhanDanaDTO", listPengajuanKebutuhanDanaDTO);
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
 
         return "form-tambah-pengajuan";
     }
     
     @PostMapping("/pengajuan/tambah")
-    public String tambahPengajuan(@Valid @ModelAttribute CreatePengajuanRequestDTO createPengajuanRequestDTO,
+    public String tambahPengajuan(@Valid @ModelAttribute CreateListPengajuanKebutuhanDanaDTO listPengajuanKebutuhanDanaDTO,
                                @RequestParam("ktpPIC") MultipartFile ktpPIC,
                                @RequestParam("rab") MultipartFile rab,
                                @RequestParam("dokumen") MultipartFile dokumen,
                                Model model) throws IOException {
-    
+
+
+        //Set Up Pengajuan Only                        
+        var pengajuanDTO = listPengajuanKebutuhanDanaDTO.getPengajuanDTO();
         byte[] ktpPICBytes = ktpPIC.getBytes();
         byte[] rabBytes = rab.getBytes();
         byte[] dokumenBytes = dokumen.getBytes();
-    
-        String nominalStr = createPengajuanRequestDTO.getNominalKebutuhanDana();
-        // Hilangkan karakter non-digit dari nominal kebutuhan dana
-        String nominalClean = nominalStr.replaceAll("[^\\d]", "");
-        // Konversi nominal kebutuhan dana ke dalam bentuk Long
-        Long nominalLong = Long.parseLong(nominalClean);
-        // Set nominal kebutuhan dana yang sudah bersih ke DTO
-        createPengajuanRequestDTO.setNominalKebutuhanDana(nominalClean);
-    
-        // Menginisialisasi pengajuan
-        Pengajuan pengajuan = pengajuanMapper.createPengajuanRequestDTOToPengajuan(createPengajuanRequestDTO);
-        // Set data KTP, RAB, dan dokumen ke pengajuan
+
+        var pengajuan =  pengajuanMapper.createPengajuanRequestDTOToPengajuan(pengajuanDTO);                  
         pengajuan.setKtpPIC(ktpPICBytes);
         pengajuan.setRab(rabBytes);
         pengajuan.setDokumen(dokumenBytes);
-    
-        // Set nominal kebutuhan dana ke pengajuan
-        pengajuan.setNominalKebutuhanDana(nominalLong);
-
-            
-        // Simpan pengajuan ke database
-        pengajuanService.savePengajuan(pengajuan);
         Long id = pengajuan.getId();
-    
-        // Ambil list kebutuhan dana dari DTO
-        List<KebutuhanDana> listKebutuhanDana = createPengajuanRequestDTO.getListKebutuhanDana();
-        System.out.println("Jumlah Kebutuhan Dana: " + listKebutuhanDana.size());
-        for (KebutuhanDana kebutuhanDana : listKebutuhanDana) {
-            System.out.println("Asnaf: " + kebutuhanDana.getAsnaf() + ", Pilar: " + kebutuhanDana.getPilar());
-        }
-        System.out.println("CAPEK");  
-        
-        
-        // Set pengajuan untuk setiap kebutuhan dana
-        if (listKebutuhanDana != null) {
-            for (KebutuhanDana kebutuhanDana : listKebutuhanDana) {
-                kebutuhanDana.setPengajuan(pengajuan);
-            }
-            // Simpan kebutuhan dana ke database
-            pengajuan.setListKebutuhanDana(listKebutuhanDana);
-            pengajuanService.savePengajuan(pengajuan);
-        }
-    
+        Long nominalDana = 0L;
+        pengajuan.setNominalKebutuhanDana(nominalDana);
+        pengajuan.setJumlahKebutuhanOperasional((long) 0);
 
+        pengajuanService.savePengajuan(pengajuan);
 
-        model.addAttribute("pengajuan", createPengajuanRequestDTO);
+        for(CreateKebutuhanDanaDTO kebutuhanDanaDTO : listPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO()){
+            kebutuhanDanaDTO.setPengajuan(pengajuan);
+            var kebutuhanDana = kebutuhanDanaMapper.createKebutuhanDanaDTOToKebutuhanDana(kebutuhanDanaDTO);
+            nominalDana += kebutuhanDana.getJumlahDana();
+            kebutuhanDanaService.saveKebutuhanDana(kebutuhanDana);
+        }
+        pengajuan.setJumlahKebutuhanOperasional(Long.valueOf(listPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO().size()));
+        pengajuan.setNominalKebutuhanDana(nominalDana);
+        pengajuanService.savePengajuan(pengajuan);
+        model.addAttribute("pengajuan", pengajuanDTO);
         model.addAttribute("id", id);
+        model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
+
     
         return "success-create-pengajuan";
     }
-    
-
-
-
-
-
-
-    // @PostMapping(value = "/pengajuan/tambah", params = {"addRow"})
-    // public String addRowKebutuhanDana(@ModelAttribute CreatePengajuanRequestDTO createPengajuanRequestDTO, Model model){
-    //     if (createPengajuanRequestDTO.getListKebutuhanDana() == null || 
-    //     createPengajuanRequestDTO.getListKebutuhanDana().size() == 0){
-    //         createPengajuanRequestDTO.setListKebutuhanDana(new ArrayList<>());
-    //     }
-
-        
-    
-    //     // Tambahkan baris baru ke dalam list kebutuhan dana
-    //     createPengajuanRequestDTO.getListKebutuhanDana().add(new KebutuhanDana());
-    
-    //     model.addAttribute("pengajuanDTO", createPengajuanRequestDTO);
-    //     return "form-tambah-pengajuan";
-    // }
-    
-
-    // @PostMapping(value = "/pengajuan/tambah", params = {"deleteRow"})
-    // public String deleteRowKebutuhanDana(
-    //         @ModelAttribute CreatePengajuanRequestDTO createpengajuanRequestDTO,
-    //         @RequestParam("deleteRow") String row,
-    //         Model model
-    // ) {
-    //     int rowId = Integer.parseInt(row);
-    //     if (rowId >= 0 && rowId < createpengajuanRequestDTO.getListKebutuhanDana().size()) {
-    //         createpengajuanRequestDTO.getListKebutuhanDana().remove(rowId);
-    //     }
-    //     model.addAttribute("pengajuanDTO", createpengajuanRequestDTO);
-    //     return "form-tambah-pengajuan";
-    // }
-    
-
-
-
-
-
-
-
-
-
-
-
-
 
 @GetMapping("/pengajuan")
 public String listPengajuan(Model model) {
@@ -186,12 +128,6 @@ public String detailAjuan(@PathVariable("id") String id, Model model) {
         return "error-page";
     }
 }
-
-
-
-
-
-    
 
     
 }
