@@ -1,4 +1,4 @@
-package propensist.salamMitra.service;
+package propensist.salamMitra.security.jwt;
 
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -71,10 +71,10 @@ public class JwtService {
         return false;
     }
 
-    public String generateToken(String userName, UUID uuid, List<String> roles){
+    public String generateToken(String userName, UUID uuid, String role){
         Map<String,Object> claims=new HashMap<>();
         claims.put("userId", uuid);
-        claims.put("role", roles);
+        claims.put("role", role);
         return createToken(claims,userName);
     }
 

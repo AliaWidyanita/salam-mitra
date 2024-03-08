@@ -24,5 +24,15 @@ public class MitraServiceImpl implements MitraService {
             }
         }
         return null;
-    }    
+    }
+
+    @Override
+    public Mitra getMitraByUsername(String username) {
+        for (Mitra mitra : mitraDb.findAll()) {
+            if (mitra.getUsername().equals(username)) {
+                return mitra;
+            }
+        }
+        return null;
+    }
 }

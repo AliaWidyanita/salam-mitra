@@ -39,7 +39,7 @@ public class Pengguna implements Serializable {
 
     @NotNull
     @Column(name="is_deleted", nullable = false)
-    private boolean isDeleted = false;
+    private boolean isDeleted;
 
     public String getRole() {
         return this.getClass().getAnnotation(DiscriminatorValue.class).value();

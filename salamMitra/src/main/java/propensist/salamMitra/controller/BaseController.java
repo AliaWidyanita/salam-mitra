@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 import propensist.salamMitra.model.Pengguna;
+import propensist.salamMitra.security.jwt.JwtService;
 import propensist.salamMitra.service.FrontEndService;
-import propensist.salamMitra.service.JwtService;
 import propensist.salamMitra.service.PenggunaService;
 
 import java.util.UUID;

@@ -1,78 +1,189 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Log In</title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"> </script>
-    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false"></script>
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="bootstrap/js/bootstrap-modal.js"></script>
-    <script src="bootstrap/js/bootstrap-transition.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-</head>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+	<head>
+		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+	</head>
 <body>
+	
+	<div th:replace="~{fragments/navbar :: header}"></div>
 
-        <div class="row justify-content-center mx-auto">
-            <div class="col-md-6">
-                <div class="card shadow" style="border-radius: 5%;">
-                    <div class="mt-4">
-                        <h4 class="font-weight-bold text-center">Log In</h4>
-                    </div>
-                    <div class="card-body col-7 mx-auto">
-                        <form th:action="@{/login}" th:object="${loginRequest}" method="POST">
-                            <div class="form-group">
-                                <label class="font-weight-bold">Username</label>
-                                <input type="username" class="form-control input-sm" name="username" placeholder="Username" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="font-weight-bold">Password</label>
-                                <div class="input-group mb-3">
-                                    <input type="password" id="password-field" class="form-control input-sm" name="password" placeholder="Password" required>
-                                    <div class="input-group-append">
-                                      <span class="input-group-text" id="basic-addon2"><i class="far fa-eye" id="togglePassword" style="cursor: pointer;"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div th:if ="${param.error}">
-                                <span class="text-danger">Email atau Password Anda salah, mohon input kembali.</span>
-                            </div>
-                            <div th:if ="${param.accessDenied}">
-                                <span class="text-danger">Mohon maaf, Anda sudah tidak memiliki akses pada sistem.</span>
-                            </div>
-                            <div class="form-group text-center mt-5">
-                                <button type="submit" class="btn" style="background:#7698F0;color:white;border-radius: 10px;padding-inline:20%;">Masuk</button>
-                            </div>
-                            <div class="text-center mt-4">
-                                Belum memiliki akun? <a th:href="@{/registrasi}" style="color:#7698F0">Daftar sekarang</a>
-                            </div>
-                            <br><br>
-                        </form>
-                    </div>
-                </div>
-            </div>
+	<div class="new-container">
+        <div th:if="${successMessage}" class="alert alert-success">
+            <p th:text="${successMessage}"></p>
         </div>
-    
-    <script>
-        var passwordField = document.querySelector("input[name=password]");
+        <div th:if="${error}" class="alert alert-danger">
+            <p th:text="${error}"></p>
+        </div>
+		<div class="forms-container">
+			<div class="signin-signup">
+				<form th:action="@{/login}" th:object="${loginRequest}" method="post" class="sign-in-form">
+					<h2 class="title">Login</h2>
+					<div class="input-field">
+						<i class="fas fa-user"></i>
+						<input type="text" placeholder="Username" th:field="*{username}" />
+					</div>
+					<div class="input-field">
+						<i class="fas fa-lock"></i>
+						<input type="password" placeholder="Password" th:field="*{password}" />
+					</div>
+						<input type="submit" value="Masuk" class="btn solid" />
+						<!-- <p class="social-text">Or Login with social platforms</p>
+					<div class="social-media">
+						<a href="#" class="social-icon">
+							<i class="fab fa-facebook-f"></i>
+						</a>
+						<a href="#" class="social-icon">
+							<i class="fab fa-twitter"></i>
+						</a>
+						<a href="#" class="social-icon">
+							<i class="fab fa-google"></i>
+						</a>
+						<a href="#" class="social-icon">
+							<i class="fab fa-linkedin-in"></i>
+						</a> -->
+					<!-- </div> -->
+				</form>
+				<form th:action="@{/register}" th:object="${mitraDTO}" method="post" class="sign-up-form">
+					<br><br><br><br><h2 class="title">Register</h2>
+					<div class="input-field">
+						<i class="fas fa-user"></i>
+						<input required type="text" placeholder="Username" th:field="*{username}" />
+					</div>
+					<div class="input-field">
+						<i class="fas fa-envelope"></i>
+						<input required type="email" placeholder="Email" th:field="*{email}" />
+					</div>
+                    <div class="input-field">
+						<i class="fas fa-building"></i>
+						<input required type="text" placeholder="Nama Perusahaan" th:field="*{companyName}" />
+					</div>
+                    <div class="input-field">
+						<i class="fas fa-location-arrow"></i>
+						<input required type="text" placeholder="Lokasi" th:field="*{location}" />
+					</div>
+                    <div class="input-field">
+						<i class="fas fa-phone"></i>
+						<input required type="number" placeholder="Kontak" th:field="*{contact}" />
+					</div>
+					<div class="input-field">
+						<i class="fas fa-lock"></i>
+						<input required type="password" placeholder="Password" th:field="*{password}" />
+					</div>
+					<input type="submit" class="btn" value="Simpan" />
+					<!-- <p class="social-text">Or Register with social platforms</p> -->
+					<!-- <div class="social-media">
+						<a href="#" class="social-icon">
+						<i class="fab fa-facebook-f"></i>
+						</a>
+						<a href="#" class="social-icon">
+						<i class="fab fa-twitter"></i>
+						</a>
+						<a href="#" class="social-icon">
+						<i class="fab fa-google"></i>
+						</a>
+						<a href="#" class="social-icon">
+						<i class="fab fa-linkedin-in"></i>
+						</a>
+					</div> -->
+				</form>
+			</div>
+		</div>
 
+		<div class="panels-container">
+		<div class="panel left-panel">
+			<div class="content">
+			<h3>New here ?</h3>
+			<p>
+				Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
+				ex ratione. Aliquid!
+			</p>
+			<button class="btn transparent" id="sign-up-btn">
+				Register
+			</button>
+			</div>
+			<img src="img/log.svg" class="image" alt="" />
+		</div>
+		<div class="panel right-panel">
+			<div class="content">
+			<h3>One of us ?</h3>
+			<p>
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
+				laboriosam ad deleniti.
+			</p>
+			<button class="btn transparent" id="sign-in-btn">
+				Login
+			</button>
+			</div>
+			<img src="img/register.svg" class="image" alt="" />
+		</div>
+		</div>
+	</div>
 
-        passwordField.addEventListener("invalid", function(){
-        this.setCustomValidity('');
-        if (!this.validity.valid) {
-            this.setCustomValidity('Mohon mengisi Password Anda');  
-            }
-        });
-    </script>
-    <script>
-        const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password-field');
+	<!-- <div class="mt-80 mb-80">
+		<div class="container">
+			<div class="container-fluid" style="display: flex; align-items: center; justify-content: center;">
+				<div class="container" data-aos="fade-up">
+					<div class="row d-flex justify-content-center">
+						<div class="col-md-7">
+							<div class="container">
+								<div class="alert alert-danger" role="alert" th:text="${success}" th:if="${success}"></div>
+								<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+							</div>
+							<div class="new_card p-3 py-5">
+								<div class="d-flex justify-content-center mb-4">
+									<h4 class="text-center">Login</h4>
+								</div>
+								<form th:action="@{/login}" method="POST">
+									<div class="row mt-3 d-flex justify-content-center">
+										<div class="col-md-10">
+											<label class="labels">Username</label>
+											<input required class="form-control" type="text" placeholder="Username" th:field="*{username}" />
+											<input class="form-control" type="text" placeholder="Username" name="username" />
+										</div>
+										</div>
+									<div class="row mt-3 d-flex justify-content-center">
+										<div class="col-md-10">
+											<label class="labels">Password</label>
+											<input required class="form-control" type="text" placeholder="Password" th:field="*{password}" />
+											<input class="form-control" type="text" placeholder="Password" name="password" />
+										</div>
+									</div>
+					
+									<div class="mt-5 text-center">
+										<button type="submit" value="Login">Login</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> -->
 
-        togglePassword.addEventListener('click', function (e) {
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
-            this.classList.toggle('fa-eye-slash');
-        });
-    </script>
+	<!-- jquery -->
+	<script src="assets/js/jquery-1.11.3.min.js"></script>
+	<!-- bootstrap -->
+	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+	<!-- count down -->
+	<script src="assets/js/jquery.countdown.js"></script>
+	<!-- isotope -->
+	<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+	<!-- waypoints -->
+	<script src="assets/js/waypoints.js"></script>
+	<!-- owl carousel -->
+	<script src="assets/js/owl.carousel.min.js"></script>
+	<!-- magnific popup -->
+	<script src="assets/js/jquery.magnific-popup.min.js"></script>
+	<!-- mean menu -->
+	<script src="assets/js/jquery.meanmenu.min.js"></script>
+	<!-- sticker js -->
+	<script src="assets/js/sticker.js"></script>
+	<!-- main js -->
+	<script src="assets/js/main.js"></script>
+	<!-- sign js -->
+	<script src="assets/js/sign.js"></script>
+
 </body>
 </html>

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Manajemen;
 import propensist.salamMitra.repository.ManajemenDb;
 
@@ -24,5 +25,15 @@ public class ManajemenServiceImpl implements ManajemenService {
             }
         }
         return null;
-    }    
+    }
+
+    @Override
+    public Manajemen getManajemenByUsername(String username) {
+        for (Manajemen manajemen : manajemenDb.findAll()) {
+            if (manajemen.getUsername().equals(username)) {
+                return manajemen;
+            }
+        }
+        return null;
+    }
 }
