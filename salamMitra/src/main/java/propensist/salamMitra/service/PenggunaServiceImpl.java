@@ -10,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
-import propensist.salamMitra.dto.request.LoginJwtRequestDTO;
 import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengguna;

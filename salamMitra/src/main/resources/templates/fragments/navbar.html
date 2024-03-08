@@ -70,28 +70,65 @@
                     <!-- menu start -->
                     <nav class="main-menu">
                         <ul>
-                            <li th:if="${user == null || user == 'mitra'}" class="current-list-item"><a th:href="@{/}">Home</a></li>
-                            <li th:if="${user == null || user == 'mitra'}"><a th:href="@{/}">Program</a></li>
-                            <li th:if="${user == 'mitra'}"><a th:href="@{/}">Ajuan Saya</a></li>
+                            <li th:if="${user == 'ROLE_ANONYMOUS' || user == 'mitra'}" 
+                                class="current-list-item">
+                                <a th:href="@{/}">
+                                    Home
+                                </a>
+                            </li>
+                            <li th:if="${user == 'ROLE_ANONYMOUS' || user == 'mitra'}">
+                                <a th:href="@{/}">
+                                    Program
+                                </a>
+                            </li>
+                            <li th:if="${user == 'mitra'}">
+                                <a th:href="@{/}">
+                                    Ajuan Saya
+                                </a>
+                            </li>
                     
-                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'programService'}" class="current-list-item"><a th:href="@{/}">Dashboard</a></li>
-                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Program</a></li>
-                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Ajuan Kerja Sama</a></li>
-                            <li th:if="${user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Daftar Pengguna</a></li>
-                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Pencairan</a></li>
+                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'program_service'}" 
+                                class="current-list-item">
+                                <a th:href="@{/}">
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'program_service'}">
+                                <a th:href="@{/}">
+                                    Program
+                                </a>
+                            </li>
+                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'program_service'}">
+                                <a th:href="@{/}">
+                                    Ajuan Kerja Sama
+                                </a>
+                            </li>
+                            <li th:if="${user == 'manajemen' || user == 'program_service'}">
+                                <a th:href="@{/}">
+                                    Daftar Pengguna
+                                </a>
+                            </li>
+                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'program_service'}">
+                                <a th:href="@{/}">
+                                    Pencairan
+                                </a>
+                            </li>
                             <li>
                                 <div class="header-icons">
                                     <div class="header-icons pull-right">
-                                        <div th:if="${user == null}">
-                                            <span><a th:href="@{/login}" class="boxed-btn">Login</a></span>
-                                        </div>
-                                        <div th:unless="${user == null}">
-                                            <div class="profile-circle" id="profile-picture">
-                                                <img src="assets/img/favicon.png">
+                                        <div th:if="${currentPage == null}">
+                                            <div th:if="${user == 'ROLE_ANONYMOUS'}">
+                                                <span><a th:href="@{/login}" class="boxed-btn">Login</a></span>
                                             </div>
-                                            <div class="profile-popup" id="profile-popup">
-                                                <p>Halo, <span th:text="${user.username}"></span></p>
-                                                <a th:href="@{/logout}" class="boxed-btn">Logout</a>
+                                            <div th:if="${user != 'ROLE_ANONYMOUS'}">
+                                                <span><a th:href="@{/logout}" class="boxed-btn">Logout</a></span>
+                                                <!-- <div class="profile-circle" id="profile-picture">
+                                                    <img src="assets/img/favicon.png">
+                                                </div>
+                                                <div class="profile-popup" id="profile-popup">
+                                                    <p>Halo, <span th:text="${username}"></span></p>
+                                                    <a th:href="@{/logout}" class="boxed-btn">Logout</a>
+                                                </div> -->
                                             </div>
                                         </div>
                                     </div>

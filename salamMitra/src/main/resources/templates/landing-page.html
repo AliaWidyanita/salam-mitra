@@ -20,10 +20,10 @@
 								<p class="subtitle">Fresh & Organic</p>
 								<h1>Delicious Seasonal Fruits</h1>
 								<div class="hero-btns">
-									<div th:if="${user == null}">
+									<div th:if="${user == 'ROLE_ANONYMOUS'}">
 										<a th:href="@{/login}" class="bordered-btn">Login</a>
 									</div>
-									<div th:unless="${user == null}">
+									<div th:if="${user == 'mitra'}">
 										<a th:href="@{/}" class="boxed-btn">Ajuan Saya</a>
 									</div>
 								</div>
@@ -43,10 +43,10 @@
 								<p class="subtitle">Fresh Everyday</p>
 								<h1>100% Organic Collection</h1>
 								<div class="hero-btns">
-									<div th:if="${user == null}">
+									<div th:if="${user == 'ROLE_ANONYMOUS'}">
 										<a th:href="@{/login}" class="bordered-btn">Login</a>
 									</div>
-									<div th:unless="${user == null}">
+									<div th:if="${user == 'mitra'}">
 										<a th:href="@{/}" class="boxed-btn">Ajuan Saya</a>
 									</div>
 								</div>
@@ -66,10 +66,10 @@
 								<p class="subtitle">Mega Sale Going On!</p>
 								<h1>Get December Discount</h1>
 								<div class="hero-btns">
-									<div th:if="${user == null}">
+									<div th:if="${user == 'ROLE_ANONYMOUS'}">
 										<a th:href="@{/login}" class="bordered-btn">Login</a>
 									</div>
-									<div th:unless="${user == null}">
+									<div th:if="${user == 'mitra'}">
 										<a th:href="@{/}" class="boxed-btn">Ajuan Saya</a>
 									</div>
 								</div>

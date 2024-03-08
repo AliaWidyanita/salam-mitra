@@ -19,40 +19,39 @@ public class WebSecurityConfig {
         @Autowired
         private UserDetailsService userDetailsService;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(new AntPathRequestMatcher("/assets/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/logout")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/tambah-admin")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/pengajuan/**")).hasAuthority("mitra")
-                        .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                        .anyRequest().authenticated()
-                ) 
-                .formLogin((form) -> form
-                        .loginPage("/login")
-                        .permitAll()
-                        .defaultSuccessUrl("/")
-                );
-                .logout((logout) -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/")
-                );
-        return http.build();
-    }
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+                http
+                        .csrf(Customizer.withDefaults())
+                        .authorizeHttpRequests(requests -> requests
+                                .requestMatchers(new AntPathRequestMatcher("/assets/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/tambah-admin")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/pengajuan/**")).hasAuthority("mitra")
+                                .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
+                        ) 
+                        .formLogin((form) -> form
+                                .loginPage("/login")
+                                .permitAll()
+                                .defaultSuccessUrl("/", true)
+                        )
+                        .logout((logout) -> logout
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                                .logoutSuccessUrl("/login")
+                        );
+                return http.build();
+        }
 
-    @Bean
-    public BCryptPasswordEncoder encoder() {
-            return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public BCryptPasswordEncoder encoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Autowired
-    public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception{
-            auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
-    }
+        @Autowired
+        public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception{
+                auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
+        }
 }

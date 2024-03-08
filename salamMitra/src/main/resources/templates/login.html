@@ -9,23 +9,23 @@
 	<div th:replace="~{fragments/navbar :: header}"></div>
 
 	<div class="new-container">
-        <div th:if="${successMessage}" class="alert alert-success">
-            <p th:text="${successMessage}"></p>
-        </div>
-        <div th:if="${error}" class="alert alert-danger">
-            <p th:text="${error}"></p>
-        </div>
+		<div class="container">
+			<div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+		</div>
+        <div class="container">
+			<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+		</div>
 		<div class="forms-container">
 			<div class="signin-signup">
-				<form th:action="@{/login}" th:object="${loginRequest}" method="post" class="sign-in-form">
+				<form th:action="@{/login}" method="post" class="sign-in-form">
 					<h2 class="title">Login</h2>
 					<div class="input-field">
 						<i class="fas fa-user"></i>
-						<input type="text" placeholder="Username" th:field="*{username}" />
+						<input required type="text" for="username" id="username" name="username" placeholder="Username" />
 					</div>
 					<div class="input-field">
 						<i class="fas fa-lock"></i>
-						<input type="password" placeholder="Password" th:field="*{password}" />
+						<input required type="password" for="password" id="password" name="password" placeholder="Password" />
 					</div>
 						<input type="submit" value="Masuk" class="btn solid" />
 						<!-- <p class="social-text">Or Login with social platforms</p>
@@ -106,7 +106,7 @@
 		</div>
 		<div class="panel right-panel">
 			<div class="content">
-			<h3>One of us ?</h3>
+			<br><br><br><br><h3>One of us ?</h3>
 			<p>
 				Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
 				laboriosam ad deleniti.
