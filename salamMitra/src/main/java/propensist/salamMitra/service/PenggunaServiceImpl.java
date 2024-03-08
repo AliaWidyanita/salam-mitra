@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import propensist.salamMitra.dto.request.LoginJwtRequestDTO;
 import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengguna;
@@ -65,12 +63,6 @@ public class PenggunaServiceImpl implements PenggunaService{
         // mitra.setPassword(hashedPass);
     }
 
-    // @Override
-    // public String encrypt(String password){
-    //     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    //     return passwordEncoder.encode(password);
-    // }
-
     @Override
     public Pengguna getAkunByEmail(String email){
         Pengguna akun = penggunaDb.findByEmail(email);
@@ -101,4 +93,5 @@ public class PenggunaServiceImpl implements PenggunaService{
             return programService;
         }
     }
+
 }

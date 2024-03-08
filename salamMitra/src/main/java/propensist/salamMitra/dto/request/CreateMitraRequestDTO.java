@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import propensist.salamMitra.model.Mitra;
 
 @AllArgsConstructor
 @NoArgsConstructor

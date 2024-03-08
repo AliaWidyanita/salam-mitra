@@ -49,7 +49,7 @@
                     <!-- menu start -->
                     <nav class="main-menu">
                         <ul>
-                            <li th:if="${user == null || user == 'mitra'}" class="current-list-item"><a th:href="@{/}">Home</a></li>
+                            <li th:if="${userRole == null || user == 'mitra'}" class="current-list-item"><a th:href="@{/}">Home</a></li>
                             <li th:if="${user == null || user == 'mitra'}"><a th:href="@{/}">Program</a></li>
                             <li th:if="${user == 'mitra'}"><a th:href="@{/}">Ajuan Saya</a></li>
                     
@@ -68,7 +68,7 @@
                                             <span><a th:href="@{/}" class="boxed-btn">Login</a></span>
                                         </div>
                                         <div th:unless="${user == null}">
-                                            <a th:href="@{/}" class="boxed-btn">Logout</a>
+                                            <a th:href="@{/logout}" class="boxed-btn">Logout</a>
                                         </div>
                                     </div>
                                 </div>

@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.MitraMapper;
 import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
@@ -22,8 +28,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-
-
 @Controller
 public class UserController {
 
@@ -33,16 +37,20 @@ public class UserController {
     @Autowired
     private PenggunaService penggunaService;
 
-    @RequestMapping("/home")
-    public String home (Principal principal, Model model){
-        String role = penggunaService.getAkunByEmail(principal.getName()).getRole();
-        model.addAttribute("role",role);
-        return "home";
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
+    @GetMapping("/")
+    public String home (Model model){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        model.addAttribute("user", role);
+        return "landing-page";
     }
 
     @GetMapping("/login")
-    public String getLoginPage(Model model) {
-        model.addAttribute("loginRequest", new Pengguna());
+    public String getLoginPage() {
+        
         return "login";
     }
 
@@ -73,6 +81,9 @@ public class UserController {
                     model.addAttribute("errors", errors);
         }
 
+        String encodedPassword = encoder.encode(mitraDTO.getPassword());
+        mitraDTO.setPassword(encodedPassword);
+
         var mitra = mitraMapper.createMitraRequestDTOToAdmin(mitraDTO);
         penggunaService.saveMitra(mitra);
         
@@ -84,26 +95,4 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @PostMapping("/login")
-    public String login(@ModelAttribute Pengguna usersModel, Model model) {
-        System.out.println("login request: " + usersModel);
-        Pengguna authenticated = penggunaService.authenticate(usersModel.getUsername());
-        if (authenticated != null){
-            model.addAttribute("userLogin", authenticated.getUsername());
-            
-            String role = authenticated.getRole();
-            System.out.println("ini role: " + role);
-            model.addAttribute("role",role);
-            if (role.equals("admin")) {
-                return "redirect:/pengguna";
-            } else if (role.equals("mitra")) {
-                return "personal-page";
-            }
-        } 
-            return "error-page";
-        
-    }
-    
-    
-    
 }
