@@ -21,27 +21,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-    <style>
-        .profile-circle {
-            border-radius: 50%;
-            overflow: hidden;
-            width: 40px;
-            height: 40px;
-        }
-        .profile-popup {
-            position: absolute;
-            top: 60px;
-            right: 0;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-    </style>
-    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>    
 </head>
 <body>
 <div th:fragment="header">
@@ -116,21 +96,24 @@
                             <li>
                                 <div class="header-icons">
                                     <div class="header-icons pull-right">
-                                        <div th:if="${currentPage == null}">
+                                        <li th:if="${currentPage == null}">
                                             <div th:if="${user == 'ROLE_ANONYMOUS'}">
                                                 <span><a th:href="@{/login}" class="boxed-btn">Login</a></span>
                                             </div>
-                                            <div th:if="${user != 'ROLE_ANONYMOUS'}">
-                                                <span><a th:href="@{/logout}" class="boxed-btn">Logout</a></span>
-                                                <!-- <div class="profile-circle" id="profile-picture">
-                                                    <img src="assets/img/favicon.png">
+                                            <li th:if="${user != 'ROLE_ANONYMOUS'}">
+                                                <div style="border-radius: 50%; overflow: hidden; width: 40px; height: 40px; background-color: #fff;">
+                                                    <img src="assets/img/favicon.png" alt="Profile Picture">
                                                 </div>
-                                                <div class="profile-popup" id="profile-popup">
-                                                    <p>Halo, <span th:text="${username}"></span></p>
-                                                    <a th:href="@{/logout}" class="boxed-btn">Logout</a>
-                                                </div> -->
-                                            </div>
-                                        </div>
+                                                <ul class="sub-menu" style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px solid #F28123;">
+                                                    <li>
+                                                        <a>Halo, <span th:text="${username}"></span></a>
+                                                    </li>
+                                                    <li style="margin-bottom: 10px;">
+                                                        <a th:href="@{/logout}" class="boxed-btn">Logout</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </li>
                                     </div>
                                 </div>
                             </li>
@@ -165,20 +148,6 @@
 </div> -->
 <!-- end search area -->
 </div>
-
-<script>
-    // Show profile popup on profile picture click
-    $('#profile-picture').on('click', function () {
-        $('#profile-popup').toggle();
-    });
-
-    // Hide profile popup when clicking outside of it
-    $(document).on('click', function (event) {
-        if (!$(event.target).closest('#profile-picture, #profile-popup').length) {
-            $('#profile-popup').hide();
-        }
-    });
-</script>
 
 </body>
 </html>
