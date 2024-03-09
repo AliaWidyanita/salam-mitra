@@ -9,15 +9,13 @@
 	<div th:replace="~{fragments/navbar :: header}"></div>
 
 	<div class="new-container">
-		<div class="container">
-			<div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
-		</div>
-        <div class="container">
-			<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
-		</div>
 		<div class="forms-container">
 			<div class="signin-signup">
 				<form th:action="@{/login}" method="post" class="sign-in-form">
+					<div class="container">
+						<div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+						<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+					</div><br><br>
 					<h2 class="title">Login</h2>
 					<div class="input-field">
 						<i class="fas fa-user"></i>
@@ -45,7 +43,11 @@
 					<!-- </div> -->
 				</form>
 				<form th:action="@{/register}" th:object="${mitraDTO}" method="post" class="sign-up-form">
-					<br><br><br><br><h2 class="title">Register</h2>
+					<br><br><br><br><div class="container">
+						<div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+						<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+					</div>
+					<h2 class="title">Register</h2>
 					<div class="input-field">
 						<i class="fas fa-user"></i>
 						<input required type="text" placeholder="Username" th:field="*{username}" />
@@ -161,6 +163,18 @@
 			</div>
 		</div>
 	</div> -->
+
+	<script>
+		function removeAlerts() {
+			setTimeout(function () {
+				jQuery('.alert').fadeOut('fast', function () {
+					jQuery(this).remove();
+				});
+			}, 3000); // Adjust the timeout duration (in milliseconds) as needed
+		}
+	
+		removeAlerts();
+	</script>
 
 	<!-- jquery -->
 	<script src="assets/js/jquery-1.11.3.min.js"></script>

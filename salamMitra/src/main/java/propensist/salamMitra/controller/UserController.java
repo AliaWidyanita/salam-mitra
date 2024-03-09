@@ -3,12 +3,11 @@ package propensist.salamMitra.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,26 +41,28 @@ public class UserController {
         }
     }
 
-    // @GetMapping("/register")
-    // public String registerMitra(Model model) {
-    //     model.addAttribute("mitraDTO", new CreateMitraRequestDTO());
-    //     return "login";
-    // }
+    @GetMapping("/register")
+    public String registerMitra(Model model) {
+        model.addAttribute("mitraDTO", new CreateMitraRequestDTO());
+        return "login";
+    }
 
     @PostMapping("/register")
     public String registerMitra(@Valid @ModelAttribute CreateMitraRequestDTO mitraDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasFieldErrors()) {
             redirectAttributes.addFlashAttribute("error", "Formulir memiliki data yang tidak valid atau belum diisi.");
-            return "redirect:/register";  // Redirect to the registration page
+            return "redirect:/register";
         } else {
             if (penggunaService.authenticate(mitraDTO.getUsername()) != null) {
                 if (penggunaService.getUserByUsername(mitraDTO.getUsername()).isDeleted() == false) {
                     redirectAttributes.addFlashAttribute("error", "Username sudah terpakai!");
+                    return "redirect:/register";
                 }
             }
             if (penggunaService.getAkunByEmail(mitraDTO.getEmail()) != null) {
                 redirectAttributes.addFlashAttribute("error", "Email sudah terpakai!");
+                return "redirect:/register";
             } else { // mitra
                 penggunaService.createMitra(mitraDTO);
 
@@ -73,19 +74,24 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String getLoginPage(Model model) {
+    public String getLoginPage(Model model, @RequestParam(name = "error", required = false) String error) {
         model.addAttribute("mitraDTO", new CreateMitraRequestDTO());
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         model.addAttribute("user", role);
         model.addAttribute("currentPage", "login");
+
+        if (error != null) {
+            model.addAttribute("error", "Username atau password salah!");
+        }
+        
         return "login";
     }
     
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         
-        return "redirect:/login";
+        return "redirect:/";
     }
 }
