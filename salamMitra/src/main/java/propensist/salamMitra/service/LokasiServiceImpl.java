@@ -16,11 +16,12 @@ public class LokasiServiceImpl implements LokasiService{
 
     @Override
     public void saveLokasi(Lokasi lokasi) {
-        lokasiDb.save(lokasi);
+        if (lokasi != null) {
+            lokasiDb.save(lokasi);
+        } else {
+            throw new IllegalArgumentException("Lokasi cannot be null.");
+        }
     }
-
-
-
 
     @Override
     public List<Lokasi> getAllLokasi() {
@@ -48,6 +49,5 @@ public class LokasiServiceImpl implements LokasiService{
         return lokasiDb.findAllKecamatanByProvinsiAndKabupatenKota(provinsi, kabupatenKota);
     }
 
- 
 }
 

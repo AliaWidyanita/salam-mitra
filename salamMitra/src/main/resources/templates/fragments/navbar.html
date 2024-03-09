@@ -21,6 +21,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>    
 </head>
 <body>
 <div th:fragment="header">
@@ -49,27 +50,70 @@
                     <!-- menu start -->
                     <nav class="main-menu">
                         <ul>
-                            <li th:if="${user == null || user == 'mitra'}" class="current-list-item"><a th:href="@{/}">Home</a></li>
-                            <li th:if="${user == null || user == 'mitra'}"><a th:href="@{/}">Program</a></li>
-                            <li th:if="${user == 'mitra'}"><a th:href="@{/}">Ajuan Saya</a></li>
+                            <li th:if="${user == 'ROLE_ANONYMOUS' || user == 'mitra'}" 
+                                class="current-list-item">
+                                <a th:href="@{/}">
+                                    Home
+                                </a>
+                            </li>
+                            <li th:if="${user == 'ROLE_ANONYMOUS' || user == 'mitra'}">
+                                <a th:href="@{/}">
+                                    Program
+                                </a>
+                            </li>
+                            <li th:if="${user == 'mitra'}">
+                                <a th:href="@{/}">
+                                    Ajuan Saya
+                                </a>
+                            </li>
                     
-                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'programService'}" class="current-list-item"><a th:href="@{/}">Dashboard</a></li>
-                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Program</a></li>
-                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Ajuan Kerja Sama</a></li>
-                            <li th:if="${user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Daftar Pengguna</a></li>
-                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Pencairan</a></li>
-                            
-                            <li th:if="${user == 'mitra' || user == 'admin' || user == 'manajemen' || user == 'programService'}"><a th:href="@{/}">Profile</a></li>
-                    
+                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'program_service'}" 
+                                class="current-list-item">
+                                <a th:href="@{/}">
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'program_service'}">
+                                <a th:href="@{/}">
+                                    Program
+                                </a>
+                            </li>
+                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'program_service'}">
+                                <a th:href="@{/}">
+                                    Ajuan Kerja Sama
+                                </a>
+                            </li>
+                            <li th:if="${user == 'manajemen' || user == 'program_service'}">
+                                <a th:href="@{/}">
+                                    Daftar Pengguna
+                                </a>
+                            </li>
+                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'program_service'}">
+                                <a th:href="@{/}">
+                                    Pencairan
+                                </a>
+                            </li>
                             <li>
                                 <div class="header-icons">
                                     <div class="header-icons pull-right">
-                                        <div th:if="${user == null}">
-                                            <span><a th:href="@{/}" class="boxed-btn">Login</a></span>
-                                        </div>
-                                        <div th:unless="${user == null}">
-                                            <a th:href="@{/}" class="boxed-btn">Logout</a>
-                                        </div>
+                                        <li th:if="${currentPage == null}">
+                                            <div th:if="${user == 'ROLE_ANONYMOUS'}">
+                                                <span><a th:href="@{/login}" class="boxed-btn">Login</a></span>
+                                            </div>
+                                            <li th:if="${user != 'ROLE_ANONYMOUS'}">
+                                                <div style="border-radius: 50%; overflow: hidden; width: 40px; height: 40px; background-color: #fff;">
+                                                    <img src="assets/img/favicon.png" alt="Profile Picture">
+                                                </div>
+                                                <ul class="sub-menu" style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px solid #F28123;">
+                                                    <li>
+                                                        <a>Halo, <span th:text="${username}"></span></a>
+                                                    </li>
+                                                    <li style="margin-bottom: 10px;">
+                                                        <a th:href="@{/logout}" class="boxed-btn">Logout</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </li>
                                     </div>
                                 </div>
                             </li>
@@ -104,5 +148,6 @@
 </div> -->
 <!-- end search area -->
 </div>
+
 </body>
 </html>

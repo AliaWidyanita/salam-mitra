@@ -25,4 +25,14 @@ public class AdminServiceImpl implements AdminService {
         }
         return null;
     }
+
+    @Override
+    public Admin getAdminByUsername(String username) {
+        for (Admin admin : adminDb.findAll()) {
+            if (admin.getUsername().equals(username)) {
+                return admin;
+            }
+        }
+        return null;
+    }
 }

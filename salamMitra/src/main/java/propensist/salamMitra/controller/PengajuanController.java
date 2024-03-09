@@ -10,17 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
-import java.util.Optional;
-import java.util.Base64;
-import java.util.ArrayList;
-
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.KebutuhanDanaMapper;
 import propensist.salamMitra.dto.PengajuanMapper;
 import propensist.salamMitra.dto.request.CreateKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.CreateListPengajuanKebutuhanDanaDTO;
-import propensist.salamMitra.dto.request.CreatePengajuanRequestDTO;
-import propensist.salamMitra.model.KebutuhanDana;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;

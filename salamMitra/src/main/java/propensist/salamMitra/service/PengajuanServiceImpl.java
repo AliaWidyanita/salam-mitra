@@ -1,28 +1,13 @@
 package propensist.salamMitra.service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.repository.PengajuanDb;
 
-import jakarta.persistence.EntityNotFoundException;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Base64;
-
-import org.springframework.util.StringUtils;
-import propensist.salamMitra.model.Pengajuan;
-import propensist.salamMitra.repository.PengajuanDb;
 
 
 
@@ -34,8 +19,12 @@ public class PengajuanServiceImpl implements PengajuanService{
 
     @Override
     public void savePengajuan(Pengajuan pengajuan) {
+        if (pengajuan != null){
+            pengajuanDb.save(pengajuan);
+        } else {
+            throw new IllegalArgumentException("Pengajuan tidak boleh kosong.");
+        }
         
-        pengajuanDb.save(pengajuan);
     }
     
     @Override
