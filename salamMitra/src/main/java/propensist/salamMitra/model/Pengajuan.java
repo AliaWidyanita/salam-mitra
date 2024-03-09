@@ -7,7 +7,6 @@ import lombok.Setter;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import java.util.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 @Setter

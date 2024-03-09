@@ -1,17 +1,11 @@
 package propensist.salamMitra;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import com.github.javafaker.Faker;
 
 import jakarta.transaction.Transactional;
 import propensist.salamMitra.dto.LokasiMapper;

@@ -25,4 +25,14 @@ public class ProgramUserServiceImpl implements ProgramUserService {
         }
         return null;
     }
+
+    @Override
+    public ProgramService getProgramUserServiceByUsername(String username) {
+        for (ProgramService programService : programUserServiceDb.findAll()) {
+            if (programService.getUsername().equals(username)) {
+                return programService;
+            }
+        }
+        return null;
+    }
 }

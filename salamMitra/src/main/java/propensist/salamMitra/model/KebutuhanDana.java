@@ -1,8 +1,5 @@
 package propensist.salamMitra.model;
 
-
-import java.util.UUID;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +16,7 @@ public class KebutuhanDana {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", columnDefinition = "bigint")
     private Long id;
 
     @Column(name = "asnaf", nullable = false)
