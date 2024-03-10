@@ -117,7 +117,7 @@ public class PengajuanController {
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
 
     
-        return "success-create-pengajuan";
+        return "redirect:/pengajuan";
     }
 
     @GetMapping("/pengajuan")
