@@ -98,4 +98,7 @@ public class Pengajuan {
     @Column(name = "alamatLengkap", nullable = false)
     private String alamatLengkap; 
 
+    @Column(name = "username", nullable = false)
+    private String username; 
+
 }
