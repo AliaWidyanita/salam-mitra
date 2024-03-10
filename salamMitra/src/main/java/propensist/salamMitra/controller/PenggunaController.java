@@ -1,6 +1,7 @@
 package propensist.salamMitra.controller;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
@@ -93,6 +98,25 @@ public class PenggunaController {
         redirectAttributes.addFlashAttribute("successMessage", "Admin berhasil ditambahkan!");
 
         // Mengarahkan pengguna kembali ke halaman "/pengguna"
+        return "redirect:/pengguna";
+    }
+
+    @GetMapping("/hapus/{id}")
+    public String hapusPengguna(@PathVariable ("id") UUID id, Model model) {
+        
+        Pengguna pengguna = penggunaService.findPenggunaById(id);
+        model.addAttribute("pengguna", pengguna);
+
+        return "konfirmasi-hapus-pengguna";
+    }
+
+    @PostMapping("/hapus/{id}")
+    public String postHapusPengguna(@PathVariable ("id") UUID id, Model model) {
+        Pengguna pengguna = penggunaService.findPenggunaById(id);
+        penggunaService.deletePengguna(pengguna);
+
+        model.addAttribute("pengguna", pengguna);
+
         return "redirect:/pengguna";
     }
 }

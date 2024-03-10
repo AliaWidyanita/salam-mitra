@@ -42,7 +42,7 @@
                 <span th:if="${pengguna.getRole() == 'manajemen'}">Manajemen</span>
             </td>
             <td>
-                <a type="button" class="btn btn-danger" th:href="@{/}" style="background-color: #dc3545;">Hapus</a>
+                <a type="button" class="btn btn-danger" th:href="@{/pengguna/hapus/{id}(id=${pengguna.id})}">Hapus</a>
             </td>
         </tr>
         </tbody>

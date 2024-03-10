@@ -85,7 +85,7 @@ public class SalamMitraApplication {
                 Manajemen manajemen = new Manajemen();
                 manajemen.setUsername("manajemen1");
                 manajemen.setEmail("manajemen1@salamsetara.com");
-                manajemen.setPassword(new BCryptPasswordEncoder().encode("Manajemen1"));
+                manajemen.setPassword(new BCryptPasswordEncoder().encode("Manajemen"));
                 manajemen.setFullName("Manajemen 1");
                 manajemen.setAddress("Address 2");
                 manajemen.setGender("Wanita");

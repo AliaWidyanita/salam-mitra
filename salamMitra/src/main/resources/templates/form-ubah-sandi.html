@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<head>
+    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <title>Ubah Kata Sandi</title>
+    <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/datatables.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card m-4">
+            <div class="card-header p-4">
+                <h2 class="text-center"> Ubah Kata Sandi </h2>
+            </div>
+            <div class="card-body p-4">
+                <div class="justify-content-center">
+                    <form th:action="@{/ubah-sandi}" method="POST" onsubmit="return validateForm()">
+                      
+                      <input type="hidden" name="userId" th:value="${pengguna.id}" />
+
+                      Kata sandi lama <br>
+                      <input id="password-lama" name="passwordLama" class="form-control" type="password" required/>
+
+                      Kata sandi baru <br>
+                      <input id="new-password" name="newPassword" class="form-control" type="password" required/>
+                      <div id="passwordError" class="invalid-feedback">
+                        Password harus terdiri dari 8-20 karakter, mengandung huruf besar dan kecil, mengandung angka, dan tidak boleh mengandung spasi, karakter khusus, atau emoji.
+                      </div>
+
+                      Konfirmasi kata sandi baru <br>
+                      <input id="confirm-password" name="confirmPassword" class="form-control" type="password" required/>
+                      <div id="confirmPasswordError" class="invalid-feedback">
+                        Konfirmasi kata sandi baru harus sesuai dengan kata sandi baru.
+                      </div>
+    
+                      <div class="text-center m-4">
+                          <a href="/" class="btn btn-danger" style="background-color: #dc3545;">Batal</a>
+                          <button class="btn btn-primary" type="submit">Simpan</button>
+                      </div>
+    
+                    </form>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const passwordInput = document.getElementById("new-password");
+        const confirmPasswordInput = document.getElementById("confirm-password");
+        const passwordError = document.getElementById("passwordError");
+        const confirmPasswordError = document.getElementById("confirmPasswordError");
+
+        passwordInput.addEventListener("input", function () {
+            const password = passwordInput.value;
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/;
+
+            if (passwordRegex.test(password)) {
+                passwordError.style.display = "none";
+            } else {
+                passwordError.style.display = "block";
+            }
+        });
+
+        function validateForm() {
+            const newPassword = passwordInput.value;
+            const confirmNewPassword = confirmPasswordInput.value;
+
+            if (newPassword !== confirmNewPassword) {
+                confirmPasswordError.style.display = "block";
+                return false;
+            } else {
+                confirmPasswordError.style.display = "none";
+                return true;
+            }
+        }
+    </script>
+</body>
+</html>
