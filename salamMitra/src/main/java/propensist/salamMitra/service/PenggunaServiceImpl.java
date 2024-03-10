@@ -61,7 +61,7 @@ public class PenggunaServiceImpl implements PenggunaService{
             mitra.setPassword(encrypt(mitra.getPassword()));
             mitraDb.save(mitra);
         } else {
-            throw new IllegalArgumentException("Mitra cannot be null");
+            throw new IllegalArgumentException("Username cannot be null");
         }
     }
 
