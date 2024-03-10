@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import propensist.salamMitra.model.ProgramService;
-import propensist.salamMitra.repository.ProgramUserServiceDb;
+import propensist.salamMitra.repository.ProgramServiceDb;
 
 @Service
 @Transactional
 public class ProgramUserServiceImpl implements ProgramUserService {
     
     @Autowired
-    ProgramUserServiceDb programUserServiceDb;
+    ProgramServiceDb programUserServiceDb;
 
     @Override
     public ProgramService getProgramUserServiceById(UUID id) {

@@ -5,9 +5,7 @@
 		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
 	</head>
 <body>
-	
-	<div th:replace="~{fragments/navbar :: header}"></div>
-
+<div th:replace="~{fragments/navbar :: header}"></div>
 	<div class="new-container">
 		<div class="forms-container">
 			<div class="signin-signup">
@@ -166,6 +164,21 @@
 	</div> -->
 
 	<script>
+		const passwordInput = document.getElementById("password");
+		const passwordError = document.getElementById("passwordError");
+	  
+		passwordInput.addEventListener("input", function () {
+		  const password = passwordInput.value;
+		  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/;
+	  
+		  if (passwordRegex.test(password)) {
+			passwordError.style.display = "none";
+		  } else {
+			passwordError.style.display = "block";
+		  }
+		});
+	  </script>
+	  <script>
 		function removeAlerts() {
 			setTimeout(function () {
 				jQuery('.alert').fadeOut('fast', function () {
@@ -283,4 +296,4 @@
 	<script src="assets/js/sign.js"></script>
 
 </body>
-</html>
+</html> 

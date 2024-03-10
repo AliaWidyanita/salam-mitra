@@ -2,6 +2,8 @@ package propensist.salamMitra.controller;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,6 +47,11 @@ public class PengajuanController {
 
     @GetMapping("/pengajuan/tambah")
     public String formTambahPengajuan(Model model) {
+        
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        model.addAttribute("user", role);
+        
         var listPengajuanKebutuhanDanaDTO = new CreateListPengajuanKebutuhanDanaDTO();
         model.addAttribute("listPengajuanKebutuhanDanaDTO", listPengajuanKebutuhanDanaDTO);
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
@@ -59,6 +66,9 @@ public class PengajuanController {
                                @RequestParam("dokumen") MultipartFile dokumen,
                                Model model) throws IOException {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        model.addAttribute("user", role);
 
         //Set Up Pengajuan Only                        
         var pengajuanDTO = listPengajuanKebutuhanDanaDTO.getPengajuanDTO();
@@ -91,43 +101,42 @@ public class PengajuanController {
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
 
     
-        return "success-create-pengajuan";
+        return "view-pengajuan";
     }
 
-@GetMapping("/pengajuan")
-public String listPengajuan(Model model) {
-    List<Pengajuan> listPengajuan = pengajuanService.getAllPengajuan();
-
-    // Menambahkan list pengajuan ke model untuk ditampilkan di halaman web
-    model.addAttribute("listPengajuan", listPengajuan);
-
-    return "viewall-pengajuan";
-}
-
-@GetMapping("/pengajuan/{id}")
-public String detailAjuan(@PathVariable("id") String id, Model model) {
-    Long longId = Long.parseLong(id);
-    
-    try {
-        var optPengajuan = pengajuanService.getPengajuanById(longId);
+    @GetMapping("/pengajuan")
+    public String listPengajuan(Model model) {
         
-        if (optPengajuan.isPresent()) {
-            Pengajuan pengajuan = optPengajuan.get();
+        List<Pengajuan> listPengajuan = pengajuanService.getAllPengajuan();
 
-            pengajuanService.handleKTP(pengajuan);
-            pengajuanService.handleRAB(pengajuan);
-            pengajuanService.handleDOC(pengajuan);
+        // Menambahkan list pengajuan ke model untuk ditampilkan di halaman web
+        model.addAttribute("listPengajuan", listPengajuan);
 
-            model.addAttribute("pengajuan", pengajuan);
-            return "view-pengajuan";
-        } 
-        else {
+        return "viewall-pengajuan";
+    }
+
+    @GetMapping("/pengajuan/{id}")
+    public String detailAjuan(@PathVariable("id") String id, Model model) {
+        Long longId = Long.parseLong(id);
+        
+        try {
+            var optPengajuan = pengajuanService.getPengajuanById(longId);
+            
+            if (optPengajuan.isPresent()) {
+                Pengajuan pengajuan = optPengajuan.get();
+
+                pengajuanService.handleKTP(pengajuan);
+                pengajuanService.handleRAB(pengajuan);
+                pengajuanService.handleDOC(pengajuan);
+
+                model.addAttribute("pengajuan", pengajuan);
+                return "view-pengajuan";
+            } 
+            else {
+                return "error-page";
+            }
+        } catch (Exception e) {
             return "error-page";
         }
-    } catch (Exception e) {
-        return "error-page";
-    }
-}
-
-    
+    }   
 }
