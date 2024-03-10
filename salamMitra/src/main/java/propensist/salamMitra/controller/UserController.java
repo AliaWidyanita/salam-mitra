@@ -89,14 +89,14 @@ public class UserController {
 
     @GetMapping("/login")
     public String getLoginPage(Model model, @RequestParam(name = "error", required = false) String error) {
-        model.addAttribute("mitraDTO", new CreateMitraRequestDTO());
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         Pengguna user = penggunaService.authenticate(auth.getName());
         
         model.addAttribute("role", role);
         model.addAttribute("user", user);
+        model.addAttribute("currentPage", "login");
+        model.addAttribute("mitraDTO", new CreateMitraRequestDTO());
 
         if (error != null) {
             model.addAttribute("error", "Username atau password salah!");

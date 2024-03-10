@@ -28,6 +28,8 @@ public interface PenggunaService {
 
     List<Manajemen> getAllManajemen();
 
+    List<Admin> getAllAdmin();
+
     void saveMitra(Mitra mitra);
 
     Pengguna getAkunByEmail(String email);
