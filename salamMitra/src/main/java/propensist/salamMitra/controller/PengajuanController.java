@@ -136,7 +136,7 @@ public class PengajuanController {
         // Iterasi melalui setiap Pengajuan di listPengajuan
         for (Pengajuan pengajuan : listPengajuan) {
             // Memeriksa apakah username pengajuan sama dengan username yang sedang diautentikasi
-            if (pengajuan.getUsername().equals(username)) {
+            if (pengajuan.getUsername().equals(user.getUsername())) {
                 // Jika username sama, tambahkan pengajuan ke listPengajuanUsername
                 listPengajuanUsername.add(pengajuan);
             }
