@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import jakarta.transaction.Transactional;
 import propensist.salamMitra.dto.LokasiMapper;
 import propensist.salamMitra.dto.request.CreateLokasiRequestDTO;
+import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Lokasi;
 import propensist.salamMitra.model.Manajemen;
 import propensist.salamMitra.model.ProgramService;
@@ -73,7 +74,7 @@ public class SalamMitraApplication {
                 ProgramService programService = new ProgramService();
                 programService.setUsername("programservice1");
                 programService.setEmail("programservice1@salamsetara.com");
-                programService.setPassword(new BCryptPasswordEncoder().encode("Programservice1"));
+                programService.setPassword(new BCryptPasswordEncoder().encode("programservice1"));
                 programService.setFullName("Program Service 1");
                 programService.setAddress("Address 1");
                 programService.setGender("Pria");
@@ -85,12 +86,25 @@ public class SalamMitraApplication {
                 Manajemen manajemen = new Manajemen();
                 manajemen.setUsername("manajemen1");
                 manajemen.setEmail("manajemen1@salamsetara.com");
-                manajemen.setPassword(new BCryptPasswordEncoder().encode("Manajemen1"));
+                manajemen.setPassword(new BCryptPasswordEncoder().encode("manajemen1"));
                 manajemen.setFullName("Manajemen 1");
                 manajemen.setAddress("Address 2");
                 manajemen.setGender("Wanita");
                 manajemen.setContact(1234567890L);
                 penggunaService.saveManajemen(manajemen);
+            }
+
+            if (penggunaService.getAllAdmin().isEmpty()) {
+                Admin admin = new Admin();
+                admin.setUsername("adminprogram");
+                admin.setEmail("adminprogram@salamsetara.com");
+                admin.setPassword(new BCryptPasswordEncoder().encode("adminprogram"));
+                admin.setFullName("AdminProgram");
+                admin.setAddress("Address 3");
+                admin.setGender("Pria");
+                admin.setContact(1234567890L);
+                admin.setAdminRole(Admin.AdminRole.PROGRAM);
+                penggunaService.saveAdmin(admin);
             }
 		};	
 	}
