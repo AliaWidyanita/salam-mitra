@@ -39,40 +39,40 @@ public class UserController {
     public String home(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
-        String username = auth.getName();
+        Pengguna user = penggunaService.authenticate(auth.getName());
         
-        model.addAttribute("user", role);
-        model.addAttribute("username", username);
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
 
         if (role.equals("ROLE_ANONYMOUS") || role.equals("mitra")) {
             return "landing-page";
         } else {
-            return "personal-page";
+            return "dashboard";
         }
     }
 
-    @GetMapping("/register")
-    public String registerMitra(Model model) {
-        model.addAttribute("mitraDTO", new CreateMitraRequestDTO());
-        return "login";
-    }
+    // @GetMapping("/register")
+    // public String registerMitra(Model model) {
+    //     model.addAttribute("mitraDTO", new CreateMitraRequestDTO());
+    //     return "login";
+    // }
 
     @PostMapping("/register")
     public String registerMitra(@Valid @ModelAttribute CreateMitraRequestDTO mitraDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasFieldErrors()) {
             redirectAttributes.addFlashAttribute("error", "Formulir memiliki data yang tidak valid atau belum diisi.");
-            return "redirect:/register";
+            return "redirect:/login";
         } else {
             if (penggunaService.authenticate(mitraDTO.getUsername()) != null) {
                 if (penggunaService.getUserByUsername(mitraDTO.getUsername()).isDeleted() == false) {
-                    redirectAttributes.addFlashAttribute("error", "Username sudah terpakai!");
-                    return "redirect:/register";
+                    redirectAttributes.addFlashAttribute("error", "Username sudah terpakai! Apakah anda memiliki akun?");
+                    return "redirect:/login";
                 }
             }
             if (penggunaService.getAkunByEmail(mitraDTO.getEmail()) != null) {
-                redirectAttributes.addFlashAttribute("error", "Email sudah terpakai!");
-                return "redirect:/register";
+                redirectAttributes.addFlashAttribute("error", "Email sudah terpakai! Apakah anda memiliki akun?");
+                return "redirect:/login";
             } else { // mitra
                 String encodedPassword = encoder.encode(mitraDTO.getPassword());
                 mitraDTO.setPassword(encodedPassword);
@@ -93,8 +93,10 @@ public class UserController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
-        model.addAttribute("user", role);
-        model.addAttribute("currentPage", "login");
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
 
         if (error != null) {
             model.addAttribute("error", "Username atau password salah!");
@@ -111,6 +113,12 @@ public class UserController {
 
     @GetMapping("/ubah-sandi/{id}")
     public String ubahSandi(@PathVariable ("id") UUID id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
         
         Pengguna pengguna = penggunaService.findPenggunaById(id);
         model.addAttribute("pengguna", pengguna);
