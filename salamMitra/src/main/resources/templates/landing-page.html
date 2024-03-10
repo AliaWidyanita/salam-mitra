@@ -2,11 +2,10 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 	<head>
 		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
-		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
 	</head>
 <body>
 	
-<div th:replace="~{fragments/navbar :: header}"></div>
+	<div th:replace="~{fragments/navbar :: header}"></div>
 	<!-- home page slider -->
 	<div class="homepage-slider">
 		<!-- single home slider -->
@@ -16,8 +15,8 @@
 					<div class="col-md-12 col-lg-7 offset-lg-1 offset-xl-0">
 						<div class="hero-text">
 							<div class="hero-text-tablecell">
-								<p class="subtitle">Fresh & Organic</p>
-								<h1>Delicious Seasonal Fruits</h1>
+								<p class="subtitle">Berkolaborasi Untuk Kebaikan</p>
+								<h1>Jadilah Mitra Kami!</h1>
 								<div class="hero-btns">
 									<div th:if="${role == 'ROLE_ANONYMOUS'}">
 										<a th:href="@{/login}" class="bordered-btn">Login</a>
@@ -39,8 +38,8 @@
 					<div class="col-lg-10 offset-lg-1 text-center">
 						<div class="hero-text">
 							<div class="hero-text-tablecell">
-								<p class="subtitle">Fresh Everyday</p>
-								<h1>100% Organic Collection</h1>
+								<p class="subtitle">Saling Membantu, Saling Berkolaborasi</p>
+								<h1>Jadi Volunteer Sekarang!</h1>
 								<div class="hero-btns">
 									<div th:if="${role == 'ROLE_ANONYMOUS'}">
 										<a th:href="@{/login}" class="bordered-btn">Login</a>
@@ -62,8 +61,8 @@
 					<div class="col-lg-10 offset-lg-1 text-right">
 						<div class="hero-text">
 							<div class="hero-text-tablecell">
-								<p class="subtitle">Mega Sale Going On!</p>
-								<h1>Get December Discount</h1>
+								<p class="subtitle">Berkontribusi Hari Ini!</p>
+								<h1>Mari Bergabung Membantu Sesama</h1>
 								<div class="hero-btns">
 									<div th:if="${role == 'ROLE_ANONYMOUS'}">
 										<a th:href="@{/login}" class="bordered-btn">Login</a>
@@ -122,7 +121,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-4 col-md-6 offset-md-3 offset-lg-0">
+				<div class="col-lg-4 col-md-6">
 					<div class="single-latest-news">
 						<a href="single-news.html"><div class="latest-news-bg news-bg-3"></div></a>
 						<div class="news-text-box">

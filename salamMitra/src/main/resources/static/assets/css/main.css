@@ -1470,15 +1470,15 @@ button[type="submit"] {
 }
 
 .homepage-bg-1 {
-  background-image: url(../img/hero-bg.jpg);
+  background-image: url(../img/volunteer.jpeg);
 }
 
 .homepage-bg-2 {
-  background-image: url(../img/hero-bg-2.jpg);
+  background-image: url(../img/volunteer1.jpeg);
 }
 
 .homepage-bg-3 {
-  background-image: url(../img/hero-bg-3.jpg);
+  background-image: url(../img/volunteer2.jpeg);
 }
 
 .homepage-slider {
@@ -1592,15 +1592,15 @@ div.owl-controls, .owl-controls div {
 
 ----------------------------------------------------------------------------- */
 .news-bg-1 {
-  background-image: url(../img/latest-news/news-bg-1.jpg);
+  background-image: url(../img/latest-news/program.jpeg);
 }
 
 .news-bg-2 {
-  background-image: url(../img/latest-news/news-bg-2.jpg);
+  background-image: url(../img/latest-news/program1.jpeg);
 }
 
 .news-bg-3 {
-  background-image: url(../img/latest-news/news-bg-3.jpg);
+  background-image: url(../img/latest-news/program2.jpeg);
 }
 
 .news-bg-4 {

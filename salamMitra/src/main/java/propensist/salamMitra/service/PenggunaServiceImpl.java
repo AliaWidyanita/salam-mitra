@@ -95,6 +95,11 @@ public class PenggunaServiceImpl implements PenggunaService{
     }
 
     @Override
+    public List<Admin> getAllAdmin() {
+        return adminDb.findAll();
+    }
+
+    @Override
     public void saveMitra(Mitra mitra) {
         if (mitra != null) {
             mitraDb.save(mitra);
