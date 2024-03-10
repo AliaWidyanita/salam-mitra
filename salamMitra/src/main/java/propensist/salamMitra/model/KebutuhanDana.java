@@ -16,6 +16,7 @@ public class KebutuhanDana {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", columnDefinition = "bigint")
     private Long id;
 
     @Column(name = "asnaf", nullable = false)

@@ -50,45 +50,45 @@
                     <!-- menu start -->
                     <nav class="main-menu">
                         <ul>
-                            <li th:if="${user == 'ROLE_ANONYMOUS' || user == 'mitra'}" 
+                            <li th:if="${role == 'ROLE_ANONYMOUS' || role == 'mitra'}" 
                                 class="current-list-item">
                                 <a th:href="@{/}">
                                     Home
                                 </a>
                             </li>
-                            <li th:if="${user == 'ROLE_ANONYMOUS' || user == 'mitra'}">
+                            <li th:if="${role == 'ROLE_ANONYMOUS' || role == 'mitra'}">
                                 <a th:href="@{/}">
                                     Program
                                 </a>
                             </li>
-                            <li th:if="${user == 'mitra'}">
-                                <a th:href="@{/}">
+                            <li th:if="${role == 'mitra'}">
+                                <a th:href="@{/pengajuan}">
                                     Ajuan Saya
                                 </a>
                             </li>
                     
-                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'program_service'}" 
+                            <li th:if="${role == 'admin' || role == 'manajemen' || role == 'program_service'}" 
                                 class="current-list-item">
                                 <a th:href="@{/}">
                                     Dashboard
                                 </a>
                             </li>
-                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'program_service'}">
+                            <li th:if="${role == 'admin' || role == 'manajemen' || role == 'program_service'}">
                                 <a th:href="@{/}">
                                     Program
                                 </a>
                             </li>
-                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'program_service'}">
+                            <li th:if="${role == 'admin' || role == 'manajemen' || role == 'program_service'}">
                                 <a th:href="@{/}">
                                     Ajuan Kerja Sama
                                 </a>
                             </li>
-                            <li th:if="${user == 'manajemen' || user == 'program_service'}">
-                                <a th:href="@{/}">
+                            <li th:if="${role == 'manajemen' || role == 'program_service'}">
+                                <a th:href="@{/pengguna}">
                                     Daftar Pengguna
                                 </a>
                             </li>
-                            <li th:if="${user == 'admin' || user == 'manajemen' || user == 'program_service'}">
+                            <li th:if="${role == 'admin' || role == 'manajemen' || role == 'program_service'}">
                                 <a th:href="@{/}">
                                     Pencairan
                                 </a>
@@ -96,20 +96,20 @@
                             <li>
                                 <div class="header-icons">
                                     <div class="header-icons pull-right">
-                                        <div th:if="${user == null}">
-                                            <span><a th:href="@{/}" class="boxed-btn">Login</a></span>
-                                        </div>
                                         <li th:if="${currentPage == null}">
-                                            <div th:if="${user == 'ROLE_ANONYMOUS'}">
+                                            <div th:if="${role == 'ROLE_ANONYMOUS'}">
                                                 <span><a th:href="@{/login}" class="boxed-btn">Login</a></span>
                                             </div>
-                                            <li th:if="${user != 'ROLE_ANONYMOUS'}">
+                                            <li th:if="${role != 'ROLE_ANONYMOUS'}">
                                                 <div style="border-radius: 50%; overflow: hidden; width: 40px; height: 40px; background-color: #fff;">
                                                     <img src="assets/img/favicon.png" alt="Profile Picture">
                                                 </div>
                                                 <ul class="sub-menu" style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px solid #F28123;">
                                                     <li>
-                                                        <a>Halo, <span th:text="${username}"></span></a>
+                                                        <a th:href="@{/pengajuan}">Halo, <span th:text="${user.username}"></span></a>
+                                                    </li>
+                                                    <li style="margin-bottom: 10px;">
+                                                        <a th:href="@{/ubah-sandi/{id}(id=${user.id})}">Ubah Sandi</a>
                                                     </li>
                                                     <li style="margin-bottom: 10px;">
                                                         <a th:href="@{/logout}" class="boxed-btn">Logout</a>

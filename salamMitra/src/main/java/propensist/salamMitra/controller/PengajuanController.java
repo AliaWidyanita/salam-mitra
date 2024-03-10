@@ -22,10 +22,12 @@ import propensist.salamMitra.dto.request.CreatePengajuanRequestDTO;
 import propensist.salamMitra.model.KebutuhanDana;
 import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengajuan;
+import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;
 import propensist.salamMitra.service.MitraService;
 import propensist.salamMitra.service.PengajuanService;
+import propensist.salamMitra.service.PenggunaService;
 
 import org.springframework.ui.Model;
 
@@ -47,12 +49,17 @@ public class PengajuanController {
     @Autowired
     private LokasiService lokasiService;
 
+    @Autowired
+    private PenggunaService penggunaService;
+
     @GetMapping("/pengajuan/tambah")
     public String formTambahPengajuan(Model model) {
-        
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
-        model.addAttribute("user", role);
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
         
         var listPengajuanKebutuhanDanaDTO = new CreateListPengajuanKebutuhanDanaDTO();
         model.addAttribute("listPengajuanKebutuhanDanaDTO", listPengajuanKebutuhanDanaDTO);
@@ -115,14 +122,13 @@ public class PengajuanController {
 
     @GetMapping("/pengajuan")
     public String listPengajuan(Model model) {
-
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
-        model.addAttribute("user", role);
-        String username = auth.getName();
-
+        Pengguna user = penggunaService.authenticate(auth.getName());
         
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
         List<Pengajuan> listPengajuan = pengajuanService.getAllPengajuan();
         // Membuat list baru untuk menyimpan Pengajuan dengan username yang sesuai
         List<Pengajuan> listPengajuanUsername = new ArrayList<>();
@@ -130,7 +136,7 @@ public class PengajuanController {
         // Iterasi melalui setiap Pengajuan di listPengajuan
         for (Pengajuan pengajuan : listPengajuan) {
             // Memeriksa apakah username pengajuan sama dengan username yang sedang diautentikasi
-            if (pengajuan.getUsername().equals(username)) {
+            if (pengajuan.getUsername().equals(user.getUsername())) {
                 // Jika username sama, tambahkan pengajuan ke listPengajuanUsername
                 listPengajuanUsername.add(pengajuan);
             }
@@ -145,6 +151,13 @@ public class PengajuanController {
 
     @GetMapping("/pengajuan/{id}")
     public String detailAjuan(@PathVariable("id") String id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
         Long longId = Long.parseLong(id);
         
         try {

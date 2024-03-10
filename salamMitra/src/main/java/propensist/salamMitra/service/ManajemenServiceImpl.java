@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Manajemen;
 import propensist.salamMitra.repository.ManajemenDb;
 

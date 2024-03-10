@@ -44,10 +44,12 @@ public class PenggunaController {
 
     @GetMapping("")
     public String viewDaftarPengguna(Model model) {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
-        model.addAttribute("user", role);
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
         
         List<Pengguna> listPengguna = penggunaService.getAllPengguna();
 
@@ -59,10 +61,12 @@ public class PenggunaController {
 
     @GetMapping("/tambah-admin")
     public String addAdmin(Model model) {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
-        model.addAttribute("user", role);
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
         
         var adminDTO = new CreateAdminRequestDTO();
         model.addAttribute("adminDTO", adminDTO);
@@ -103,7 +107,13 @@ public class PenggunaController {
 
     @GetMapping("/hapus/{id}")
     public String hapusPengguna(@PathVariable ("id") UUID id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
         
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
         Pengguna pengguna = penggunaService.findPenggunaById(id);
         model.addAttribute("pengguna", pengguna);
 
