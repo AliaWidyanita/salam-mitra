@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import propensist.salamMitra.model.ProgramService;
 
 @Repository
-public interface ProgramUserServiceDb extends JpaRepository<ProgramService, UUID> {
+public interface ProgramServiceDb extends JpaRepository<ProgramService, UUID> {
     
 }

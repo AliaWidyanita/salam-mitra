@@ -3,19 +3,19 @@ package propensist.salamMitra.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import propensist.salamMitra.dto.MitraMapper;
 import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
 import propensist.salamMitra.service.PenggunaService;
-
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
@@ -24,6 +24,20 @@ public class UserController {
 
     @Autowired
     private PenggunaService penggunaService;
+
+    @Autowired
+    private MitraMapper mitraMapper;
+
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
+    // @GetMapping("/")
+    // public String home (Model model){
+    //     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    //     String role = auth.getAuthorities().iterator().next().getAuthority();
+    //     model.addAttribute("user", role);
+    //     return "landing-page";
+    // }
 
     @GetMapping("/")
     public String home(Model model) {
@@ -64,7 +78,11 @@ public class UserController {
                 redirectAttributes.addFlashAttribute("error", "Email sudah terpakai!");
                 return "redirect:/register";
             } else { // mitra
-                penggunaService.createMitra(mitraDTO);
+                String encodedPassword = encoder.encode(mitraDTO.getPassword());
+                mitraDTO.setPassword(encodedPassword);
+        
+                var mitra = mitraMapper.createMitraRequestDTOToAdmin(mitraDTO);
+                penggunaService.saveMitra(mitra);
 
                 // Menyimpan pesan sukses
                 redirectAttributes.addFlashAttribute("successMessage", "Selamat, anda berhasil mendaftarkan akun!");

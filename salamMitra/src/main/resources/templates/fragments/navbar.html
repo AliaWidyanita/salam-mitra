@@ -25,13 +25,13 @@
 </head>
 <body>
 <div th:fragment="header">
-<!--PreLoader-->
-<div class="loader">
+<!-- PreLoader-->
+<!-- <div class="loader">
     <div class="loader-inner">
         <div class="circle"></div>
     </div>
-</div>
-<!--PreLoader Ends-->
+</div> -->
+<!--PreLoader Ends -->
 
 <!-- header -->
 <div class="top-header-area" id="sticker">
@@ -96,6 +96,9 @@
                             <li>
                                 <div class="header-icons">
                                     <div class="header-icons pull-right">
+                                        <div th:if="${user == null}">
+                                            <span><a th:href="@{/}" class="boxed-btn">Login</a></span>
+                                        </div>
                                         <li th:if="${currentPage == null}">
                                             <div th:if="${user == 'ROLE_ANONYMOUS'}">
                                                 <span><a th:href="@{/login}" class="boxed-btn">Login</a></span>
