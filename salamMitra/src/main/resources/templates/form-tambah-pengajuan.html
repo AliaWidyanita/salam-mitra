@@ -208,80 +208,93 @@
 												</div>
 											</div> 
 
+							</div>
+			            </section>
+                <!-- SECTION 4 -->
+			            <h2>
+			            	<!-- <p class="step-icon"><span>4</span></p> -->
+			            	<div class="step-text">
+			            		<span class="step-inner-1">Tanggal dan Lokasi</span>
+			            		<span class="step-inner-2">Date & Location</span>
+			            	</div>
+			            </h2>
+			            <section>
+			                <div class="inner">
+			                	<div class="wizard-header">
+									<h3 class="heading">Tanggal dan Lokasi</h3>
+								</div>
+								<div class="form-row">
+									<div class="form-holder form-holder-2">
+										<label for="tanggal_mulai">Tanggal Mulai Implementasi</label>
+										<input type="date" name="tanggal_mulai" id="tanggal_mulai" placeholder="Tanggal Mulai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalMulai}" required>
+									</div>
+								</div>
+                				<div class="form-row">
+									<div class="form-holder form-holder-2">
+										<label for="tanggal_selesai">Tanggal Selesai Implementasi</label>
+										<input type="date" name="tanggal_selesai" id="tanggal_selesai" placeholder="Tanggal Selesai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalSelesai}" required>
+									</div>
+								</div>
+                				<div class="form-row">
+									<div class="form-holder form-holder-2">
+										<label for="tanggal_laporan">Tanggal Selesai Laporan</label>
+										<input type="date" name="tanggal_laporan" id="tanggal_laporan" placeholder="Tanggal Selesai Laporan" class="form-control" th:field="*{pengajuanDTO.tanggalLaporan}" required>
+									</div>
+								</div>
+								<fieldset class="lokasi-penyaluran-dana">
+									<legend>Lokasi Penyaluran Dana</legend>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+											<label for="provinsi">Provinsi</label>
+											<!-- Dropdown untuk provinsi -->
+											<select name="provinsi" id="provinsi" class="form-control" th:field="*{pengajuanDTO.provinsi}" required>
+												<option value="">--Pilih Provinsi--</option>
+												<!-- Iterasi melalui daftar provinsi dari model -->
+												<option th:each="provinsi : ${daftarProvinsi}" th:value="${provinsi}" th:text="${provinsi}"></option>
+											</select>
 										</div>
-									</section>
-							<!-- SECTION 4 -->
-									<h2>
-										<!-- <p class="step-icon"><span>4</span></p> -->
-										<div class="step-text">
-											<span class="step-inner-1">Tanggal dan Lokasi</span>
-											<span class="step-inner-2">Date & Location</span>
+									</div>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+											<label for="kabupatenKota">Kabupaten/Kota</label>
+											<select name="kabupatenKota" id="kabupatenKota" class="form-control" th:field="*{pengajuanDTO.kabupatenKota}" required>
+												<option value="">--Pilih Kabupaten/Kota--</option>
+												<option value="Jakarta Pusat">Jakarta Pusat</option>
+												<option value="Jakarta Barat">Jakarta Barat</option>
+												<option value="Jakarta Selatan">Jakarta Selatan</option>
+												<option value="Jakarta Timur">Jakarta Timur</option>
+												<option value="Jakarta Utara">Jakarta Utara</option>
+																							</select>
 										</div>
-									</h2>
-									<section>
-										<div class="inner">
-											<div class="wizard-header">
-												<h3 class="heading">Tanggal dan Lokasi</h3>
-											</div>
-											<div class="form-row">
-												<div class="form-holder form-holder-2">
-													<label for="tanggal_mulai">Tanggal Mulai Implementasi</label>
-													<input type="date" name="tanggal_mulai" id="tanggal_mulai" placeholder="Tanggal Mulai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalMulai}" required>
-												</div>
-											</div>
-											<div class="form-row">
-												<div class="form-holder form-holder-2">
-													<label for="tanggal_selesai">Tanggal Selesai Implementasi</label>
-													<input type="date" name="tanggal_selesai" id="tanggal_selesai" placeholder="Tanggal Selesai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalSelesai}" required>
-												</div>
-											</div>
-											<div class="form-row">
-												<div class="form-holder form-holder-2">
-													<label for="tanggal_laporan">Tanggal Selesai Laporan</label>
-													<input type="date" name="tanggal_laporan" id="tanggal_laporan" placeholder="Tanggal Selesai Laporan" class="form-control" th:field="*{pengajuanDTO.tanggalLaporan}" required>
-												</div>
-											</div>
-											<fieldset class="lokasi-penyaluran-dana">
-												<legend>Lokasi Penyaluran Dana</legend>
-												<div class="form-row">
-													<div class="form-holder form-holder-2">
-														<label for="provinsi">Provinsi</label>
-														<!-- Dropdown untuk provinsi -->
-														<select name="provinsi" id="provinsi" class="form-control" th:field="*{pengajuanDTO.provinsi}" required>
-															<option value="">--Pilih Provinsi--</option>
-															<!-- Iterasi melalui daftar provinsi dari model -->
-															<option th:each="provinsi : ${daftarProvinsi}" th:value="${provinsi}" th:text="${provinsi}"></option>
-														</select>
-													</div>
-												</div>
-												<div class="form-row">
-													<div class="form-holder form-holder-2">
-														<label for="kabupatenKota">Kabupaten/Kota</label>
-														<select name="kabupatenKota" id="kabupatenKota" class="form-control" th:field="*{pengajuanDTO.kabupatenKota}" required>
-															<option value="">--Pilih Kabupaten/Kota--</option>
-															<option th:each="kabupatenKota : ${daftarKabupatenKota}" th:value="${kabupatenKota}" th:text="${kabupatenKota}"></option>
-														</select>
-													</div>
-												</div>
-												<div class="form-row">
-													<div class="form-holder form-holder-2">
-														<label for="kecamatan">Kecamatan</label>
-														<select name="kecamatan" id="kecamatan" class="form-control" th:field="*{pengajuanDTO.kecamatan}" required>
-															<option value="">--Pilih Kecamatan--</option>
-															<option th:each="kecamatan : ${daftarKecamatan}" th:value="${kecamatan}" th:text="${kecamatan}"></option>
-														</select>
-													</div>
-												</div>
-												<div class="form-row">
-													<div class="form-holder form-holder-2">
-													<label for="alamatLengkap">Alamat Lengkap</label>
-													<input type="text" name="alamatLengkap" id="alamatLengkap" placeholder="Alamat Lengkap" class="form-control"  th:field="*{pengajuanDTO.alamatLengkap}" required>
-													</div>
-												</div>
-											</fieldset>
-											
+									</div>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+											<label for="kecamatan">Kecamatan</label>
+											<select name="kecamatan" id="kecamatan" class="form-control" th:field="*{pengajuanDTO.kecamatan}" required>
+												<option value="">--Pilih Kecamatan--</option>
+												<option value="Gambir">Gambir</option>
+												<option value="Tanah Abang">Tanah Abang</option>
+												<option value="Menteng">Menteng</option>
+												<option value="Senen">Senen</option>
+												<option value="Cempaka Putih">Cempaka Putih</option>
+												<option value="Johar Baru">Johar Baru</option>
+												<option value="Kemayoran">Kemayoran</option>
+												<option value="Sawah Besar">Sawah Besar</option>
+												<option value="Gambir">Gambir</option>
+												<option value="Kemayoran">Kemayoran</option>
+																							</select>
 										</div>
-									</section>
+									</div>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+										  <label for="alamatLengkap">Alamat Lengkap</label>
+										  <input type="text" name="alamatLengkap" id="alamatLengkap" placeholder="Alamat Lengkap" class="form-control"  th:field="*{pengajuanDTO.alamatLengkap}" required>
+										</div>
+									</div>
+								</fieldset>
+								
+							</div>
+			            </section>
 
 									<!-- SECTION 5 -->
 									<h2>
@@ -398,6 +411,7 @@
         });
     });
 </script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {

@@ -12,15 +12,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+import java.util.ArrayList;
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.KebutuhanDanaMapper;
 import propensist.salamMitra.dto.PengajuanMapper;
 import propensist.salamMitra.dto.request.CreateKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.CreateListPengajuanKebutuhanDanaDTO;
+import propensist.salamMitra.dto.request.CreatePengajuanRequestDTO;
+import propensist.salamMitra.model.KebutuhanDana;
+import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;
+import propensist.salamMitra.service.MitraService;
 import propensist.salamMitra.service.PengajuanService;
 import propensist.salamMitra.service.PenggunaService;
 
@@ -37,7 +42,6 @@ public class PengajuanController {
 
     @Autowired
     private PengajuanService pengajuanService;
-
     
     @Autowired
     private KebutuhanDanaService kebutuhanDanaService;
@@ -73,7 +77,10 @@ public class PengajuanController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
+        String username = auth.getName();
+        
         model.addAttribute("user", role);
+        model.addAttribute("username", username);       
 
         //Set Up Pengajuan Only                        
         var pengajuanDTO = listPengajuanKebutuhanDanaDTO.getPengajuanDTO();
@@ -89,8 +96,12 @@ public class PengajuanController {
         Long nominalDana = 0L;
         pengajuan.setNominalKebutuhanDana(nominalDana);
         pengajuan.setJumlahKebutuhanOperasional((long) 0);
+        pengajuan.setUsername(username);
+                                
 
         pengajuanService.savePengajuan(pengajuan);
+        id = pengajuan.getId();
+
 
         for(CreateKebutuhanDanaDTO kebutuhanDanaDTO : listPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO()){
             kebutuhanDanaDTO.setPengajuan(pengajuan);
@@ -106,7 +117,7 @@ public class PengajuanController {
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
 
     
-        return "view-pengajuan";
+        return "success-create-pengajuan";
     }
 
     @GetMapping("/pengajuan")
@@ -119,9 +130,21 @@ public class PengajuanController {
         model.addAttribute("user", user);
 
         List<Pengajuan> listPengajuan = pengajuanService.getAllPengajuan();
+        // Membuat list baru untuk menyimpan Pengajuan dengan username yang sesuai
+        List<Pengajuan> listPengajuanUsername = new ArrayList<>();
+
+        // Iterasi melalui setiap Pengajuan di listPengajuan
+        for (Pengajuan pengajuan : listPengajuan) {
+            // Memeriksa apakah username pengajuan sama dengan username yang sedang diautentikasi
+            if (pengajuan.getUsername().equals(username)) {
+                // Jika username sama, tambahkan pengajuan ke listPengajuanUsername
+                listPengajuanUsername.add(pengajuan);
+            }
+        }
+
 
         // Menambahkan list pengajuan ke model untuk ditampilkan di halaman web
-        model.addAttribute("listPengajuan", listPengajuan);
+        model.addAttribute("listPengajuan", listPengajuanUsername);
 
         return "viewall-pengajuan";
     }
