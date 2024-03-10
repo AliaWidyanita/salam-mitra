@@ -20,29 +20,32 @@ public class WebSecurityConfig {
         private UserDetailsService userDetailsService;
 
         @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-                http
-                        .csrf(Customizer.withDefaults())
-                        .authorizeHttpRequests(requests -> requests
-                                .requestMatchers(new AntPathRequestMatcher("/assets/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/tambah-admin")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/pengajuan/**")).hasAuthority("mitra")
-                                .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                        ) 
-                        .formLogin((form) -> form
-                                .loginPage("/login")
-                                .permitAll()
-                                .defaultSuccessUrl("/", true)
-                        )
-                        .logout((logout) -> logout
-                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                                .logoutSuccessUrl("/login")
-                        );
-                return http.build();
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            http
+                    .csrf(Customizer.withDefaults())
+                    .authorizeHttpRequests(requests -> requests
+                            .requestMatchers(new AntPathRequestMatcher("/assets/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/ubah-sandi/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/pengguna/tambah-admin")).hasAnyAuthority("program_service", "manajemen")
+                            .requestMatchers(new AntPathRequestMatcher("/pengguna")).hasAnyAuthority("program_service", "manajemen")
+                            .requestMatchers(new AntPathRequestMatcher("/pengguna/hapus/**")).hasAnyAuthority("program_service", "manajemen")
+                            .requestMatchers(new AntPathRequestMatcher("/pengajuan/**")).hasAuthority("mitra")
+                            .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
+                    ) 
+                    .formLogin((form) -> form
+                            .loginPage("/login")
+                            .defaultSuccessUrl("/", true)
+                            .permitAll()
+                    )
+                    .logout((logout) -> logout
+                            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                            .logoutSuccessUrl("/")
+                    );
+            return http.build();
         }
 
         @Bean

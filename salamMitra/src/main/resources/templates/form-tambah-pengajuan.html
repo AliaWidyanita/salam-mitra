@@ -1,18 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 <head>
-	<meta charset="utf-8">
-	<title>wizard-v7</title>
-	<!-- Mobile Specific Metas -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<!-- Font-->
-	<link rel="stylesheet" type="text/css" href="css/opensans-font.css">
-	<link rel="stylesheet" type="text/css" href="css/montserrat-font.css">
-	<link rel="stylesheet" type="text/css" href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
-	<!-- Main Style Css -->
+	<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+	<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
     <link rel="stylesheet" href="" th:href="@{/css/style.css}"/>
+	<title>Ajukan Kerja Sama</title>
 </head>
 <body>
+	<div th:replace="~{fragments/navbar :: header}"></div>
 	<div class="page-content">
 		<div class="wizard-heading">Ajukan Kerja Sama</div>
 		<div class="wizard-v7-content">
@@ -21,7 +16,6 @@
 		        	<div id="form-total">
 		        		<!-- SECTION 1 -->
 			            <h2>
-			            	<p class="step-icon"><span>1</span></p>
 			            	<div class="step-text">
 			            		<span class="step-inner-1">Informasi Umum</span>
 			            		<span class="step-inner-2">General Information</span>
@@ -84,7 +78,7 @@
 			            </section>
 						<!-- SECTION 2 -->
 			            <h2>
-			            	<p class="step-icon"><span>2</span></p>
+			            	<!-- <p class="step-icon"><span>2</span></p> -->
 			            	<div class="step-text">
 			            		<span class="step-inner-1">Kebutuhan</span>
 			            		<span class="step-inner-2">Needs</span>
@@ -186,7 +180,7 @@
 			            </section>
                   <!-- SECTION 3 -->
 			            <h2>
-			            	<p class="step-icon"><span>3</span></p>
+			            	<!-- <p class="step-icon"><span>3</span></p> -->
 			            	<div class="step-text">
 			            		<span class="step-inner-1">Dokumen</span>
 			            		<span class="step-inner-2">Document</span>
@@ -214,7 +208,7 @@
 			            </section>
                 <!-- SECTION 4 -->
 			            <h2>
-			            	<p class="step-icon"><span>4</span></p>
+			            	<!-- <p class="step-icon"><span>4</span></p> -->
 			            	<div class="step-text">
 			            		<span class="step-inner-1">Tanggal dan Lokasi</span>
 			            		<span class="step-inner-2">Date & Location</span>
@@ -287,7 +281,7 @@
 
 			            <!-- SECTION 5 -->
 			            <h2>
-			            	<p class="step-icon"><span>3</span></p>
+			            	<!-- <p class="step-icon"><span>3</span></p> -->
 			            	<div class="step-text">
 			            		<span class="step-inner-1">Agreement</span>
 			            		<span class="step-inner-2">Our site policy</span>
@@ -509,7 +503,7 @@
         });
     });
 </script>
-
+git
 
 
 

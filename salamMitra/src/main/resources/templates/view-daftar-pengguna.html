@@ -9,11 +9,11 @@
 </head>
 <body>
 <!-- <nav th:replace="~{fragments/navbar :: navbar('permintaan-pengiriman')}"></nav> -->
-<div class="container margin-top">
+<div class="container">
     <h2 class="text-center m-4">Daftar Pengguna</h2>
     <div class="row">
         <div class="col-sm-6">
-            <!-- Kosongkan kolom ini untuk memberikan ruang kosong -->
+            <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
         </div>
         <div class="col-sm-6 text-right">
             <a type="button" class="btn btn-primary" href="/pengguna/tambah-admin">+ Tambah Admin</a>
@@ -42,7 +42,7 @@
                 <span th:if="${pengguna.getRole() == 'manajemen'}">Manajemen</span>
             </td>
             <td>
-                <a type="button" class="btn btn-secondary" th:href="@{/}">Hapus</a>
+                <a type="button" class="btn btn-danger" th:href="@{/pengguna/hapus/{id}(id=${pengguna.id})}">Hapus</a>
             </td>
         </tr>
         </tbody>
@@ -74,6 +74,5 @@
         document.getElementById("successMessage").style.display = "none";
     }, 3000); // 3000 milliseconds = 3 seconds
 </script>
-
 </body>
 </html>

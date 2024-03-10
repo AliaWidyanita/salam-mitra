@@ -6,12 +6,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import jakarta.transaction.Transactional;
 import propensist.salamMitra.dto.LokasiMapper;
 import propensist.salamMitra.dto.request.CreateLokasiRequestDTO;
 import propensist.salamMitra.model.Lokasi;
+import propensist.salamMitra.model.Manajemen;
+import propensist.salamMitra.model.ProgramService;
 import propensist.salamMitra.service.LokasiService;
+import propensist.salamMitra.service.PenggunaService;
 
 @SpringBootApplication
 public class SalamMitraApplication {
@@ -22,7 +25,8 @@ public class SalamMitraApplication {
 
 	@Bean
 	@Transactional
-	CommandLineRunner run(LokasiService lokasiService, LokasiMapper lokasiMapper){
+	CommandLineRunner run(LokasiService lokasiService, LokasiMapper lokasiMapper, 
+        PenggunaService penggunaService){
 		return args -> {
 			List<CreateLokasiRequestDTO> lokasiDTOs = new ArrayList<>();
 
@@ -64,6 +68,31 @@ public class SalamMitraApplication {
                 lokasi.setKecamatan(lokasiDTO.getKecamatan());
                 lokasiService.saveLokasi(lokasi);
             }
+
+            if (penggunaService.getAllProgramService().isEmpty()){
+                ProgramService programService = new ProgramService();
+                programService.setUsername("programservice1");
+                programService.setEmail("programservice1@salamsetara.com");
+                programService.setPassword(new BCryptPasswordEncoder().encode("Programservice1"));
+                programService.setFullName("Program Service 1");
+                programService.setAddress("Address 1");
+                programService.setGender("Pria");
+                programService.setContact(1234567890L);
+                penggunaService.saveProgramService(programService);
+            }
+
+            if (penggunaService.getAllManajemen().isEmpty()){
+                Manajemen manajemen = new Manajemen();
+                manajemen.setUsername("manajemen1");
+                manajemen.setEmail("manajemen1@salamsetara.com");
+                manajemen.setPassword(new BCryptPasswordEncoder().encode("Manajemen"));
+                manajemen.setFullName("Manajemen 1");
+                manajemen.setAddress("Address 2");
+                manajemen.setGender("Wanita");
+                manajemen.setContact(1234567890L);
+                penggunaService.saveManajemen(manajemen);
+            }
+            
 		
 		};	
 	}

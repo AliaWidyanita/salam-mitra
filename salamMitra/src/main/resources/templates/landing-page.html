@@ -6,8 +6,7 @@
 	</head>
 <body>
 	
-	<div th:replace="~{fragments/navbar :: header}"></div>
-
+<div th:replace="~{fragments/navbar :: header}"></div>
 	<!-- home page slider -->
 	<div class="homepage-slider">
 		<!-- single home slider -->
@@ -24,7 +23,7 @@
 										<a th:href="@{/login}" class="bordered-btn">Login</a>
 									</div>
 									<div th:if="${user == 'mitra'}">
-										<a th:href="@{/}" class="boxed-btn" style="color: white;">Ajuan Saya</a>
+										<a th:href="@{/pengajuan/tambah}" class="boxed-btn">Ajukan Kerja Sama</a>
 									</div>
 								</div>
 							</div>
@@ -47,7 +46,7 @@
 										<a th:href="@{/login}" class="bordered-btn">Login</a>
 									</div>
 									<div th:if="${user == 'mitra'}">
-										<a th:href="@{/}" class="boxed-btn">Ajuan Saya</a>
+										<a th:href="@{/pengajuan/tambah}" class="boxed-btn">Ajukan Kerja Sama</a>
 									</div>
 								</div>
 							</div>
@@ -70,7 +69,7 @@
 										<a th:href="@{/login}" class="bordered-btn">Login</a>
 									</div>
 									<div th:if="${user == 'mitra'}">
-										<a th:href="@{/}" class="boxed-btn">Ajuan Saya</a>
+										<a th:href="@{/pengajuan/tambah}" class="boxed-btn">Ajukan Kerja Sama</a>
 									</div>
 								</div>
 							</div>

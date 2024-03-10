@@ -1,6 +1,4 @@
-body {
-	margin:  0;
-}
+
 .page-content {
 	width: 100%;
 	margin:  0 auto;
@@ -21,9 +19,6 @@ body {
     -ms-flex-direction: column;
     -moz-flex-direction: column;
     -webkit-flex-direction: column;
-    background-image: -moz-linear-gradient(136deg, #333333 0%, #222222 50%, #111111 100%);
-    background-image: -webkit-linear-gradient(136deg, #333333 0%, #222222 50%, #111111 100%);
-    background-image: -ms-linear-gradient(136deg, #333333 0%, #222222 50%, #111111 100%);
 }
 .page-content .wizard-heading {
     color: rgba(255, 255, 255, 0.6);
@@ -34,7 +29,6 @@ body {
     margin-left: -26.8%;
 }
 .wizard-v7-content   {
-	background: #fff;
 	width: 790px;
 	border-radius: 10px;
 	-o-border-radius: 10px;

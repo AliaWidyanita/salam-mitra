@@ -1,21 +1,25 @@
 package propensist.salamMitra.controller;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import propensist.salamMitra.dto.MitraMapper;
 import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
+import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.service.PenggunaService;
-
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
@@ -24,6 +28,12 @@ public class UserController {
 
     @Autowired
     private PenggunaService penggunaService;
+
+    @Autowired
+    private MitraMapper mitraMapper;
+
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -64,7 +74,11 @@ public class UserController {
                 redirectAttributes.addFlashAttribute("error", "Email sudah terpakai!");
                 return "redirect:/register";
             } else { // mitra
-                penggunaService.createMitra(mitraDTO);
+                String encodedPassword = encoder.encode(mitraDTO.getPassword());
+                mitraDTO.setPassword(encodedPassword);
+        
+                var mitra = mitraMapper.createMitraRequestDTOToAdmin(mitraDTO);
+                penggunaService.saveMitra(mitra);
 
                 // Menyimpan pesan sukses
                 redirectAttributes.addFlashAttribute("successMessage", "Selamat, anda berhasil mendaftarkan akun!");
@@ -93,5 +107,30 @@ public class UserController {
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         
         return "redirect:/";
+    }
+
+    @GetMapping("/ubah-sandi/{id}")
+    public String ubahSandi(@PathVariable ("id") UUID id, Model model) {
+        
+        Pengguna pengguna = penggunaService.findPenggunaById(id);
+        model.addAttribute("pengguna", pengguna);
+        
+        return "form-ubah-sandi";
+    }
+
+    @PostMapping("/ubah-sandi")
+    public String gantiPassword(@RequestParam String userId,
+                                @RequestParam String passwordLama,
+                                @RequestParam String newPassword,
+                                Model model) {
+
+        if (penggunaService.gantiPassword(userId, passwordLama, newPassword)) {
+            // Ganti password berhasil
+            return "redirect:/";
+        } else {
+            // Ganti password gagal
+            model.addAttribute("error", "Password lama tidak sesuai");
+            return "form-ubah-sandi";
+        }
     }
 }

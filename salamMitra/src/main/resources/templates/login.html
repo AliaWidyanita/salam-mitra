@@ -5,9 +5,7 @@
 		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
 	</head>
 <body>
-	
-	<div th:replace="~{fragments/navbar :: header}"></div>
-
+<div th:replace="~{fragments/navbar :: header}"></div>
 	<div class="new-container">
 		<div class="forms-container">
 			<div class="signin-signup">
@@ -66,11 +64,13 @@
 					</div>
                     <div class="input-field">
 						<i class="fas fa-phone"></i>
-						<input required type="number" placeholder="Kontak" th:field="*{contact}" />
+						<input required type="number" placeholder="Kontak" th:field="*{contact}" oninput="validatePhoneNumber(this)" />
 					</div>
 					<div class="input-field">
 						<i class="fas fa-lock"></i>
-						<input required type="password" placeholder="Password" th:field="*{password}" />
+						<input required type="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+                        title="Harus mengandung minimal satu angka dan satu huruf besar dan kecil, serta minimal 8 karakter atau lebih" 
+                        th:field="*{password}" />
 					</div>
 					<input type="submit" class="btn" value="Simpan" />
 					<!-- <p class="social-text">Or Register with social platforms</p> -->
@@ -90,15 +90,15 @@
 					</div> -->
 				</form>
 			</div>
+
 		</div>
 
 		<div class="panels-container">
 		<div class="panel left-panel">
 			<div class="content">
-			<h3>New here ?</h3>
+			<h3>Belum memiliki akun?</h3>
 			<p>
-				Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
-				ex ratione. Aliquid!
+				Daftarlah sekarang untuk menjadi salah satu mitra kami!
 			</p>
 			<button class="btn transparent" id="sign-up-btn">
 				Register
@@ -108,10 +108,9 @@
 		</div>
 		<div class="panel right-panel">
 			<div class="content">
-			<br><br><br><br><h3>One of us ?</h3>
+			<br><br><br><br><h3>Sudah punya akun?</h3>
 			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-				laboriosam ad deleniti.
+				Selamat datang kembali!
 			</p>
 			<button class="btn transparent" id="sign-in-btn">
 				Login
@@ -165,6 +164,21 @@
 	</div> -->
 
 	<script>
+		const passwordInput = document.getElementById("password");
+		const passwordError = document.getElementById("passwordError");
+	  
+		passwordInput.addEventListener("input", function () {
+		  const password = passwordInput.value;
+		  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/;
+	  
+		  if (passwordRegex.test(password)) {
+			passwordError.style.display = "none";
+		  } else {
+			passwordError.style.display = "block";
+		  }
+		});
+	  </script>
+	  <script>
 		function removeAlerts() {
 			setTimeout(function () {
 				jQuery('.alert').fadeOut('fast', function () {
@@ -175,6 +189,88 @@
 	
 		removeAlerts();
 	</script>
+<script>
+    function validatePhoneNumber(input) {
+        // Hapus karakter selain angka
+        var phoneNumber = input.value.replace(/\D/g, '');
+
+        // Pastikan awalan nomor telepon adalah "08"
+        if (!phoneNumber.startsWith('08')) {
+            input.setCustomValidity('Nomor telepon tidak valid harus diawali 08');
+        } else {
+            // Pastikan panjang nomor telepon antara 11 dan 13 digit
+            if (phoneNumber.length < 11 || phoneNumber.length > 13) {
+                input.setCustomValidity('Nomor telepon tidak valid harus terdiri dari 10-13 digit');
+            } else {
+                input.setCustomValidity('');
+            }
+        }
+    }
+	input.value = '0' + phoneNumber;
+
+</script>
+
+<script>
+    var myInput = document.getElementById("psw");
+    var letter = document.getElementById("letter");
+    var capital = document.getElementById("capital");
+    var number = document.getElementById("number");
+    var length = document.getElementById("length");
+    
+    // When the user clicks on the password field, show the message box
+    myInput.onfocus = function() {
+      document.getElementById("message").style.display = "block";
+    }
+    
+    // When the user clicks outside of the password field, hide the message box
+    myInput.onblur = function() {
+      document.getElementById("message").style.display = "none";
+    }
+    
+    // When the user starts to type something inside the password field
+    myInput.onkeyup = function() {
+      // Validate lowercase letters
+      var lowerCaseLetters = /[a-z]/g;
+      if(myInput.value.match(lowerCaseLetters)) {
+        letter.classList.remove("invalid");
+        letter.classList.add("valid");
+      } else {
+        letter.classList.remove("valid");
+        letter.classList.add("invalid");
+    }
+    
+      // Validate capital letters
+      var upperCaseLetters = /[A-Z]/g;
+      if(myInput.value.match(upperCaseLetters)) {
+        capital.classList.remove("invalid");
+        capital.classList.add("valid");
+      } else {
+        capital.classList.remove("valid");
+        capital.classList.add("invalid");
+      }
+    
+      // Validate numbers
+      var numbers = /[0-9]/g;
+      if(myInput.value.match(numbers)) {
+        number.classList.remove("invalid");
+        number.classList.add("valid");
+      } else {
+        number.classList.remove("valid");
+        number.classList.add("invalid");
+      }
+    
+      // Validate length
+      if(myInput.value.length >= 8) {
+        length.classList.remove("invalid");
+        length.classList.add("valid");
+      } else {
+        length.classList.remove("valid");
+        length.classList.add("invalid");
+      }
+    }
+    </script>
+
+
 
 	<!-- jquery -->
 	<script src="assets/js/jquery-1.11.3.min.js"></script>
@@ -200,4 +296,4 @@
 	<script src="assets/js/sign.js"></script>
 
 </body>
-</html>
+</html> 
