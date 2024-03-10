@@ -94,7 +94,6 @@ public class PenggunaServiceImpl implements PenggunaService{
         return manajemenDb.findAll();
     }
 
-
     @Override
     public void saveMitra(Mitra mitra) {
         if (mitra != null) {
