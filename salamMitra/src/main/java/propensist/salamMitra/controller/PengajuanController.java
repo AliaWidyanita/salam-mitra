@@ -15,6 +15,8 @@ import propensist.salamMitra.dto.KebutuhanDanaMapper;
 import propensist.salamMitra.dto.PengajuanMapper;
 import propensist.salamMitra.dto.request.CreateKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.CreateListPengajuanKebutuhanDanaDTO;
+import propensist.salamMitra.dto.request.CreatePengajuanRequestDTO;
+import propensist.salamMitra.model.KebutuhanDana;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;

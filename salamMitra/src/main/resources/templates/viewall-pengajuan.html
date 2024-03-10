@@ -1,53 +1,69 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <title>Daftar Pengajuan</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+    <object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <title>Daftar Pengajuan Kerja Sama</title>
+    <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/datatables.css">
 </head>
 <body>
-    <div class="container">
-        <div class="text-center pt-5">
-            <h2>Daftar pengajuan</h2>
+<!-- <nav th:replace="~{fragments/navbar :: navbar('permintaan-pengiriman')}"></nav> -->
+<div class="container margin-top">
+    <h2 class="text-center m-4">Daftar Pengajuan Kerja Sama</h2>
+    <div class="row">
+        <div class="col-sm-6">
+            <!-- Kosongkan kolom ini untuk memberikan ruang kosong -->
         </div>
-        <div class="text-center m-3">
-            <a type="button" class="btn btn-md btn-primary" href="/pengajuan/tambah">+ Tambah pengajuan</a>
+        <div class="col-sm-6 text-right">
+            <a type="button" class="btn btn-primary" href="/pengajuan/tambah">+ Tambah Pengajuan Kerja Sama</a>
         </div>
-        <br><br>
-        <table id="tabelpengajuan" class="table table-bordered">
-            <thead class="bg-primary text-white text-center">
-                <tr>
-                    <th class="text-center">No</th>
-                    <th class="text-center">ID</th>
-                    <th class="text-center">Nama Mitra</th>
-                    <th class="text-center">Nama Program</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="pengajuan, iterationStatus : ${listPengajuan}">
-                    <td class="text-center" th:text="${iterationStatus.count}"></td>
-                    <td class="text-center" th:text="${pengajuan.id}"></td>
-                    <td class="text-center" th:text="${pengajuan.namaMitra}"></td>
-                    <td class="text-center" th:text="${pengajuan.namaProgram}"></td>
-
-                    
-                    
-                </tr>
-            </tbody>
-        </table>
     </div>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
-    <script>
-        $(document).ready(function () {
-            var table = $('#tabelpengajuan').DataTable({
-                "lengthMenu": [5, 10, 20],
-                "columnDefs": [
-                    { "orderable": false, "targets": 4 } // Adjusted the target column index
-                ]
-            });
+    <table class="table table-bordered" id="dataTable">
+        <thead class="bg-dark text-white text-center">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nama Mitra</th>
+            <th scope="col">Nama Program</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody class="text-center">
+        <tr th:each="pengajuan, iterationStatus: ${listPengajuan}">
+            <td th:text="${pengajuan.id}"></td>
+            <td>
+                <a th:href="'pengajuan/' + ${pengajuan.id}" th:text="${pengajuan.namaMitra}"></a>
+            </td>            
+            <td th:text="${pengajuan.namaProgram}"></td>
+            <td>
+                <a type="button" class="btn btn-secondary" th:href="@{/}">Hapus</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!-- Sertakan referensi ke jQuery di sini -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- Sertakan referensi ke DataTables JavaScript di sini -->
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+<!-- Inisialisasi DataTables dengan konfigurasi tertentu -->
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "ordering": false, // Menonaktifkan sorting
+            "searching": false // Menonaktifkan fitur pencarian
         });
-    </script>
+    });
+</script>
+<script>
+    // Menampilkan pesan sukses
+    document.getElementById("successMessage").style.display = "block";
+    // Mengatur waktu tampilan pesan sebelum menghilang
+    setTimeout(function() {
+        document.getElementById("successMessage").style.display = "none";
+    }, 3000); // 3000 milliseconds = 3 seconds
+</script>
 </body>
 </html>
+Excellence In Teamwork
