@@ -1,5 +1,7 @@
 package propensist.salamMitra.controller;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -7,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.MitraMapper;
 import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
+import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.service.PenggunaService;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -111,5 +115,30 @@ public class UserController {
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         
         return "redirect:/";
+    }
+
+    @GetMapping("/ubah-sandi/{id}")
+    public String ubahSandi(@PathVariable ("id") UUID id, Model model) {
+        
+        Pengguna pengguna = penggunaService.findPenggunaById(id);
+        model.addAttribute("pengguna", pengguna);
+        
+        return "form-ubah-sandi";
+    }
+
+    @PostMapping("/ubah-sandi")
+    public String gantiPassword(@RequestParam String userId,
+                                @RequestParam String passwordLama,
+                                @RequestParam String newPassword,
+                                Model model) {
+
+        if (penggunaService.gantiPassword(userId, passwordLama, newPassword)) {
+            // Ganti password berhasil
+            return "redirect:/";
+        } else {
+            // Ganti password gagal
+            model.addAttribute("error", "Password lama tidak sesuai");
+            return "form-ubah-sandi";
+        }
     }
 }

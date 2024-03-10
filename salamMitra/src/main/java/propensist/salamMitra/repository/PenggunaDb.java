@@ -1,5 +1,6 @@
 package propensist.salamMitra.repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,5 +12,5 @@ import propensist.salamMitra.model.Pengguna;
 public interface PenggunaDb extends JpaRepository<Pengguna, UUID> {
     Pengguna findByUsername(String username);
     Pengguna findByEmail(String email);
-
+    List<Pengguna> findAllByIsDeletedFalse();
 }

@@ -20,6 +20,10 @@ public interface PenggunaService {
 
     List<Pengguna> getAllPengguna();
 
+    void deletePengguna(Pengguna pengguna);
+
+    Pengguna findPenggunaById(UUID id);
+
     List<ProgramService> getAllProgramService();
 
     List<Manajemen> getAllManajemen();
@@ -35,4 +39,6 @@ public interface PenggunaService {
     Pengguna getUserByUsername(String username);
 
     Pengguna getUserById(UUID id);
+
+    boolean gantiPassword(String username, String passwordLama, String passwordBaru);
 }

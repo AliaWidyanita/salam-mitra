@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
 import propensist.salamMitra.model.Admin;
@@ -47,6 +48,9 @@ public class PenggunaServiceImpl implements PenggunaService{
     @Autowired
     ProgramUserService programUserService;
 
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
+
     @Override
     public void saveAdmin(Admin admin) {
         if (admin != null) {
@@ -82,7 +86,12 @@ public class PenggunaServiceImpl implements PenggunaService{
 
     @Override
     public List<Pengguna> getAllPengguna() {
-        return penggunaDb.findAll();
+        return penggunaDb.findAllByIsDeletedFalse();
+    }
+
+    @Override
+    public List<Manajemen> getAllManajemen() {
+        return manajemenDb.findAll();
     }
 
     @Override
@@ -161,6 +170,34 @@ public class PenggunaServiceImpl implements PenggunaService{
         } else {
             return programService;
         }
+    }
+
+    @Override
+    public void deletePengguna(Pengguna pengguna) {
+        pengguna.setDeleted(true);
+        penggunaDb.save(pengguna);
+    }
+
+    @Override
+    public Pengguna findPenggunaById(UUID id) {
+        for (Pengguna pengguna : getAllPengguna()) {
+            if (pengguna.getId().equals(id)) {
+                return pengguna;
+            }
+        }
+        return null;
+    }
+
+    public boolean gantiPassword(String id, String passwordLama, String passwordBaru) {
+        Pengguna pengguna = findPenggunaById(UUID.fromString(id));
+
+        if (pengguna != null && passwordEncoder.matches(passwordLama, pengguna.getPassword())) {
+            pengguna.setPassword(passwordEncoder.encode(passwordBaru));
+            penggunaDb.save(pengguna);
+            return true;
+        }
+
+        return false;
     }
 
 }
