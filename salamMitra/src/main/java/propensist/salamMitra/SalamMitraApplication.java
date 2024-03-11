@@ -62,12 +62,14 @@ public class SalamMitraApplication {
             lokasiDTOs.add(new CreateLokasiRequestDTO("Jawa Barat", "Depok", "Cinere"));
 
             // Simpan lokasi ke database menggunakan LokasiService
-            for (CreateLokasiRequestDTO lokasiDTO : lokasiDTOs) {
-                Lokasi lokasi = new Lokasi();
-                lokasi.setProvinsi(lokasiDTO.getProvinsi());
-                lokasi.setKabupatenKota(lokasiDTO.getKabupatenKota());
-                lokasi.setKecamatan(lokasiDTO.getKecamatan());
-                lokasiService.saveLokasi(lokasi);
+            if (lokasiService.getAllLokasi().isEmpty()) {
+                for (CreateLokasiRequestDTO lokasiDTO : lokasiDTOs) {
+                    Lokasi lokasi = new Lokasi();
+                    lokasi.setProvinsi(lokasiDTO.getProvinsi());
+                    lokasi.setKabupatenKota(lokasiDTO.getKabupatenKota());
+                    lokasi.setKecamatan(lokasiDTO.getKecamatan());
+                    lokasiService.saveLokasi(lokasi);
+                }
             }
 
             if (penggunaService.getAllProgramService().isEmpty()){

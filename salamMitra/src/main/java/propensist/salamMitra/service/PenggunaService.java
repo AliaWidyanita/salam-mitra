@@ -3,7 +3,6 @@ package propensist.salamMitra.service;
 import java.util.List;
 import java.util.UUID;
 
-import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
 import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Manajemen;
 import propensist.salamMitra.model.Mitra;
@@ -11,6 +10,8 @@ import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.model.ProgramService;
 
 public interface PenggunaService { 
+
+    void saveMitra(Mitra mitra);
   
     void saveAdmin(Admin admin);
 
@@ -20,27 +21,19 @@ public interface PenggunaService {
 
     List<Pengguna> getAllPengguna();
 
-    void deletePengguna(Pengguna pengguna);
-
-    Pengguna findPenggunaById(UUID id);
+    List<Admin> getAllAdmin();
 
     List<ProgramService> getAllProgramService();
 
     List<Manajemen> getAllManajemen();
 
-    List<Admin> getAllAdmin();
-
-    void saveMitra(Mitra mitra);
-
     Pengguna getAkunByEmail(String email);
 
     Pengguna authenticate(String username);
 
-    Mitra createMitra(CreateMitraRequestDTO mitraDTO);
+    void deletePengguna(Pengguna pengguna);
 
-    Pengguna getUserByUsername(String username);
-
-    Pengguna getUserById(UUID id);
+    Pengguna findPenggunaById(UUID id);
 
     boolean gantiPassword(String username, String passwordLama, String passwordBaru);
 }
