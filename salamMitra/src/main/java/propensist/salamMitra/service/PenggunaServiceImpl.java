@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
 import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Manajemen;
 import propensist.salamMitra.model.Mitra;
@@ -37,19 +36,16 @@ public class PenggunaServiceImpl implements PenggunaService{
     PenggunaDb penggunaDb;
 
     @Autowired
-    AdminService adminService;
-
-    @Autowired
-    ManajemenService manajemenService;
-
-    @Autowired
-    MitraService mitraService;
-
-    @Autowired
-    ProgramUserService programUserService;
-
-    @Autowired
     BCryptPasswordEncoder passwordEncoder;
+
+    @Override
+    public void saveMitra(Mitra mitra) {
+        if (mitra != null) {
+            mitraDb.save(mitra);
+        } else {
+            throw new IllegalArgumentException("Username cannot be null");
+        }
+    }
 
     @Override
     public void saveAdmin(Admin admin) {
@@ -80,18 +76,13 @@ public class PenggunaServiceImpl implements PenggunaService{
     }
 
     @Override
-    public List<ProgramService> getAllProgramService() {
-        return programServiceDb.findAll();
-    }
-
-    @Override
     public List<Pengguna> getAllPengguna() {
         return penggunaDb.findAllByIsDeletedFalse();
     }
 
     @Override
-    public List<Manajemen> getAllManajemen() {
-        return manajemenDb.findAll();
+    public List<ProgramService> getAllProgramService() {
+        return programServiceDb.findAll();
     }
 
     @Override
@@ -100,12 +91,8 @@ public class PenggunaServiceImpl implements PenggunaService{
     }
 
     @Override
-    public void saveMitra(Mitra mitra) {
-        if (mitra != null) {
-            mitraDb.save(mitra);
-        } else {
-            throw new IllegalArgumentException("Username cannot be null");
-        }
+    public List<Manajemen> getAllManajemen() {
+        return manajemenDb.findAll();
     }
 
     @Override
@@ -116,60 +103,6 @@ public class PenggunaServiceImpl implements PenggunaService{
     @Override
     public Pengguna authenticate(String username) {
         return penggunaDb.findByUsername(username);
-    }
-
-    @Override
-    public Mitra createMitra(CreateMitraRequestDTO mitraDTO) {
-        var user = new Mitra();
-        user.setUsername(mitraDTO.getUsername());
-        user.setEmail(mitraDTO.getEmail());
-        user.setPassword(mitraDTO.getPassword());
-        user.setCompanyName(mitraDTO.getCompanyName());
-        user.setLocation(mitraDTO.getLocation());
-        user.setContact(mitraDTO.getContact());
-        user.setDeleted(mitraDTO.isDeleted());
-        saveMitra(user);
-        return user;
-    }
-
-    @Override
-    public Pengguna getUserByUsername(String username) {
-        var admin = adminService.getAdminByUsername(username);
-        var manajemen = manajemenService.getManajemenByUsername(username);
-        var mitra = mitraService.getMitraByUsername(username);
-        var programService = programUserService.getProgramUserServiceByUsername(username);
-
-        if (admin == null && manajemen == null && mitra == null && programService == null) {
-            return null;
-        } else if (admin != null) {
-            return admin;
-        } else if (manajemen != null) {
-            return manajemen;
-        } else if (mitra != null) {
-            return mitra;
-        } else {
-            return programService;
-        }
-    }
-
-    @Override
-    public Pengguna getUserById(UUID id) {
-        var admin = adminService.getAdminById(id);
-        var manajemen = manajemenService.getManajemenById(id);
-        var mitra = mitraService.getMitraById(id);
-        var programService = programUserService.getProgramUserServiceById(id);
-
-        if (admin == null && manajemen == null && mitra == null && programService == null) {
-            return null;
-        } else if (admin != null) {
-            return admin;
-        } else if (manajemen != null) {
-            return manajemen;
-        } else if (mitra != null) {
-            return mitra;
-        } else {
-            return programService;
-        }
     }
 
     @Override

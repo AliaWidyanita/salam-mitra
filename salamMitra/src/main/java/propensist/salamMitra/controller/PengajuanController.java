@@ -18,14 +18,10 @@ import propensist.salamMitra.dto.KebutuhanDanaMapper;
 import propensist.salamMitra.dto.PengajuanMapper;
 import propensist.salamMitra.dto.request.CreateKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.CreateListPengajuanKebutuhanDanaDTO;
-import propensist.salamMitra.dto.request.CreatePengajuanRequestDTO;
-import propensist.salamMitra.model.KebutuhanDana;
-import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;
-import propensist.salamMitra.service.MitraService;
 import propensist.salamMitra.service.PengajuanService;
 import propensist.salamMitra.service.PenggunaService;
 
@@ -77,10 +73,10 @@ public class PengajuanController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
-        String username = auth.getName();
+        Pengguna user = penggunaService.authenticate(auth.getName());
         
-        model.addAttribute("user", role);
-        model.addAttribute("username", username);       
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);       
 
         //Set Up Pengajuan Only                        
         var pengajuanDTO = listPengajuanKebutuhanDanaDTO.getPengajuanDTO();
@@ -96,7 +92,7 @@ public class PengajuanController {
         Long nominalDana = 0L;
         pengajuan.setNominalKebutuhanDana(nominalDana);
         pengajuan.setJumlahKebutuhanOperasional((long) 0);
-        pengajuan.setUsername(username);
+        pengajuan.setUsername(user.getUsername());
                                 
 
         pengajuanService.savePengajuan(pengajuan);
