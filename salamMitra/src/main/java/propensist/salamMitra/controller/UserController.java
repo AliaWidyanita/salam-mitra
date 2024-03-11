@@ -65,7 +65,7 @@ public class UserController {
             return "redirect:/login";
         } else {
             if (penggunaService.authenticate(mitraDTO.getUsername()) != null) {
-                if (penggunaService.getUserByUsername(mitraDTO.getUsername()).isDeleted() == false) {
+                if (penggunaService.authenticate(mitraDTO.getUsername()).isDeleted() == false) {
                     redirectAttributes.addFlashAttribute("error", "Username sudah terpakai! Apakah anda memiliki akun?");
                     return "redirect:/login";
                 }
