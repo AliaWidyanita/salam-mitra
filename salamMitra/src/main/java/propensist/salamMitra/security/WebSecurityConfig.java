@@ -34,6 +34,8 @@ public class WebSecurityConfig {
                             .requestMatchers(new AntPathRequestMatcher("/pengguna")).hasAnyAuthority("program_service", "manajemen")
                             .requestMatchers(new AntPathRequestMatcher("/pengguna/hapus/**")).hasAnyAuthority("program_service", "manajemen")
                             .requestMatchers(new AntPathRequestMatcher("/pengajuan/**")).hasAuthority("mitra")
+                            .requestMatchers(new AntPathRequestMatcher("/getKabupatenKotaByProvinsi")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/getKecamatanByProvinsiKabupatenKota")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                     ) 
                     .formLogin((form) -> form
