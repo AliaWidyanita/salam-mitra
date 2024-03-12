@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
-<head>
-    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
-    <title>Ubah Kata Sandi</title>
-    <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/css/datatables.css">
-</head>
+	<head>
+		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+        <style>
+            .top-header-area {
+                background-color: #051922;
+            }
+    
+            .top-header-area a {
+                color: white;
+            }
+        </style>
+	</head>
 <body>
     <div th:replace="~{fragments/navbar :: header}"></div>
     
@@ -13,17 +19,41 @@
 		<div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
 			<div class="container" data-aos="fade-up">
 				<div class="row d-flex justify-content-center">
-                    <div class="card m-4">
-                        <div class="card-header p-4">
-                            <h2 class="text-center"> Ubah Kata Sandi </h2>
-                        </div>
-                        <div class="card-body p-4">
-                            <div class="justify-content-center">
-                                <form th:action="@{/ubah-sandi}" method="POST" onsubmit="return validateForm()">
-                                
+                    <div class="col-md-7">
+					    <div class="new_card p-3 py-5">
+                            <div class="d-flex justify-content-center mb-4">
+                                <h4 class="text-center">Ubah Kata Sandi</h4>
+                            </div>
+                            <form th:action="@{/ubah-sandi}" method="POST" onsubmit="return validateForm()">
+                            
                                 <input type="hidden" name="userId" th:value="${pengguna.id}" />
 
-                                Kata sandi lama <br>
+                                <div class="row mt-3 d-flex justify-content-center">
+                                    <div class="col-md-15">
+                                        <label class="labels">Kata Sandi Lama</label>
+                                        <input required class="form-control" type="password" id="password-lama" name="passwordLama"/>
+                                    </div>
+                                </div>
+                                <div class="row mt-3 d-flex justify-content-center">
+                                    <div class="col-md-15">
+                                        <label class="labels">Kata Sandi Baru</label>
+                                        <input required class="form-control" type="password" id="new-password" name="newPassword"/>
+                                    </div>
+                                    <div id="passwordError" class="invalid-feedback">
+                                        Password harus terdiri dari 8-20 karakter, mengandung huruf besar dan kecil, mengandung angka, dan tidak boleh mengandung spasi, karakter khusus, atau emoji.
+                                    </div>
+                                </div>
+                                <div class="row mt-3 d-flex justify-content-center">
+                                    <div class="col-md-15">
+                                        <label class="labels">Konfirmasi Kata Sandi Baru</label>
+                                        <input required class="form-control" type="password" id="confirm-password" name="confirmPassword"/>
+                                    </div>
+                                    <div id="confirmPasswordError" class="invalid-feedback">
+                                        Konfirmasi kata sandi baru harus sesuai dengan kata sandi baru.
+                                    </div>
+                                </div>
+
+                                <!-- Kata sandi lama <br>
                                 <input id="password-lama" name="passwordLama" class="form-control" type="password" required/>
 
                                 Kata sandi baru <br>
@@ -36,16 +66,14 @@
                                 <input id="confirm-password" name="confirmPassword" class="form-control" type="password" required/>
                                 <div id="confirmPasswordError" class="invalid-feedback">
                                     Konfirmasi kata sandi baru harus sesuai dengan kata sandi baru.
+                                </div> -->
+                
+                                <div class="mt-5 text-center">
+                                    <button onclick="window.location.href='/'" class="btn" style="background-color: #dc3545; width: 110px;">Batal</button>
+                                    <button class="btn" type="submit" style="width: 110px;">Simpan</button>
                                 </div>
-                
-                                <div class="text-center m-4">
-                                    <a href="/" class="btn btn-danger" style="background-color: #dc3545;">Batal</a>
-                                    <button class="btn btn-primary" type="submit">Simpan</button>
-                                </div>
-                
-                                </form>
-                            </div>
-                
+            
+                            </form>
                         </div>
                     </div>
                 </div>
