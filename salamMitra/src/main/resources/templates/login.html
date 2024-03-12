@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+	<head>
+		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+	</head>
+<body>
+<div th:replace="~{fragments/navbar :: header}"></div>
+	<div class="new-container">
+		<div class="forms-container">
+			<div class="signin-signup">
+				<form th:action="@{/login}" method="post" class="sign-in-form">
+					<div class="container">
+						<div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+						<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+					</div><br><br>
+					<h2 class="title">Login</h2>
+					<div class="input-field">
+						<i class="fas fa-user"></i>
+						<input required type="text" for="username" id="username" name="username" placeholder="Username" />
+					</div>
+					<div class="input-field">
+						<i class="fas fa-lock"></i>
+						<input required type="password" for="password" id="password" name="password" placeholder="Password" />
+					</div>
+						<input type="submit" value="Masuk" class="btn solid" />
+						<!-- <p class="social-text">Or Login with social platforms</p>
+					<div class="social-media">
+						<a href="#" class="social-icon">
+							<i class="fab fa-facebook-f"></i>
+						</a>
+						<a href="#" class="social-icon">
+							<i class="fab fa-twitter"></i>
+						</a>
+						<a href="#" class="social-icon">
+							<i class="fab fa-google"></i>
+						</a>
+						<a href="#" class="social-icon">
+							<i class="fab fa-linkedin-in"></i>
+						</a> -->
+					<!-- </div> -->
+				</form>
+				<form th:action="@{/register}" th:object="${mitraDTO}" method="post" class="sign-up-form">
+					<br><br><br><br><div class="container">
+						<div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+						<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+					</div>
+					<h2 class="title">Register</h2>
+					<div class="input-field">
+						<i class="fas fa-user"></i>
+						<input required type="text" placeholder="Username" th:field="*{username}" />
+					</div>
+					<div class="input-field">
+						<i class="fas fa-envelope"></i>
+						<input required type="email" placeholder="Email" th:field="*{email}" />
+					</div>
+                    <div class="input-field">
+						<i class="fas fa-building"></i>
+						<input required type="text" placeholder="Nama Perusahaan" th:field="*{companyName}" />
+					</div>
+                    <div class="input-field">
+						<i class="fas fa-location-arrow"></i>
+						<input required type="text" placeholder="Lokasi" th:field="*{location}" />
+					</div>
+                    <div class="input-field">
+						<i class="fas fa-phone"></i>
+						<input required type="number" placeholder="Kontak" th:field="*{contact}" oninput="validatePhoneNumber(this)" />
+					</div>
+					<div class="input-field">
+						<i class="fas fa-lock"></i>
+						<input required type="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+                        title="Harus mengandung minimal satu angka dan satu huruf besar dan kecil, serta minimal 8 karakter atau lebih" 
+                        th:field="*{password}" />
+					</div>
+					<input type="submit" class="btn" value="Simpan" />
+					<!-- <p class="social-text">Or Register with social platforms</p> -->
+					<!-- <div class="social-media">
+						<a href="#" class="social-icon">
+						<i class="fab fa-facebook-f"></i>
+						</a>
+						<a href="#" class="social-icon">
+						<i class="fab fa-twitter"></i>
+						</a>
+						<a href="#" class="social-icon">
+						<i class="fab fa-google"></i>
+						</a>
+						<a href="#" class="social-icon">
+						<i class="fab fa-linkedin-in"></i>
+						</a>
+					</div> -->
+				</form>
+			</div>
+
+		</div>
+
+		<div class="panels-container">
+		<div class="panel left-panel">
+			<div class="content">
+			<h3>Belum memiliki akun?</h3>
+			<p>
+				Daftarlah sekarang untuk menjadi salah satu mitra kami!
+			</p>
+			<button class="btn transparent" id="sign-up-btn">
+				Register
+			</button>
+			</div>
+			<img src="img/log.svg" class="image" alt="" />
+		</div>
+		<div class="panel right-panel">
+			<div class="content">
+			<br><br><br><br><h3>Sudah punya akun?</h3>
+			<p>
+				Selamat datang kembali!
+			</p>
+			<button class="btn transparent" id="sign-in-btn">
+				Login
+			</button>
+			</div>
+			<img src="img/register.svg" class="image" alt="" />
+		</div>
+		</div>
+	</div>
+
+	<!-- <div class="mt-80 mb-80">
+		<div class="container">
+			<div class="container-fluid" style="display: flex; align-items: center; justify-content: center;">
+				<div class="container" data-aos="fade-up">
+					<div class="row d-flex justify-content-center">
+						<div class="col-md-7">
+							<div class="container">
+								<div class="alert alert-danger" role="alert" th:text="${success}" th:if="${success}"></div>
+								<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+							</div>
+							<div class="new_card p-3 py-5">
+								<div class="d-flex justify-content-center mb-4">
+									<h4 class="text-center">Login</h4>
+								</div>
+								<form th:action="@{/login}" method="POST">
+									<div class="row mt-3 d-flex justify-content-center">
+										<div class="col-md-10">
+											<label class="labels">Username</label>
+											<input required class="form-control" type="text" placeholder="Username" th:field="*{username}" />
+											<input class="form-control" type="text" placeholder="Username" name="username" />
+										</div>
+										</div>
+									<div class="row mt-3 d-flex justify-content-center">
+										<div class="col-md-10">
+											<label class="labels">Password</label>
+											<input required class="form-control" type="text" placeholder="Password" th:field="*{password}" />
+											<input class="form-control" type="text" placeholder="Password" name="password" />
+										</div>
+									</div>
+					
+									<div class="mt-5 text-center">
+										<button type="submit" value="Login">Login</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> -->
+
+	<script>
+		const passwordInput = document.getElementById("password");
+		const passwordError = document.getElementById("passwordError");
+	  
+		passwordInput.addEventListener("input", function () {
+		  const password = passwordInput.value;
+		  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/;
+	  
+		  if (passwordRegex.test(password)) {
+			passwordError.style.display = "none";
+		  } else {
+			passwordError.style.display = "block";
+		  }
+		});
+	  </script>
+	  <script>
+		function removeAlerts() {
+			setTimeout(function () {
+				jQuery('.alert').fadeOut('fast', function () {
+					jQuery(this).remove();
+				});
+			}, 3000); // Adjust the timeout duration (in milliseconds) as needed
+		}
+	
+		removeAlerts();
+	</script>
+<script>
+    function validatePhoneNumber(input) {
+        // Hapus karakter selain angka
+        var phoneNumber = input.value.replace(/\D/g, '');
+
+        // Pastikan awalan nomor telepon adalah "08"
+        if (!phoneNumber.startsWith('08')) {
+            input.setCustomValidity('Nomor telepon tidak valid harus diawali 08');
+        } else {
+            // Pastikan panjang nomor telepon antara 11 dan 13 digit
+            if (phoneNumber.length < 11 || phoneNumber.length > 13) {
+                input.setCustomValidity('Nomor telepon tidak valid harus terdiri dari 10-13 digit');
+            } else {
+                input.setCustomValidity('');
+            }
+        }
+    }
+	input.value = '0' + phoneNumber;
+
+</script>
+
+<script>
+    var myInput = document.getElementById("psw");
+    var letter = document.getElementById("letter");
+    var capital = document.getElementById("capital");
+    var number = document.getElementById("number");
+    var length = document.getElementById("length");
+    
+    // When the user clicks on the password field, show the message box
+    myInput.onfocus = function() {
+      document.getElementById("message").style.display = "block";
+    }
+    
+    // When the user clicks outside of the password field, hide the message box
+    myInput.onblur = function() {
+      document.getElementById("message").style.display = "none";
+    }
+    
+    // When the user starts to type something inside the password field
+    myInput.onkeyup = function() {
+      // Validate lowercase letters
+      var lowerCaseLetters = /[a-z]/g;
+      if(myInput.value.match(lowerCaseLetters)) {
+        letter.classList.remove("invalid");
+        letter.classList.add("valid");
+      } else {
+        letter.classList.remove("valid");
+        letter.classList.add("invalid");
+    }
+    
+      // Validate capital letters
+      var upperCaseLetters = /[A-Z]/g;
+      if(myInput.value.match(upperCaseLetters)) {
+        capital.classList.remove("invalid");
+        capital.classList.add("valid");
+      } else {
+        capital.classList.remove("valid");
+        capital.classList.add("invalid");
+      }
+    
+      // Validate numbers
+      var numbers = /[0-9]/g;
+      if(myInput.value.match(numbers)) {
+        number.classList.remove("invalid");
+        number.classList.add("valid");
+      } else {
+        number.classList.remove("valid");
+        number.classList.add("invalid");
+      }
+    
+      // Validate length
+      if(myInput.value.length >= 8) {
+        length.classList.remove("invalid");
+        length.classList.add("valid");
+      } else {
+        length.classList.remove("valid");
+        length.classList.add("invalid");
+      }
+    }
+    </script>
+
+	<!-- jquery -->
+	<script src="assets/js/jquery-1.11.3.min.js"></script>
+	<!-- bootstrap -->
+	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+	<!-- count down -->
+	<script src="assets/js/jquery.countdown.js"></script>
+	<!-- isotope -->
+	<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+	<!-- waypoints -->
+	<script src="assets/js/waypoints.js"></script>
+	<!-- owl carousel -->
+	<script src="assets/js/owl.carousel.min.js"></script>
+	<!-- magnific popup -->
+	<script src="assets/js/jquery.magnific-popup.min.js"></script>
+	<!-- mean menu -->
+	<script src="assets/js/jquery.meanmenu.min.js"></script>
+	<!-- sticker js -->
+	<script src="assets/js/sticker.js"></script>
+	<!-- main js -->
+	<script src="assets/js/main.js"></script>
+	<!-- sign js -->
+	<script src="assets/js/sign.js"></script>
+
+</body>
+</html> 

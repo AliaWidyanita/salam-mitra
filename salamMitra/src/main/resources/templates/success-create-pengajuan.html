@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+    <title>Success</title>
+    <style>
+        /* CSS untuk mengatur gambar di tengah */
+        .centered {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo {
+            max-width: 150px; /* Lebar maksimum yang Anda inginkan */
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="~{fragments/navbar :: header}"></div>
+    <div class="container">
+        <div class="card m-4 p-4">
+            <div class="card-body">
+                <div class="centered">
+                    <img src="https://media.istockphoto.com/id/1132722559/id/vektor/ikon-garis-tanda-centang-hijau-bulat-tombol-simbol-centang-di-latar-belakang-putih.jpg?s=612x612&w=0&k=20&c=-38FxwUH8pmBCPSWC6UWylXsXE9OFTKsQuk7vRw_56E="
+                        alt="Logo" class="logo">
+                </div>
+                <div class="text-center">
+                    <h2 th:text="'Pengajuan dengan Id ' + ${id} + ' berhasil ditambahkan.'"></h2>
+                </div>
+                <div class="text-center m-3">
+                    <a type="button" class="btn btn-md btn-primary" href="/">Home</a>
+                    <a type="button" class="btn btn-md btn-primary" href="/pengajuan">Lihat Ajuan Saya</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+      // JavaScript untuk menampilkan pesan error setelah gambar dimuat
+      document.addEventListener('DOMContentLoaded', function () {
+          document.querySelector('.logo').onload = function () {
+              document.querySelector('#errorMessage').classList.remove('hidden');
+          };
+      });
+  </script>
+
+<!-- jquery -->
+<script src="assets/js/jquery-1.11.3.min.js"></script>
+<!-- bootstrap -->
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>

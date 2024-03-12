@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <title>Detail Ajuan</title>
+</head>
+
+<body>
+    <div th:replace="~{fragments/navbar :: header}"></div>
+    <div class="container">
+        <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
+            <div class="container" data-aos="fade-up">
+                <div class="row d-flex justify-content-center">
+                    <div class="card">
+                        <div class="card-header p-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h1 class="card-title">Detail Ajuan</h1>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <tr class="no-border">
+                                    <td>ID</td>
+                                    <td><span th:text="': ' + ${pengajuan.id}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Nama Mitra</td>
+                                    <td><span th:text="': ' + ${pengajuan.namaMitra}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Nama Program</td>
+                                    <td><span th:text="': ' + ${pengajuan.namaProgram}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Kategori</td>
+                                    <td><span th:text="': ' + ${pengajuan.kategori}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Nama Person in Charge (PIC)</td>
+                                    <td><span th:text="': ' + ${pengajuan.namaPIC}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Kontak Person in Charge (PIC)</td>
+                                    <td><span th:text="': ' + ${pengajuan.kontakPIC}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Alamat Kantor atau Rumah</td>
+                                    <td><span th:text="': ' + ${pengajuan.alamatKantor}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>KTP Person in Charge (PIC)</td>
+                                    <td>
+                                        <span th:text="': '"></span>
+                                        <img th:src="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" class="card-img-top" alt="KTP PIC" style="height: 50px; object-fit: cover;">
+                                        <a th:href="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" th:download="'KTP-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.jpg'">Download</a>
+                                    </td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Rancangan Anggaran Biaya (RAB)</td>
+                                    <td>
+                                        <!-- Download link for RAB PDF -->
+                                        <a th:href="'data:application/pdf;base64,' + ${pengajuan.rabBase64}" th:download="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
+                                            <span th:text="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Rancangan Anggaran Biaya (RAB)</td>
+                                    <td>
+                                        <!-- Download link for RAB PDF -->
+                                        <a th:href="'data:application/pdf;base64,' + ${pengajuan.dokumenBase64}" th:download="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
+                                            <span th:text="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <h5 style="margin-top: 40px;">List Kebutuhan Dana</h5>
+                            <table class="table table-bordered">
+                                <thead class="bg-primary text-white text-center">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nama Gudang</th>
+                                        <th scope="col">Alamat Gudang</th>
+                                        <th scope="col">Stok</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="text-center m-4" style="margin-top: 20px;">
+                                <a class="btn btn-secondary" href="/pengajuan" style="margin-right: 10px;">Kembali</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- jquery -->
+<script src="assets/js/jquery-1.11.3.min.js"></script>
+<!-- bootstrap -->
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
