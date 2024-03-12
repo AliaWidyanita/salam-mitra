@@ -39,9 +39,7 @@
                         <tbody class="text-center" th:unless="${listPengajuan.isEmpty()}">
                             <tr th:each="pengajuan, iterationStatus: ${listPengajuan}">
                                 <td th:text="${pengajuan.id}"></td>
-                                <td>
-                                    <a th:href="'pengajuan/' + ${pengajuan.id}" th:text="${pengajuan.namaMitra}"></a>
-                                </td>            
+                                <td th:text="${pengajuan.namaMitra}"></td>
                                 <td th:text="${pengajuan.namaProgram}"></td>
                                 <td>
                                     <a type="button" class="btn btn-secondary" th:href="@{/}">Hapus</a>
