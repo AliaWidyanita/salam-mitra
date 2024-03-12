@@ -3,20 +3,25 @@
 <head>
     <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
     <link rel="stylesheet" href="" th:href="@{/css/style.css}"/>
+	<style>
+		.btn-follow-text-width {
+			display: inline-block;
+			width: auto;
+			padding-left: 15px;
+			padding-right: 15px;
+		}
+		.removeRow {
+			font-size: smaller; /* Anda dapat menyesuaikan nilai ini jika diperlukan */
+		}
+		.top-header-area {
+					background-color: #051922;
+				}
+		
+		.top-header-area a {
+			color: white;
+		}
+	</style>
 </head>
-<style>
-    .btn-follow-text-width {
-        display: inline-block;
-        width: auto;
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-</style>
-<style>
-    .removeRow {
-        font-size: smaller; /* Anda dapat menyesuaikan nilai ini jika diperlukan */
-    }
-</style>
 <body>
 <div th:replace="~{fragments/navbar :: header}"></div>
 	<div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%;">
