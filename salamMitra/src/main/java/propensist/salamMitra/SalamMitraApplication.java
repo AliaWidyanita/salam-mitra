@@ -98,9 +98,9 @@ public class SalamMitraApplication {
 
             if (penggunaService.getAllAdmin().isEmpty()) {
                 Admin admin = new Admin();
-                admin.setUsername("adminprogram");
+                admin.setUsername("adminprogram1");
                 admin.setEmail("adminprogram@salamsetara.com");
-                admin.setPassword(new BCryptPasswordEncoder().encode("Adminprogram"));
+                admin.setPassword(new BCryptPasswordEncoder().encode("Adminprogram1"));
                 admin.setFullName("AdminProgram");
                 admin.setAddress("Address 3");
                 admin.setGender("Pria");

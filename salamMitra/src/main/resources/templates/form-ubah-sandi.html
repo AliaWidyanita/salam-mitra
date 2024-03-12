@@ -1,91 +1,88 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
-	<head>
-		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
-        <style>
-            .top-header-area {
-                background-color: #051922;
-            }
-    
-            .top-header-area a {
-                color: white;
-            }
-        </style>
-	</head>
+<head>
+    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <style>
+        .top-header-area {
+            background-color: #051922;
+        }
+
+        .top-header-area a {
+            color: white;
+        }
+    </style>
+</head>
 <body>
     <div th:replace="~{fragments/navbar :: header}"></div>
-    
-	<div class="container">
-		<div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
-			<div class="container" data-aos="fade-up">
-				<div class="row d-flex justify-content-center">
-                    <div class="col-md-7">
-					    <div class="new_card p-3 py-5">
-                            <div class="d-flex justify-content-center mb-4">
-                                <h4 class="text-center">Ubah Kata Sandi</h4>
-                            </div>
-                            <form th:action="@{/ubah-sandi}" method="POST" onsubmit="return validateForm()">
-                            
-                                <input type="hidden" name="userId" th:value="${pengguna.id}" />
 
-                                <div class="row mt-3 d-flex justify-content-center">
-                                    <div class="col-md-15">
-                                        <label class="labels">Kata Sandi Lama</label>
-                                        <input required class="form-control" type="password" id="password-lama" name="passwordLama"/>
-                                    </div>
+    <div class="container">
+        <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
+            <div class="container" data-aos="fade-up">
+                <div class="row d-flex justify-content-center">
+                    <h2 class="text-center m-4">Ubah Kata Sandi</h2>
+                    <div class="container">
+                        <form th:action="@{/ubah-sandi}" method="POST" onsubmit="return validateForm()">
+                            <input type="hidden" name="userId" th:value="${pengguna.id}" />
+                            <div class="col-md-6">
+                                <label for="password-lama" class="form-label">Kata Sandi Lama</label>
+                                <div class="input-group">
+                                    <input required class="form-control" type="password" id="password-lama" name="passwordLama"/>
+                                    <span class="input-group-text" id="togglePasswordLama"><i class="bi bi-eye-slash"></i></span>
                                 </div>
-                                <div class="row mt-3 d-flex justify-content-center">
-                                    <div class="col-md-15">
-                                        <label class="labels">Kata Sandi Baru</label>
-                                        <input required class="form-control" type="password" id="new-password" name="newPassword"/>
-                                    </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="new-password" class="form-label">Kata Sandi Baru</label>
+                                <div class="input-group">
+                                    <input required class="form-control" type="password" id="new-password" name="newPassword"/>
+                                    <span class="input-group-text" id="togglePassword"><i class="bi bi-eye-slash"></i></span>
                                     <div id="passwordError" class="invalid-feedback">
                                         Password harus terdiri dari 8-20 karakter, mengandung huruf besar dan kecil, mengandung angka, dan tidak boleh mengandung spasi, karakter khusus, atau emoji.
                                     </div>
                                 </div>
-                                <div class="row mt-3 d-flex justify-content-center">
-                                    <div class="col-md-15">
-                                        <label class="labels">Konfirmasi Kata Sandi Baru</label>
-                                        <input required class="form-control" type="password" id="confirm-password" name="confirmPassword"/>
-                                    </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirm-password" class="form-label">Konfirmasi Kata Sandi Baru</label>
+                                <div class="input-group">
+                                    <input required class="form-control" type="password" id="confirm-password" name="confirmPassword"/>
+                                    <span class="input-group-text" id="toggleConfirmPassword"><i class="bi bi-eye-slash"></i></span>
                                     <div id="confirmPasswordError" class="invalid-feedback">
                                         Konfirmasi kata sandi baru harus sesuai dengan kata sandi baru.
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Kata sandi lama <br>
-                                <input id="password-lama" name="passwordLama" class="form-control" type="password" required/>
-
-                                Kata sandi baru <br>
-                                <input id="new-password" name="newPassword" class="form-control" type="password" required/>
-                                <div id="passwordError" class="invalid-feedback">
-                                    Password harus terdiri dari 8-20 karakter, mengandung huruf besar dan kecil, mengandung angka, dan tidak boleh mengandung spasi, karakter khusus, atau emoji.
-                                </div>
-
-                                Konfirmasi kata sandi baru <br>
-                                <input id="confirm-password" name="confirmPassword" class="form-control" type="password" required/>
-                                <div id="confirmPasswordError" class="invalid-feedback">
-                                    Konfirmasi kata sandi baru harus sesuai dengan kata sandi baru.
-                                </div> -->
-                
-                                <div class="mt-5 text-center">
-                                    <button onclick="window.location.href='/'" class="btn" style="background-color: #dc3545; width: 110px;">Batal</button>
-                                    <button class="btn" type="submit" style="width: 110px;">Simpan</button>
-                                </div>
-            
-                            </form>
-                        </div>
+                            <div class="mt-5 text-center">
+                                <button onclick="window.location.href='/'" class="btn" style="background-color: #dc3545; width: 110px;">Batal</button>
+                                <button class="btn" type="submit" style="width: 110px;">Simpan</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <script>
         const passwordInput = document.getElementById("new-password");
         const confirmPasswordInput = document.getElementById("confirm-password");
         const passwordError = document.getElementById("passwordError");
         const confirmPasswordError = document.getElementById("confirmPasswordError");
+        const togglePassword = document.querySelector("#togglePassword");
+        const togglePasswordLama = document.querySelector("#togglePasswordLama");
+        const toggleConfirmPassword = document.querySelector("#toggleConfirmPassword");
+    
+        togglePassword.addEventListener("click", togglePasswordVisibility);
+        togglePasswordLama.addEventListener("click", togglePasswordVisibility);
+        toggleConfirmPassword.addEventListener("click", togglePasswordVisibility);
+    
+        function togglePasswordVisibility() {
+            const inputField = this.closest(".input-group").querySelector("input");
+            const type = inputField.getAttribute("type") === "password" ? "text" : "password";
+            inputField.setAttribute("type", type);
+            this.querySelector("i").classList.toggle("bi-eye");
+            this.querySelector("i").classList.toggle("bi-eye-slash");
+        }
 
         passwordInput.addEventListener("input", function () {
             const password = passwordInput.value;
@@ -112,26 +109,25 @@
         }
     </script>
 
-<!-- jquery -->
-<script src="assets/js/jquery-1.11.3.min.js"></script>
-<!-- bootstrap -->
-<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-<!-- count down -->
-<script src="assets/js/jquery.countdown.js"></script>
-<!-- isotope -->
-<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
-<!-- waypoints -->
-<script src="assets/js/waypoints.js"></script>
-<!-- owl carousel -->
-<script src="assets/js/owl.carousel.min.js"></script>
-<!-- magnific popup -->
-<script src="assets/js/jquery.magnific-popup.min.js"></script>
-<!-- mean menu -->
-<script src="assets/js/jquery.meanmenu.min.js"></script>
-<!-- sticker js -->
-<script src="assets/js/sticker.js"></script>
-<!-- main js -->
-<script src="assets/js/main.js"></script>
-
+    <!-- jquery -->
+    <script src="assets/js/jquery-1.11.3.min.js"></script>
+    <!-- bootstrap -->
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <!-- count down -->
+    <script src="assets/js/jquery.countdown.js"></script>
+    <!-- isotope -->
+    <script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+    <!-- waypoints -->
+    <script src="assets/js/waypoints.js"></script>
+    <!-- owl carousel -->
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- magnific popup -->
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- mean menu -->
+    <script src="assets/js/jquery.meanmenu.min.js"></script>
+    <!-- sticker js -->
+    <script src="assets/js/sticker.js"></script>
+    <!-- main js -->
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
