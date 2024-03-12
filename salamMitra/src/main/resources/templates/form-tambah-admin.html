@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+	<head>
+		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <title>Tambah Admin</title>
+    <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/datatables.css">
+    <style>
+      .form-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 2rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: inline-block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        width: 120px;
+      }
+
+      select.form-control {
+        margin-bottom: 1rem;
+      }
+
+      .invalid-feedback {
+        display: none;
+        margin-top: 0.25rem;
+        font-size: 0.8rem;
+        color: #dc3545;
+      }
+
+      .btn-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2rem;
+      }
+
+      .btn-container button {
+        flex-basis: 48%;
+        text-align: center;
+      }
+
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+  </style>
+	</head>
+  <body>
+    <div th:replace="~{fragments/navbar :: header}"></div>
+    
+	<div class="container">
+		<div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
+			<div class="container" data-aos="fade-up">
+				<div class="row d-flex justify-content-center">
+          <div class="card m-4">
+              <div class="card-header p-4">
+                  <h2 class="text-center"> Tambah Admin </h2>
+              </div>
+              <div class="card-body p-4">
+                  <div class="justify-content-center">
+                      <form th:action="@{/pengguna/tambah-admin}" th:object="${adminDTO}" method="POST" onsubmit="return validateForm()">
+                          Username <br>
+                          <input class="form-control" type="text" th:field="*{username}" required/>
+                          <br>
+      
+                          Email <br>
+                          <input class="form-control" type="text" th:field="*{email}" required/>
+                          <div class="invalid-feedback" id="emailError"></div>
+                          <br>
+      
+                          Password <br>
+                          <input id="password" class="form-control" type="password" th:field="*{password}" required/>
+                          <div id="passwordError" class="invalid-feedback">
+                            Password harus terdiri dari 8-20 karakter, mengandung huruf dan angka, dan tidak boleh mengandung spasi, karakter khusus, atau emoji.
+                          </div>
+                          <br>
+      
+                          Nama Lengkap <br>
+                          <input class="form-control" type="text" th:field="*{fullName}" required/>
+                          <br>
+      
+                          Alamat <br>
+                          <input class="form-control" type="text" th:field="*{address}" required/>
+                          <br>
+      
+                          Jenis Kelamin: <br>
+                          <table class="table">
+                              <tbody>
+                              <tr>
+                                  <select class="form-control" th:field="*{gender}" id="validationCustom05" required>
+                                      <option value="" disabled selected>Pilih...</option>
+                                      <option value="Laki-Laki">Pria</option>
+                                      <option value="Perempuan">Wanita</option>
+                                  </select>
+                                  <div class="invalid-feedback">
+                                    Silakan pilih jenis kelamin yang sesuai.
+                                  </div>
+                              </tr>
+                              </tbody>
+                          </table>
+                          <br>
+      
+                          Kontak: <br>
+                          <input class="form-control" type="number" th:field="*{contact}" required/>
+                          <br>
+      
+                          Admin Role: <br>
+                          <table class="table">
+                              <tbody>
+                              <tr>
+                                  <select class="form-control" th:field="*{adminRole}" id="validationCustom04" required>
+                                      <option value="" disabled selected>Pilih...</option>
+                                      <option value="PROGRAM">Program</option>
+                                      <option value="FINANCE">Finance</option>
+                                  </select>
+                                  <div class="invalid-feedback">
+                                    Silakan pilih admin role yang sesuai.
+                                  </div>
+                              </tr>
+                              </tbody>
+                          </table>
+                          <br>    
+                          <div class="text-center m-4">
+                              <a href="/pengguna" class="btn btn-danger" style="background-color: #dc3545;">Batal</a>
+                              <button class="btn btn-primary" type="submit">Simpan</button>
+                          </div>
+      
+                      </form>
+                  </div>
+      
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+    <script>
+      const passwordInput = document.getElementById("password");
+      const passwordError = document.getElementById("passwordError");
+    
+      passwordInput.addEventListener("input", function () {
+        const password = passwordInput.value;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/;
+    
+        if (passwordRegex.test(password)) {
+          passwordError.style.display = "none";
+        } else {
+          passwordError.style.display = "block";
+        }
+      });
+    </script>
+    <script>
+      function removeAlerts() {
+        setTimeout(function () {
+          jQuery('.alert').fadeOut('fast', function () {
+            jQuery(this).remove();
+          });
+        }, 3000); // Adjust the timeout duration (in milliseconds) as needed
+      }
+    
+      removeAlerts();
+    </script>
+    <script>
+      const emailInput = document.querySelector('input[type="text"][th:field="*{email}"]');
+      const emailError = document.createElement("div");
+      emailError.classList.add("invalid-feedback");
+      emailError.id = "emailError";
+      emailInput.parentNode.appendChild(emailError);
+    
+      emailInput.addEventListener("input", function () {
+        const email = emailInput.value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+        if (emailRegex.test(email)) {
+          emailError.style.display = "none";
+        } else {
+          emailError.style.display = "block";
+          emailError.textContent = "Format email tidak valid. Harap masukkan email yang benar.";
+        }
+      });
+    </script>
+
+<!-- jquery -->
+<script src="assets/js/jquery-1.11.3.min.js"></script>
+<!-- bootstrap -->
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
