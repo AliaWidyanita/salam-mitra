@@ -101,7 +101,7 @@ public class SalamMitraApplication {
                 admin.setUsername("adminprogram1");
                 admin.setEmail("adminprogram@salamsetara.com");
                 admin.setPassword(new BCryptPasswordEncoder().encode("Adminprogram1"));
-                admin.setFullName("AdminProgram");
+                admin.setFullName("Admin Program 1");
                 admin.setAddress("Address 3");
                 admin.setGender("Pria");
                 admin.setContact(1234567890L);
