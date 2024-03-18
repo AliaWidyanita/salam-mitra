@@ -71,14 +71,17 @@
 </script>
 
 <script>
-    // Menampilkan pesan sukses
-    document.getElementById("successMessage").style.display = "block";
+    function removeAlerts() {
+        setTimeout(function () {
+            jQuery('.alert').fadeOut('fast', function () {
+                jQuery(this).remove();
+            });
+        }, 2000); // Adjust the timeout duration (in milliseconds) as needed
+    }
 
-    // Mengatur waktu tampilan pesan sebelum menghilang
-    setTimeout(function() {
-        document.getElementById("successMessage").style.display = "none";
-    }, 3000); // 3000 milliseconds = 3 seconds
+    removeAlerts();
 </script>
+
 
 <!-- jquery -->
 <script src="assets/js/jquery-1.11.3.min.js"></script>

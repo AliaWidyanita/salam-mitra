@@ -76,7 +76,7 @@ public class SalamMitraApplication {
                 ProgramService programService = new ProgramService();
                 programService.setUsername("programservice1");
                 programService.setEmail("programservice1@salamsetara.com");
-                programService.setPassword(new BCryptPasswordEncoder().encode("programservice1"));
+                programService.setPassword(new BCryptPasswordEncoder().encode("Programservice1"));
                 programService.setFullName("Program Service 1");
                 programService.setAddress("Address 1");
                 programService.setGender("Pria");
@@ -88,7 +88,7 @@ public class SalamMitraApplication {
                 Manajemen manajemen = new Manajemen();
                 manajemen.setUsername("manajemen1");
                 manajemen.setEmail("manajemen1@salamsetara.com");
-                manajemen.setPassword(new BCryptPasswordEncoder().encode("manajemen1"));
+                manajemen.setPassword(new BCryptPasswordEncoder().encode("Manajemen1"));
                 manajemen.setFullName("Manajemen 1");
                 manajemen.setAddress("Address 2");
                 manajemen.setGender("Wanita");
@@ -98,10 +98,10 @@ public class SalamMitraApplication {
 
             if (penggunaService.getAllAdmin().isEmpty()) {
                 Admin admin = new Admin();
-                admin.setUsername("adminprogram");
+                admin.setUsername("adminprogram1");
                 admin.setEmail("adminprogram@salamsetara.com");
-                admin.setPassword(new BCryptPasswordEncoder().encode("adminprogram"));
-                admin.setFullName("AdminProgram");
+                admin.setPassword(new BCryptPasswordEncoder().encode("Adminprogram1"));
+                admin.setFullName("Admin Program 1");
                 admin.setAddress("Address 3");
                 admin.setGender("Pria");
                 admin.setContact(1234567890L);
