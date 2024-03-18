@@ -24,6 +24,14 @@ public class Pengajuan {
     @CreationTimestamp
     private Date waktuDibuat;
 
+
+    @Column(name = "status", nullable = false)
+    private String status;
+
+    @Column(name = "statusManajer")
+    private String statusManajer;
+
+
     @Column(name = "namaProgram", nullable = false)
     private String namaProgram;
 
@@ -38,6 +46,15 @@ public class Pengajuan {
 
     @Column(name = "kontakPIC", nullable = false)
     private String kontakPIC;
+    
+    @Column(name = "bank", nullable = false)
+    private String bank;
+
+    @Column(name = "namaPemilikRekening", nullable = false)
+    private String namaPemilikRekening;
+
+    @Column(name = "nomorRekening", nullable = false)
+    private Long nomorRekening;
 
     @Column(name = "alamatKantor", nullable = false)
     private String alamatKantor;
@@ -100,5 +117,13 @@ public class Pengajuan {
 
     @Column(name = "username", nullable = false)
     private String username; 
+
+
+    @Column(name = "buktiPencairanDana")
+    private String buktiPencairanDana; 
+    
+    @Column(name = "komentar")
+    private String komentar; 
+
 
 }

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -13,8 +15,8 @@ import jakarta.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "program")
-public class Program {
+@Table(name = "programKerja")
+public class ProgramKerja {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,11 +37,11 @@ public class Program {
     @Column(name = "eligibilitas", nullable = false)
     private String eligibilitas;
 
-    @NotNull
-    @Column(name = "syarat", nullable = false)
+    @Column(name = "syarat")
     private String syarat;
 
     @NotNull
     @Column(name = "form", nullable = false)
     private String form;
+
 }

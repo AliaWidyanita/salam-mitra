@@ -44,53 +44,56 @@
 										<br>
                                         <div class="form-row">
                                             <div class="form-holder form-holder-2">
-                                                <label for="nama_mitra">Nama Mitra</label>
+                                                <label for="nama_mitra">Nama Mitra*</label>
                                                 <input type="text" name="nama_mitra" id="nama_mitra" placeholder="Nama Mitra" class="form-control" th:field="*{pengajuanDTO.namaMitra}" required>
                                             </div>
                                         </div>
 										<div class="form-row">
 											<div class="form-holder form-holder-2">
-												<label for="nama_program">Nama Program</label>
+												<label for="nama_program">Nama Program*</label>
 												<input type="text" name="nama_program" id="nama_program" placeholder="Nama Program" class="form-control"  th:field="*{pengajuanDTO.namaProgram}" required>
 											</div>
 										</div>
 										<div class="form-holder form-holder-2">
-											<label for="kategori">Kategori</label>
+											<label for="kategori">Kategori*</label>
 											<select name="kategori" id="kategori" class="form-control"  th:field="*{pengajuanDTO.kategori}" required>
-												<option value="" disabled selected>--Pilih Kategori Program--</option>
-												<option value="Pendidikan">Pendidikan</option>
-												<option value="Kesehatan">Kesehatan</option>
-												<option value="Kesejahteraan">Kesejahteraan</option>
+												<option value="">--Pilih Kategori--</option>
+												<option th:each="kategori : ${daftarKategori}" th:value="${kategori}" th:text="${kategori}"></option>
+
 											</select>
 										</div>
 										<br>
 										<div class="form-row">
 											<div class="form-holder form-holder-2">
-												<label for="nama_pic">Nama Person In Charge (PIC)</label>
+												<label for="nama_pic">Nama Person In Charge (PIC)*</label>
 												<input type="text" name="nama_pic" id="nama_pic" placeholder="Nama Person In Charge (PIC)" class="form-control"  th:field="*{pengajuanDTO.namaPIC}" required>
 											</div>
 										</div>
 										<div class="form-row">
 											<div class="form-holder form-holder-2">
-												<label for="kontak_pic">Kontak Person In Charge (PIC)</label>
+												<label for="kontak_pic">Kontak Person In Charge (PIC)*</label>
 												<input type="number" name="kontak_pic" id="kontak_pic" placeholder="08XX-XXXX-XXXX" class="form-control" th:field="*{pengajuanDTO.kontakPIC}" required oninput="validatePhoneNumber(this)">
 											</div>
 										</div>
+
 										<div class="form-row">
 											<div class="form-holder form-holder-2">
-												<label for="alamat">Alamat</label>
+												<label for="alamat">Alamat*</label>
 												<input type="text" name="alamat" id="alamat" placeholder="Alamat Kantor atau Rumah" class="form-control"  th:field="*{pengajuanDTO.alamatKantor}" required>
 											</div>
 										</div>
 										<div class="form-holder form-holder-2">
-										<label for="ktpPIC">KTP Person In Charge (PIC)</label>
+										<label for="ktpPIC">KTP Person In Charge (PIC)*</label>
 										<input type="file" name="ktpPIC" accept=".jpg, .png, .jpeg" class="form-control-file form-control" required>
+										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
 										</div>
 										<br>
 
 
                                     </div>
                                 </section>
+
+
                                 <!-- SECTION 2 -->
                                 <h2>
                                     <div class="step-text">
@@ -179,6 +182,60 @@
 
                                     </div>
                                 </section>
+
+								
+								<!-- SECTION 2.5 -->
+								<h2>
+									<div class="step-text">
+
+									</div>
+								</h2>
+								<br>
+								<section>
+									<div class="inner">
+										<div class="wizard-header">
+											<h3 class="heading">Tujuan Pencairan Dana</h3>
+											<p class="info">Mohon pastikan bahwa informasi bank, nama pemilik, dan nomor rekening yang Anda berikan adalah akurat. Kesalahan dalam pengisian data dapat berdampak pada proses persetujuan pengajuan kerja sama Anda.</p>
+
+										</div>
+										<br>
+
+										<div class="form-holder form-holder-2">
+											<label for="bank">Bank*</label>
+											<select name="bank" id="bank" class="form-control" onchange="checkBank(this);" th:field="*{pengajuanDTO.bank}" required>
+												<option value="">--Pilih Bank--</option>
+												<option value="Bank Central Asia (BCA)">Bank Central Asia (BCA)</option>
+												<option value="Bank CIMB Niaga">Bank CIMB Niaga</option>
+												<option value="Bank Mandiri">Bank Mandiri</option>
+												<option value="Bank Mega">Bank Mega</option>
+												<option value="Bank Negara Indonesia (BNI)">Bank Negara Indonesia (BNI)</option>
+												<option value="Bank Rakyat Indonesia (BRI)">Bank Rakyat Indonesia (BRI)</option>
+												<option value="Bank Tabungan Negara (BTN)">Bank Tabungan Negara (BTN)</option>
+												<option value="Bank Syariah Mandiri">Bank Syariah Mandiri</option>
+												<!-- Tambahkan opsi untuk bank lainnya -->
+												<option value="Lainnya">Lainnya</option>
+											</select>
+											<br>
+											<input type="text" id="bank_lainnya" name="bank_lainnya" placeholder="Masukkan Nama Bank*" class="form-control" style="display: none;" oninput="replaceDropdownValue()">
+										</div>
+										<br>
+
+										<div class="form-row">
+											<div class="form-holder form-holder-2">
+												<label for="nama_pemilik_rekening">Nama Pemilik Rekening*</label>
+												<input type="text" name="nama_pemilik_rekening" id="nama_pemilik_rekening" placeholder="Nama Pemilik Rekening" class="form-control" th:field="*{pengajuanDTO.namaPemilikRekening}">
+											</div>
+										</div>
+										
+										<div class="form-row">
+											<div class="form-holder form-holder-2">
+												<label for="nomor_rekening">No. Rekening*</label>
+												<input type="number" name="nomor_rekening" id="nomor_rekening" placeholder="Nomor Rekening" class="form-control" th:field="*{pengajuanDTO.nomorRekening}">
+											</div>
+										</div>
+									</div>
+								</section>
+
                                 <!-- SECTION 3 -->
                                 <h2>
                                     <div class="step-text">
@@ -192,13 +249,16 @@
 										</div>
 										<br>
 										<div class="form-holder form-holder-2">
-											<label for="rab">Rancangan Anggaran Biaya (RAB)</label>
+											<label for="rab">Rancangan Anggaran Biaya (RAB)*</label>
 											<input type="file" name="rab" accept=".pdf" class="form-control-file form-control" required>
+											<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
+
 										</div>
 										<br>
 										<div class="form-holder form-holder-2">
-											<label for="dokumen">Dokumen Perizinan</label>
+											<label for="dokumen">Dokumen Perizinan*</label>
 											<input type="file" name="dokumen" accept=".pdf" class="form-control-file form-control" required>
+											<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
 										</div>
 									</div>                                
 								</section>
@@ -216,22 +276,26 @@
 										<br>
 										<div class="form-row">
 											<div class="form-holder form-holder-2">
-												<label for="tanggal_mulai">Tanggal Mulai Implementasi</label>
-												<input type="date" name="tanggal_mulai" id="tanggal_mulai" placeholder="Tanggal Mulai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalMulai}" required>
+												<label for="tanggal_mulai">Tanggal Mulai Implementasi*</label>
+												<input type="date" name="tanggal_mulai" id="tanggal_mulai" placeholder="Tanggal Mulai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalMulai}"  required>
 											</div>
 										</div>
 										<div class="form-row">
 											<div class="form-holder form-holder-2">
-												<label for="tanggal_selesai">Tanggal Selesai Implementasi</label>
+												<label for="tanggal_selesai">Tanggal Selesai Implementasi*</label>
+												<!-- Atribut 'min' diatur ke tanggal mulai menggunakan JavaScript -->
 												<input type="date" name="tanggal_selesai" id="tanggal_selesai" placeholder="Tanggal Selesai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalSelesai}" required>
 											</div>
 										</div>
 										<div class="form-row">
 											<div class="form-holder form-holder-2">
-												<label for="tanggal_laporan">Tanggal Selesai Laporan</label>
+												<label for="tanggal_laporan">Tanggal Selesai Laporan*</label>
+												<!-- Atribut 'min' diatur ke tanggal mulai menggunakan JavaScript -->
 												<input type="date" name="tanggal_laporan" id="tanggal_laporan" placeholder="Tanggal Selesai Laporan" class="form-control" th:field="*{pengajuanDTO.tanggalLaporan}" required>
 											</div>
 										</div>
+
+
 									</div>
 								</section>
 								<br>
@@ -244,7 +308,7 @@
 										<br>
 										<div>
 											<div class="form-holder form-holder-2">
-												<label for="provinsi">Provinsi</label>
+												<label for="provinsi">Provinsi*</label>
 												<!-- Dropdown untuk provinsi -->
 												<select name="provinsi" id="provinsi" class="form-control" th:field="*{pengajuanDTO.provinsi}" required>
 													<option value="">--Pilih Provinsi--</option>
@@ -254,14 +318,14 @@
 											</div>
 											<br>
 											<div class="form-holder form-holder-2">
-												<label for="kabupatenKota">Kabupaten/Kota</label>
+												<label for="kabupatenKota">Kabupaten/Kota*</label>
 												<select name="kabupatenKota" id="kabupatenKota" class="form-control" th:field="*{pengajuanDTO.kabupatenKota}" required>
 													<option value="">--Pilih Kabupaten/Kota--</option> <!-- Tambahkan atribut "value" kosong di sini -->
 												</select>
 											</div>
 											<br>
 											<div class="form-holder form-holder-2">
-												<label for="kecamatan">Kecamatan</label>
+												<label for="kecamatan">Kecamatan*</label>
 												<select name="kecamatan" id="kecamatan" class="form-control" th:field="*{pengajuanDTO.kecamatan}" required>
 													<option value="">--Pilih Kabupaten/Kota--</option> <!-- Tambahkan atribut "value" kosong di sini -->
 												</select>
@@ -269,7 +333,7 @@
 											<br>
 											<div class="form-row">
 												<div class="form-holder form-holder-2">
-												<label for="alamatLengkap">Alamat Lengkap</label>
+												<label for="alamatLengkap">Alamat Lengkap*</label>
 												<input type="text" name="alamatLengkap" id="alamatLengkap" placeholder="Alamat Lengkap" class="form-control"  th:field="*{pengajuanDTO.alamatLengkap}" required>
 												</div>
 											</div>
@@ -361,6 +425,35 @@
 
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function checkBank(select) {
+        var selectedOption = select.options[select.selectedIndex].value;
+        var bankLainnyaInput = document.getElementById('bank_lainnya');
+        if (selectedOption === 'Lainnya') {
+            bankLainnyaInput.style.display = 'block';
+            bankLainnyaInput.required = true;
+        } else {
+            bankLainnyaInput.style.display = 'none';
+            bankLainnyaInput.required = false;
+        }
+    }
+
+    function replaceDropdownValue() {
+        var dropdown = document.getElementById('bank');
+        var selectedOption = dropdown.options[dropdown.selectedIndex].value;
+        var bankLainnyaInput = document.getElementById('bank_lainnya');
+        if (selectedOption === 'Lainnya') {
+            // Ambil nilai dari input teks 'bank_lainnya'
+            var bankLainnyaValue = bankLainnyaInput.value;
+            // Ganti nilai dropdown dengan nilai dari input teks
+            dropdown.options[dropdown.selectedIndex].value = bankLainnyaValue;
+        }
+    }
+</script>
+
+
+
 <script>
     $(document).ready(function() {
         $('#provinsi').change(function() {
@@ -407,6 +500,42 @@
         });
     });
 </script>
+<script>
+    // Mendapatkan elemen input tanggal mulai, tanggal selesai implementasi, dan tanggal selesai laporan
+    var tanggalMulaiInput = document.getElementById('tanggal_mulai');
+    var tanggalSelesaiInput = document.getElementById('tanggal_selesai');
+    var tanggalLaporanInput = document.getElementById('tanggal_laporan');
+
+    // Menambahkan event listener untuk memvalidasi tanggal selesai implementasi saat nilai tanggal mulai berubah
+    tanggalMulaiInput.addEventListener('change', function() {
+        // Mendapatkan nilai tanggal mulai
+        var tanggalMulai = new Date(tanggalMulaiInput.value);
+        // Mengatur atribut 'min' pada tanggal selesai implementasi dan tanggal selesai laporan ke tanggal mulai
+        tanggalSelesaiInput.min = tanggalMulaiInput.value;
+        tanggalLaporanInput.min = tanggalMulaiInput.value;
+        // Reset nilai tanggal selesai implementasi dan tanggal selesai laporan jika sebelum tanggal mulai
+        if (new Date(tanggalSelesaiInput.value) < tanggalMulai) {
+            tanggalSelesaiInput.value = tanggalMulaiInput.value;
+        }
+        if (new Date(tanggalLaporanInput.value) < tanggalMulai) {
+            tanggalLaporanInput.value = tanggalMulaiInput.value;
+        }
+    });
+
+    // Menambahkan event listener untuk memvalidasi tanggal selesai laporan saat nilai tanggal selesai implementasi berubah
+    tanggalSelesaiInput.addEventListener('change', function() {
+        // Mendapatkan nilai tanggal selesai implementasi
+        var tanggalSelesai = new Date(tanggalSelesaiInput.value);
+        // Mengatur atribut 'min' pada tanggal selesai laporan ke tanggal selesai implementasi
+        tanggalLaporanInput.min = tanggalSelesaiInput.value;
+        // Reset nilai tanggal selesai laporan jika sebelum tanggal selesai implementasi
+        if (new Date(tanggalLaporanInput.value) < tanggalSelesai) {
+            tanggalLaporanInput.value = tanggalSelesaiInput.value;
+        }
+    });
+</script>
+
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

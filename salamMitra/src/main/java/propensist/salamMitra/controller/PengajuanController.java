@@ -24,8 +24,12 @@ import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;
 import propensist.salamMitra.service.PengajuanService;
 import propensist.salamMitra.service.PenggunaService;
+import propensist.salamMitra.service.ProgramKerjaService;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
 @Controller
 public class PengajuanController {
@@ -46,6 +50,9 @@ public class PengajuanController {
     private LokasiService lokasiService;
 
     @Autowired
+    private ProgramKerjaService programKerjaService;
+
+    @Autowired
     private PenggunaService penggunaService;
 
     @GetMapping("/pengajuan/tambah")
@@ -60,6 +67,8 @@ public class PengajuanController {
         var listPengajuanKebutuhanDanaDTO = new CreateListPengajuanKebutuhanDanaDTO();
         model.addAttribute("listPengajuanKebutuhanDanaDTO", listPengajuanKebutuhanDanaDTO);
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
+        model.addAttribute("daftarKategori", programKerjaService.getAllKategori());
+
 
         return "form-tambah-pengajuan";
     }
@@ -69,6 +78,7 @@ public class PengajuanController {
                                @RequestParam("ktpPIC") MultipartFile ktpPIC,
                                @RequestParam("rab") MultipartFile rab,
                                @RequestParam("dokumen") MultipartFile dokumen,
+                               RedirectAttributes redirectAttributes,
                                Model model) throws IOException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -88,6 +98,8 @@ public class PengajuanController {
         pengajuan.setKtpPIC(ktpPICBytes);
         pengajuan.setRab(rabBytes);
         pengajuan.setDokumen(dokumenBytes);
+        pengajuan.setStatus("Diajukan");
+
         Long id = pengajuan.getId();
         Long nominalDana = 0L;
         pengajuan.setNominalKebutuhanDana(nominalDana);
@@ -111,6 +123,7 @@ public class PengajuanController {
         model.addAttribute("pengajuan", pengajuanDTO);
         model.addAttribute("id", id);
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
+        redirectAttributes.addFlashAttribute("successMessage", "Kerja Sama baru berhasil diajukan!");
 
     
         return "redirect:/pengajuan";
