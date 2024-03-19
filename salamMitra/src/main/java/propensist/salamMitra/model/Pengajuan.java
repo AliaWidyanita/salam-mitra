@@ -28,9 +28,6 @@ public class Pengajuan {
     @Column(name = "status", nullable = false)
     private String status;
 
-    @Column(name = "statusManajer")
-    private String statusManajer;
-
 
     @Column(name = "namaProgram", nullable = false)
     private String namaProgram;

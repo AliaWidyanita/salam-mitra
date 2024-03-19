@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+import java.util.Optional;
 import java.util.ArrayList;
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.KebutuhanDanaMapper;
@@ -126,11 +127,11 @@ public class PengajuanController {
         redirectAttributes.addFlashAttribute("successMessage", "Kerja Sama baru berhasil diajukan!");
 
     
-        return "redirect:/pengajuan";
+        return "redirect:/pengajuan/daftar-pengajuan-saya";
     }
 
-    @GetMapping("/pengajuan")
-    public String listPengajuan(Model model) {
+    @GetMapping("/pengajuan/daftar-pengajuan-saya")
+    public String listPengajuanByMitra(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         Pengguna user = penggunaService.authenticate(auth.getName());
@@ -155,11 +156,11 @@ public class PengajuanController {
         // Menambahkan list pengajuan ke model untuk ditampilkan di halaman web
         model.addAttribute("listPengajuan", listPengajuanUsername);
 
-        return "viewall-pengajuan";
+        return "daftar-pengajuan-saya";
     }
 
-    @GetMapping("/pengajuan/{id}")
-    public String detailAjuan(@PathVariable("id") String id, Model model) {
+    @GetMapping("/pengajuan/detail-pengajuan-saya/{id}")
+    public String detailAjuanByMitra(@PathVariable("id") String id, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         Pengguna user = penggunaService.authenticate(auth.getName());
@@ -180,7 +181,7 @@ public class PengajuanController {
                 pengajuanService.handleDOC(pengajuan);
 
                 model.addAttribute("pengajuan", pengajuan);
-                return "view-pengajuan";
+                return "detail-pengajuan-saya";
             } 
             else {
                 return "error-page";
@@ -188,5 +189,117 @@ public class PengajuanController {
         } catch (Exception e) {
             return "error-page";
         }
-    }   
+    } 
+
+    @GetMapping("/pengajuan/daftar-pengajuan-admin")
+    public String listPengajuanByAdmin(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
+        List<Pengajuan> listPengajuan = pengajuanService.getAllPengajuan();
+        // Membuat list baru untuk menyimpan Pengajuan dengan username yang sesuai
+
+
+
+        // Menambahkan list pengajuan ke model untuk ditampilkan di halaman web
+        model.addAttribute("listPengajuan", listPengajuan);
+
+        return "daftar-pengajuan-admin";
+    }
+
+    @GetMapping("/pengajuan/review-pengajuan-admin/{id}")
+    public String reviewAjuanByAdmin(@PathVariable("id") String id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
+        Long longId = Long.parseLong(id);
+        
+            var optPengajuan = pengajuanService.getPengajuanById(longId);
+            
+            if (optPengajuan.isPresent()) {
+                Pengajuan pengajuan = optPengajuan.get();
+
+
+                if (pengajuan.getStatus().equalsIgnoreCase("Diajukan")){
+                    pengajuan.setStatus("In Review");
+                }
+               
+                pengajuanService.savePengajuan(pengajuan);
+
+                pengajuanService.handleKTP(pengajuan);
+                pengajuanService.handleRAB(pengajuan);
+                pengajuanService.handleDOC(pengajuan);
+
+                model.addAttribute("pengajuan", pengajuan);
+                return "review-pengajuan-admin";
+            } 
+            else {
+                return "error-page";
+            }
+ 
+    } 
+    @PostMapping("/pengajuan/review-pengajuan-admin/{id}")
+    public String submitReviewByAdmin(@PathVariable("id") String id,
+                                      @RequestParam(value="comment", required = false) String comment,
+                                      @RequestParam("action") String action,
+                                      Model model) {
+        // Ambil informasi pengguna yang sedang login
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+    
+        // Ubah ID menjadi tipe data Long
+        Long longId = Long.parseLong(id);
+        Optional<Pengajuan> optPengajuan = pengajuanService.getPengajuanById(longId);
+    
+        if (optPengajuan.isPresent()) {
+            Pengajuan pengajuan = optPengajuan.get();
+            
+            // Set komentar pada pengajuan
+            pengajuan.setKomentar(comment);
+            
+            // Sesuaikan status berdasarkan aksi yang dipilih
+            switch (action) {
+                case "setujui":
+                    pengajuan.setStatus("Menunggu Pencairan Dana");
+                    break;
+                case "tolak":
+                    pengajuan.setStatus("Ditolak");
+                    break;
+                case "perlu-revisi":
+                    pengajuan.setStatus("Perlu Revisi");
+                    break;
+                case "teruskan":
+                    pengajuan.setStatus("Diteruskan ke Manajemen");
+                    break;
+                default:
+                    // Aksi tidak valid
+                    return "error-page";
+            }
+            
+            // Simpan perubahan pada pengajuan
+            pengajuanService.savePengajuan(pengajuan);
+            
+            // Redirect kembali ke halaman review dengan mengirimkan ID pengajuan
+            return "redirect:/pengajuan/review-pengajuan-admin/" + id;
+        } else {
+            // Pengajuan tidak ditemukan
+            return "error-page";
+        }
+    }
+    
+
+    
+    
+
 }

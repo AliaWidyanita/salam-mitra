@@ -79,14 +79,14 @@ public class SalamMitraApplication {
             }
 
             
-                Mitra mitra = new Mitra();
-                mitra.setUsername("mitra1");
-                mitra.setEmail("manajemen1@salamsetara.com");
-                mitra.setPassword(new BCryptPasswordEncoder().encode("Mitranad1"));
-                mitra.setCompanyName("Com 2");
-                mitra.setLocation("Address 2");
-                mitra.setContact(1234567890L);
-                penggunaService.saveMitra(mitra);
+                // Mitra mitra = new Mitra();
+                // mitra.setUsername("mitra1");
+                // mitra.setEmail("manajemen1@salamsetara.com");
+                // mitra.setPassword(new BCryptPasswordEncoder().encode("Mitranad1"));
+                // mitra.setCompanyName("Com 2");
+                // mitra.setLocation("Address 2");
+                // mitra.setContact(1234567890L);
+                // penggunaService.saveMitra(mitra);
             
 
             if (penggunaService.getAllAdmin().isEmpty()) {
