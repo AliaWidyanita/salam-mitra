@@ -67,18 +67,18 @@
                                 </a>
                             </li>
                     
-                            <li th:if="${role == 'admin' || role == 'manajemen' || role == 'program_service'}" 
+                            <li th:if="${role == 'admin_PROGRAM' || role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}" 
                                 class="current-list-item">
                                 <a th:href="@{/}">
                                     Dashboard
                                 </a>
                             </li>
-                            <li th:if="${role == 'admin' || role == 'manajemen' || role == 'program_service'}">
+                            <li th:if="${role == 'admin_PROGRAM' || role == 'manajemen' || role == 'program_service'}">
                                 <a th:href="@{/}">
                                     Program
                                 </a>
                             </li>
-                            <li th:if="${role == 'admin' || role == 'manajemen' || role == 'program_service'}">
+                            <li th:if="${role == 'admin_PROGRAM' || role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}">
                                 <a th:href="@{/}">
                                     Ajuan Kerja Sama
                                 </a>
@@ -88,7 +88,7 @@
                                     Daftar Pengguna
                                 </a>
                             </li>
-                            <li th:if="${role == 'admin' || role == 'manajemen' || role == 'program_service'}">
+                            <li th:if="${role == 'admin_PROGRAM' || role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}">
                                 <a th:href="@{/}">
                                     Pencairan
                                 </a>
