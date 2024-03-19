@@ -23,6 +23,13 @@ public class CreatePengajuanRequestDTO {
 
     private String kontakPIC;
 
+    private String bank;
+
+    private String namaPemilikRekening;
+
+    private Long nomorRekening;
+
+
     private String alamatKantor;
 
     private List<KebutuhanDana> listKebutuhanDana = new ArrayList<>();

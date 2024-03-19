@@ -13,9 +13,12 @@ import propensist.salamMitra.dto.request.CreateLokasiRequestDTO;
 import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Lokasi;
 import propensist.salamMitra.model.Manajemen;
+import propensist.salamMitra.model.Mitra;
+import propensist.salamMitra.model.ProgramKerja;
 import propensist.salamMitra.model.ProgramService;
 import propensist.salamMitra.service.LokasiService;
 import propensist.salamMitra.service.PenggunaService;
+import propensist.salamMitra.service.ProgramKerjaService;
 
 @SpringBootApplication
 public class SalamMitraApplication {
@@ -27,39 +30,18 @@ public class SalamMitraApplication {
 	@Bean
 	@Transactional
 	CommandLineRunner run(LokasiService lokasiService, LokasiMapper lokasiMapper, 
-        PenggunaService penggunaService){
+        PenggunaService penggunaService, ProgramKerjaService programKerjaService){
 		return args -> {
 			List<CreateLokasiRequestDTO> lokasiDTOs = new ArrayList<>();
 
-            // Provinsi DKI Jakarta
-            lokasiDTOs.add(new CreateLokasiRequestDTO("DKI Jakarta", "Jakarta Pusat", "Menteng"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("DKI Jakarta", "Jakarta Pusat", "Gambir"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("DKI Jakarta", "Jakarta Utara", "Tanjung Priok"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("DKI Jakarta", "Jakarta Utara", "Kelapa Gading"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("DKI Jakarta", "Jakarta Barat", "Kebon Jeruk"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("DKI Jakarta", "Jakarta Barat", "Palmerah"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("DKI Jakarta", "Jakarta Selatan", "Pancoran"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("DKI Jakarta", "Jakarta Selatan", "Kebayoran Baru"));
+            // Provinsi Provinsi Dump
+            lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dump", "Kota Dump 1", "Kec. A"));
+            lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dump", "Kota Dump 1", "Kec. B"));
+            lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dump", "Kota Dump 2", "Kec. C"));
+            lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dump", "Kota Dump 2", "Kec. D"));
 
 
-            // Provinsi Sumatera Barat
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Sumatera Barat", "Padang", "Pauh"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Sumatera Barat", "Padang", "Kuranji"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Sumatera Barat", "Bukittinggi", "Mandiangin Koto Selayan"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Sumatera Barat", "Bukittinggi", "Banuhampu"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Sumatera Barat", "Padang Panjang", "Lubuk Begalung"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Sumatera Barat", "Padang Panjang", "Padang Panjang Timur"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Sumatera Barat", "Payakumbuh", "Beringin"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Sumatera Barat", "Payakumbuh", "Payakumbuh"));
 
-
-            // Provinsi Jawa Barat
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Jawa Barat", "Bandung", "Lengkong"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Jawa Barat", "Bandung", "Regol"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Jawa Barat", "Bogor", "Bogor Tengah"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Jawa Barat", "Bogor", "Bogor Utara"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Jawa Barat", "Depok", "Beji"));
-            lokasiDTOs.add(new CreateLokasiRequestDTO("Jawa Barat", "Depok", "Cinere"));
 
             // Simpan lokasi ke database menggunakan LokasiService
             if (lokasiService.getAllLokasi().isEmpty()) {
@@ -96,6 +78,17 @@ public class SalamMitraApplication {
                 penggunaService.saveManajemen(manajemen);
             }
 
+            
+                // Mitra mitra = new Mitra();
+                // mitra.setUsername("mitra1");
+                // mitra.setEmail("manajemen1@salamsetara.com");
+                // mitra.setPassword(new BCryptPasswordEncoder().encode("Mitranad1"));
+                // mitra.setCompanyName("Com 2");
+                // mitra.setLocation("Address 2");
+                // mitra.setContact(1234567890L);
+                // penggunaService.saveMitra(mitra);
+            
+
             if (penggunaService.getAllAdmin().isEmpty()) {
                 Admin admin = new Admin();
                 admin.setUsername("adminprogram1");
@@ -107,6 +100,28 @@ public class SalamMitraApplication {
                 admin.setContact(1234567890L);
                 admin.setAdminRole(Admin.AdminRole.PROGRAM);
                 penggunaService.saveAdmin(admin);
+            }
+
+            if (programKerjaService.getAllProgramKerja().isEmpty()){
+                ProgramKerja programKerja = new ProgramKerja();
+                programKerja.setJudul("Judul1");
+                programKerja.setKategori("Pendidikan");
+                programKerja.setDeskripsi("Desc1");
+                programKerja.setEligibilitas("Eli1");
+                programKerja.setSyarat("Syarat1");
+                programKerja.setForm("Dummy1");
+
+                ProgramKerja programKerja2 = new ProgramKerja();
+                programKerja2.setJudul("Judul2");
+                programKerja2.setKategori("Kesehatan");
+                programKerja2.setDeskripsi("Des");
+                programKerja2.setEligibilitas("El21");
+                programKerja.setSyarat("Syarat2");
+                programKerja2.setForm("Dummy2");
+
+                programKerjaService.saveProgramKerja(programKerja);
+                programKerjaService.saveProgramKerja(programKerja2);
+
             }
 		};	
 	}
