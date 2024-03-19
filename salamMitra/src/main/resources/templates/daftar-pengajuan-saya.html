@@ -5,6 +5,7 @@
     <title>Daftar Pengajuan Kerja Sama</title>
     <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/css/datatables.css">
+
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: header}"></div>
@@ -13,10 +14,10 @@
         <div class="container" data-aos="fade-up">
             <div class="row d-flex justify-content-center">
                 <div class="col-md-7">
-                    <h3 class="text-center m-4">Daftar Pengajuan Kerja Sama</h3>
+                    <h3 class="text-center m-4">Daftar Ajuan Saya</h3>
                     <div class="row">
                         <div class="col-sm-6">
-                            <!-- Kosongkan kolom ini untuk memberikan ruang kosong -->
+                            <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
                         </div>
                         <div class="col-sm-6 text-right">
                             <a type="button" class="btn btn-primary btn-auto-width" href="/pengajuan/tambah">+ Buat Pengajuan</a>
@@ -28,6 +29,7 @@
                             <th scope="col">ID</th>
                             <th scope="col">Nama Mitra</th>
                             <th scope="col">Nama Program</th>
+                            <th scope="col">Status</th>
                             <th scope="col">Action</th>
                         </tr>
                         </thead>
@@ -41,9 +43,12 @@
                                 <td th:text="${pengajuan.id}"></td>
                                 <td th:text="${pengajuan.namaMitra}"></td>
                                 <td th:text="${pengajuan.namaProgram}"></td>
+                                <td th:text="${pengajuan.status}"></td>
                                 <td>
-                                    <a type="button" class="btn btn-secondary" th:href="@{/}">Hapus</a>
+                                    <a type="button" class="btn btn-md btn-secondary" th:href="@{/pengajuan/detail-pengajuan-saya/{id}(id=${pengajuan.id})}">Detail</a>
+
                                 </td>
+                                                              
                             </tr>
                         </tbody>
                     </table>
@@ -66,6 +71,9 @@
         });
     });
 </script>
+
+
+
 <script>
     // Menampilkan pesan sukses
     document.getElementById("successMessage").style.display = "block";
