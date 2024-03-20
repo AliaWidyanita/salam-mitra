@@ -37,7 +37,6 @@ public class WebSecurityConfig {
                             .requestMatchers(new AntPathRequestMatcher("/pengajuan/detail-pengajuan-saya/**")).hasAuthority("mitra")
                             .requestMatchers(new AntPathRequestMatcher("/pengajuan/daftar-pengajuan-admin")).hasAuthority("admin")
                             .requestMatchers(new AntPathRequestMatcher("/pengajuan/review-pengajuan-admin/**")).hasAuthority("admin")
-                            .requestMatchers(new AntPathRequestMatcher("/pengajuan/review-pengajuan-admin/review/**")).hasAuthority("admin")
 
                             .requestMatchers(new AntPathRequestMatcher("/pengajuan/daftar-pengajuan-manajemen")).hasAuthority("manajemen")
                             .requestMatchers(new AntPathRequestMatcher("/pengajuan/review-pengajuan-manajemen/**")).hasAuthority("manajemen")
