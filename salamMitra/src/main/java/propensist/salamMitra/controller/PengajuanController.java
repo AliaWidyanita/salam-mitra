@@ -227,7 +227,6 @@ public class PengajuanController {
             if (optPengajuan.isPresent()) {
                 Pengajuan pengajuan = optPengajuan.get();
 
-
                 if (pengajuan.getStatus().equalsIgnoreCase("Diajukan")){
                     pengajuan.setStatus("In Review");
                 }
@@ -292,6 +291,110 @@ public class PengajuanController {
             
             // Redirect kembali ke halaman review dengan mengirimkan ID pengajuan
             return "redirect:/pengajuan/review-pengajuan-admin/" + id;
+        } else {
+            // Pengajuan tidak ditemukan
+            return "error-page";
+        }
+    }
+
+    @GetMapping("/pengajuan/daftar-pengajuan-manajemen")
+    public String listPengajuanByManajemen(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
+        List<Pengajuan> listPengajuan = pengajuanService.getAllPengajuan();
+        List<Pengajuan> listPengajuanDiteruskan = new ArrayList<>();
+
+        // Iterasi melalui setiap Pengajuan di listPengajuan
+        for (Pengajuan pengajuan : listPengajuan) {
+            // Memeriksa apakah username pengajuan sama dengan username yang sedang diautentikasi
+            if (pengajuan.getStatus().equals("Diteruskan ke Manajemen")) {
+                // Jika username sama, tambahkan pengajuan ke listPengajuanUsername
+                listPengajuanDiteruskan.add(pengajuan);
+            }
+        }
+
+        // Menambahkan list pengajuan ke model untuk ditampilkan di halaman web
+        model.addAttribute("listPengajuan", listPengajuan);
+
+        return "daftar-pengajuan-manajemen";
+    }
+
+    @GetMapping("/pengajuan/review-pengajuan-manajemen/{id}")
+    public String reviewAjuanByManajemen(@PathVariable("id") String id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
+        Long longId = Long.parseLong(id);
+        
+            var optPengajuan = pengajuanService.getPengajuanById(longId);
+            
+            if (optPengajuan.isPresent()) {
+                Pengajuan pengajuan = optPengajuan.get();
+
+                pengajuanService.handleKTP(pengajuan);
+                pengajuanService.handleRAB(pengajuan);
+                pengajuanService.handleDOC(pengajuan);
+
+                model.addAttribute("pengajuan", pengajuan);
+                return "review-pengajuan-manajemen";
+            } 
+            else {
+                return "error-page";
+            }
+    } 
+    
+    @PostMapping("/pengajuan/review-pengajuan-manajemen/{id}")
+    public String submitReviewByManejemen(@PathVariable("id") String id,
+                                      @RequestParam(value="comment", required = false) String comment,
+                                      @RequestParam("action") String action,
+                                      Model model) {
+        // Ambil informasi pengguna yang sedang login
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+    
+        // Ubah ID menjadi tipe data Long
+        Long longId = Long.parseLong(id);
+        Optional<Pengajuan> optPengajuan = pengajuanService.getPengajuanById(longId);
+    
+        if (optPengajuan.isPresent()) {
+            Pengajuan pengajuan = optPengajuan.get();
+            
+            // Set komentar pada pengajuan
+            pengajuan.setKomentar(comment);
+            
+            // Sesuaikan status berdasarkan aksi yang dipilih
+            switch (action) {
+                case "setujui":
+                    pengajuan.setStatus("Menunggu Pencairan Dana");
+                    break;
+                case "tolak":
+                    pengajuan.setStatus("Ditolak");
+                    break;
+                case "perlu-revisi":
+                    pengajuan.setStatus("Perlu Revisi");
+                    break;
+                default:
+                    // Aksi tidak valid
+                    return "error-page";
+            }
+            
+            // Simpan perubahan pada pengajuan
+            pengajuanService.savePengajuan(pengajuan);
+            
+            // Redirect kembali ke halaman review dengan mengirimkan ID pengajuan
+            return "redirect:/pengajuan/review-pengajuan-manajemen/" + id;
         } else {
             // Pengajuan tidak ditemukan
             return "error-page";
