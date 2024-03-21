@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <title>Detail Ajuan</title>
+    <style>
+        .btn {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+    
+        .disabled {
+            pointer-events: none; /* Menonaktifkan interaksi pengguna */
+            opacity: 0.65; /* Memberikan efek transparansi pada tombol yang dinonaktifkan */
+            cursor: not-allowed; /* Mengubah ikon kursor saat diarahkan ke tombol yang dinonaktifkan */
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="~{fragments/navbar :: header}"></div>
+    <div class="container">
+        <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
+            <div class="container" data-aos="fade-up">
+                <div class="row d-flex justify-content-center">
+                    <div class="card">
+                        <div class="card-header p-4">
+                            <div th:if="${role eq 'mitra'}" class="d-flex justify-content-between align-items-center">                              
+                                <h1>Detail Ajuan</h1>
+                            </div>
+                            <div th:if="${role eq 'admin_PROGRAM'}" class="d-flex justify-content-between align-items-center">                              
+                                <h1 class="card-title">Review Pengajuan Kerja Sama</h1>
+                            </div>
+                            <div th:if="${role eq 'manajemen'}" class="d-flex justify-content-between align-items-center">                              
+                                <h1 class="card-title">Review Pengajuan yang Diteruskan</h1>
+                            </div>
+                        </div>
+                        <div class="sub-heading">
+                            <hr class="mt-1 mb-4">
+                            <h4>Status Ajuan : 
+                                <span th:text="${pengajuan.status}" class="text-success"></span>
+                            </h4>                       
+                        </div>
+                        <div th:if="${role eq 'mitra'}" style="margin-top: 30px;">
+                            <h5 style="margin-bottom: 5px;">Terakhir diubah</h5>
+                            <div th:if="${pengajuan.reviewedBy == null}">
+                                <p style="margin: 0;">-</p>
+                            </div>
+                            <div th:if="${pengajuan.reviewedBy != null}">
+                                <p style="margin: 0;" th:text="${pengajuan.reviewedBy}"></p>
+                            </div>
+                            <div>
+                                <h5 style="margin-top: 40px;">Komentar :</h5>
+                                <div class="sub-heading" style="border: 1px solid #ccc; background-color: #f9f9f9; padding: 10px;">
+                                    <hr class="mt-1 mb-4">
+                                    <p th:text="${pengajuan.komentar}" class="text-muted"></p>
+                                </div>
+                            </div>
+                            <div class="row justify-content-end">
+                                <div class="col-auto">
+                                    <a class="btn btn-secondary mr-2" href="/edit" th:if="${pengajuan.status == 'Diajukan'}">Revisi Ajuan</a>
+                                    <a class="btn btn-secondary mr-2" href="/edit" th:if="${pengajuan.status == 'Perlu Revisi'}">Revisi Ajuan</a>
+    
+                                </div>
+                                <div class="col-auto">
+                                    <a class="btn btn-secondary" href="/cancel" th:if="${pengajuan.status == 'Diajukan'}">Batalkan Ajuan</a>
+                                    <a class="btn btn-secondary" href="/cancel" th:if="${pengajuan.status == 'Perlu Revisi'}">Batalkan Ajuan</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <table class="table table-borderless">
+                                <tr class="no-border">
+                                    <td>ID Pengajuan</td>
+                                    <td><span th:text="': ' + ${pengajuan.id}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Waktu Dibuat</td>
+                                    <td><span th:text="': ' + ${#dates.format(pengajuan.waktuDibuat, 'HH:mm:ss dd/MM/yyyy')}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Nama Mitra</td>
+                                    <td><span th:text="': ' + ${pengajuan.namaMitra}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Nama Program</td>
+                                    <td><span th:text="': ' + ${pengajuan.namaProgram}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Kategori</td>
+                                    <td><span th:text="': ' + ${pengajuan.kategori}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Nama Person in Charge (PIC)</td>
+                                    <td><span th:text="': ' + ${pengajuan.namaPIC}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Kontak Person in Charge (PIC)</td>
+                                    <td><span th:text="': ' + ${pengajuan.kontakPIC}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Alamat Kantor atau Rumah</td>
+                                    <td><span th:text="': ' + ${pengajuan.alamatKantor}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>KTP Person in Charge (PIC)</td>
+                                    <td>
+                                        <span th:text="': '"></span>
+                                        <img th:src="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" class="card-img-top" alt="KTP PIC" style="height: 50px; object-fit: cover;">
+                                        <a th:href="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" th:download="'KTP-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.jpg'">Download</a>
+                                    </td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Rancangan Anggaran Biaya (RAB)</td>
+                                    <td>
+                                        <!-- Download link for RAB PDF -->
+                                        <a th:href="'data:application/pdf;base64,' + ${pengajuan.rabBase64}" th:download="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
+                                            <span th:text="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Dokumen Perizinan</td>
+                                    <td>
+                                        <!-- Download link for RAB PDF -->
+                                        <a th:href="'data:application/pdf;base64,' + ${pengajuan.dokumenBase64}" th:download="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
+                                            <span th:text="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Tanggal Mulai Implementasi</td>
+                                    <td><span th:text="': ' + ${#dates.format(pengajuan.tanggalMulai, 'dd/MM/yyyy')}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Tanggal Selesai Implementasi</td>
+                                    <td><span th:text="': ' + ${#dates.format(pengajuan.tanggalSelesai, 'dd/MM/yyyy')}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Tanggal Selesai Laporan</td>
+                                    <td><span th:text="': ' + ${#dates.format(pengajuan.tanggalSelesai, 'dd/MM/yyyy')}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Lokasi Penyaluran Dana</td>
+                                    <td><span th:text="': ' + ${pengajuan.alamatLengkap} + ', ' + ${pengajuan.kecamatan} + ', ' + ${pengajuan.kabupatenKota} + ', ' + ${pengajuan.provinsi}"></span></td>                                    
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Nama Pemilik Rekening</td>
+                                    <td th:text="': ' + ${pengajuan.namaPemilikRekening}"></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Bank & Nomor Rekening</td>
+                                    <td><span th:text="': ' + ${pengajuan.bank} + ' - ' + ${pengajuan.nomorRekening}"></span></td>                                    
+                                </tr>
+                            </table>
+                            <h5 style="margin-top: 40px;">List Kebutuhan Dana</h5>
+                            <table class="table table-bordered">
+                                <thead class="bg-primary text-white text-center">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Asnaf</th>
+                                        <th scope="col">Jumlah Penerima</th>
+                                        <th scope="col">Pilar</th>
+                                        <th scope="col">Jenis Bantuan</th>
+                                        <th scope="col">Jumlah Dana</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    <tr th:each="kebutuhanDana, iterasi: ${pengajuan.listKebutuhanDana}">
+                                        <td th:text="${iterasi.index + 1}"></td>
+                                        <td th:text="${kebutuhanDana.asnaf}"></td>
+                                        <td th:text="${kebutuhanDana.jumlahPenerima}"></td>     
+                                        <td th:text="${kebutuhanDana.pilar}"></td>
+                                        <td th:text="${kebutuhanDana.jenisBantuan}"></td>
+                                        <td th:text="'Rp ' + ${kebutuhanDana.jumlahDana}"></td>
+                                                                 
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div th:unless="${role eq 'mitra'}" style="margin-top: 20px;">
+                                <h5 style="margin-bottom: 5px;">Terakhir diubah</h5>
+                                <div th:if="${pengajuan.reviewedBy == null}">
+                                    <p style="margin: 0;">-</p>
+                                </div>
+                                <div th:if="${pengajuan.reviewedBy != null}">
+                                    <p style="margin: 0;" th:text="${pengajuan.reviewedBy}"></p>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                                                      
+
+                            <div th:if="${role eq 'admin_PROGRAM'}">                                
+                                <h5 style="margin-top: 40px;">Komentar :</h5>
+                                <div class="sub-heading" style="border: 1px solid #ccc; background-color: #f9f9f9; padding: 10px;">
+                                    <hr class="mt-1 mb-4">
+                                    <p th:text="${pengajuan.komentar}" class="text-muted"></p>
+                                </div>
+    
+                                    <!-- Form akan ditampilkan jika status "In Review" -->
+                                    <div th:if="${pengajuan.status == 'In Review'}">
+                                        <hr class="mt-1 mb-4">
+                                        <form id="reviewForm" th:action="@{/review-pengajuan-admin-{id}(id=${pengajuan.id})}" method="post">
+                                                <textarea class="form-control" rows="3" name="comment" placeholder="Tulis komentar di sini..."></textarea>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <!-- Jika NominalKebutuhanDana kurang dari 70.000.000 -->
+                                                    <th:block th:if="${pengajuan.NominalKebutuhanDana lt 70000000}">
+                                                        <button type="submit" name="action" value="setujui" class="btn btn-success btn-block">Setujui</button>
+                                                    </th:block>
+                                                    <th:block th:unless="${pengajuan.NominalKebutuhanDana lt 70000000}">
+                                                        <button type="submit" name="action" value="teruskan" class="btn btn-primary btn-block" style="white-space: nowrap; min-width: 200px;">Teruskan ke Manajemen</button>
+                                                    </th:block>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <button type="submit" name="action" value="tolak" class="btn btn-danger btn-block">Tolak</button>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <button type="submit" name="action" value="perlu-revisi" class="btn btn-warning btn-block">Perlu Revisi</button>
+                                                </div>
+                                            </div>                                       
+                                        </form>   
+                                    </div>
+                                </div>
+
+                                <div th:if="${role eq 'manajemen'}">
+                                    <h5 style="margin-top: 40px;">Komentar Pengajuan</h5>
+                                    <div class="sub-heading" style="border: 1px solid #ccc; background-color: #f9f9f9; padding: 10px;">
+                                        <hr class="mt-1 mb-4">
+                                        <p th:text="${pengajuan.komentar}" class="text-muted"></p>
+                                    </div>
+        
+                                        <!-- Form akan ditampilkan jika status "In Review" -->
+                                        <div th:if="${pengajuan.status == 'Diteruskan ke Manajemen'}">
+                                            <hr class="mt-1 mb-4">
+                                            <form id="reviewForm" th:action="@{/review-pengajuan-manajemen-{id}(id=${pengajuan.id})}" method="post">
+                                                    <textarea class="form-control" rows="3" name="comment" placeholder="Tulis komentar di sini..."></textarea>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <!-- Jika NominalKebutuhanDana kurang dari 70.000.000 -->
+                                                            <button type="submit" name="action" value="setujui" class="btn btn-success btn-block">Setujui</button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                            <button type="submit" name="action" value="tolak" class="btn btn-danger btn-block">Tolak</button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                            <button type="submit" name="action" value="perlu-revisi" class="btn btn-warning btn-block">Perlu Revisi</button>
+                                                    </div>
+                                                </div>                                       
+                                            </form>
+                                        </div>
+                                    </div>
+
+                            <div class="text-center m-4" style="margin-top: 20px;">
+                                <a class="btn btn-secondary" href="/pengajuan" style="margin-right: 10px;">Kembali</a>
+                            </div>
+
+
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- jquery -->
+<script src="assets/js/jquery-1.11.3.min.js"></script>
+<!-- bootstrap -->
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="assets/js/main.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var pengajuanStatus = "${pengajuan.status}";
+        var revisiButton = document.getElementById('revisiButton');
+        var cancelButton = document.getElementById('cancelButton');
+
+        if (pengajuanStatus !== 'Diajukan' && pengajuanStatus !== 'Perlu revisi') {
+            revisiButton.setAttribute('disabled', 'disabled');
+            cancelButton.setAttribute('disabled', 'disabled');
+        }
+    });
+</script>
+</body>
+</html>
