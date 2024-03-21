@@ -27,7 +27,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 @Controller
-@RequestMapping("/pengguna")
 public class PenggunaController {
 
     @Autowired
@@ -39,7 +38,7 @@ public class PenggunaController {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-    @GetMapping("")
+    @GetMapping("/pengguna")
     public String viewDaftarPengguna(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
@@ -56,7 +55,7 @@ public class PenggunaController {
         return "view-daftar-pengguna";
     }
 
-    @GetMapping("/tambah-admin")
+    @GetMapping("/pengguna-tambah-admin")
     public String addAdmin(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
@@ -71,7 +70,7 @@ public class PenggunaController {
         return "form-tambah-admin";
     }
 
-    @PostMapping("/tambah-admin")
+    @PostMapping("/pengguna-tambah-admin")
     public String addAdmin(@Valid @ModelAttribute CreateAdminRequestDTO adminDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         
         if (bindingResult.hasErrors()) {
@@ -102,7 +101,7 @@ public class PenggunaController {
         return "redirect:/pengguna";
     }
 
-    @GetMapping("/hapus/{id}")
+    @GetMapping("/pengguna-hapus-{id}")
     public String hapusPengguna(@PathVariable ("id") UUID id, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
@@ -117,7 +116,7 @@ public class PenggunaController {
         return "konfirmasi-hapus-pengguna";
     }
 
-    @PostMapping("/hapus/{id}")
+    @PostMapping("/pengguna-hapus-{id}")
     public String postHapusPengguna(@PathVariable ("id") UUID id, Model model) {
         Pengguna pengguna = penggunaService.findPenggunaById(id);
         penggunaService.deletePengguna(pengguna);

@@ -15,13 +15,13 @@
         <div class="container" data-aos="fade-up">
             <div class="row d-flex justify-content-center">
                 <div class="col-md-7">
-                    <th:block th:if="${role eq 'mitra'}">
+                    <th:block th:if="${role == 'mitra'}">
                         <h3 class="text-center m-4">Daftar Ajuan Saya</h3>
                     </th:block>
-                    <th:block th:if="${role eq 'admin_PROGRAM'}">
+                    <th:block th:if="${role == 'admin_PROGRAM' || role == 'program_service'}">
                         <h3 class="text-center m-4">Daftar Pengajuan Kerja Sama</h3>
                     </th:block> 
-                    <th:block th:if="${role eq 'manajemen'}">
+                    <th:block th:if="${role == 'manajemen'}">
                         <h3 class="text-center m-4">Daftar Pengajuan Kerja Sama yang Diteruskan</h3>
                     </th:block>                      
                     <div class="row">
@@ -60,10 +60,8 @@
                                 <td th:text="${pengajuan.kategori}"></td>
                                 <td th:text="${pengajuan.status}"></td>
                                 <td>
-                                    <a type="button" class="btn btn-md btn-secondary" th:href="@{/detail-pengajuan-{id}(id=${pengajuan.id})}">Detail</a>
-
+                                    <a type="button" class="btn btn-md btn-secondary" th:href="@{/pengajuan-detail-{id}(id=${pengajuan.id})}">Detail</a>
                                 </td>
-                                                              
                             </tr>
                         </tbody>
                     </table>
@@ -86,8 +84,6 @@
         });
     });
 </script>
-
-
 
 <script>
     // Menampilkan pesan sukses
