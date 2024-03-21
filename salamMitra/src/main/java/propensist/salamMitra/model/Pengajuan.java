@@ -115,12 +115,24 @@ public class Pengajuan {
     @Column(name = "username", nullable = false)
     private String username; 
 
-
+    @Lob
     @Column(name = "buktiPencairanDana")
-    private String buktiPencairanDana; 
+    private byte[] buktiPencairanDana;
+    @Transient //For KTP
+    private String buktiPencairanDanaBase64; // Add this field to store Base64 encoded image
+
     
     @Column(name = "komentar")
     private String komentar; 
+
+    @Lob
+    @Column(name = "laporan")
+    private byte[] laporan;
+    @Transient //For KTP
+    private String laporanBase64; // Add this field to store Base64 encoded image
+
+    @Column(name = "reviewedBy")
+    private String reviewedBy; 
 
 
 }

@@ -3,6 +3,7 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,18 +20,21 @@ import propensist.salamMitra.dto.KebutuhanDanaMapper;
 import propensist.salamMitra.dto.PengajuanMapper;
 import propensist.salamMitra.dto.request.CreateKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.CreateListPengajuanKebutuhanDanaDTO;
+import propensist.salamMitra.model.Admin;
+import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.model.Pengguna;
+import propensist.salamMitra.security.service.UserDetailsServiceImpl;
 import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;
 import propensist.salamMitra.service.PengajuanService;
 import propensist.salamMitra.service.PenggunaService;
 import propensist.salamMitra.service.ProgramKerjaService;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 
 @Controller
 public class PengajuanController {
@@ -56,7 +60,7 @@ public class PengajuanController {
     @Autowired
     private PenggunaService penggunaService;
 
-    @GetMapping("/pengajuan/tambah")
+    @GetMapping("/tambah-pengajuan")
     public String formTambahPengajuan(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
@@ -74,7 +78,7 @@ public class PengajuanController {
         return "form-tambah-pengajuan";
     }
     
-    @PostMapping("/pengajuan/tambah")
+    @PostMapping("/tambah-pengajuan")
     public String tambahPengajuan(@Valid @ModelAttribute CreateListPengajuanKebutuhanDanaDTO listPengajuanKebutuhanDanaDTO,
                                @RequestParam("ktpPIC") MultipartFile ktpPIC,
                                @RequestParam("rab") MultipartFile rab,
@@ -127,10 +131,10 @@ public class PengajuanController {
         redirectAttributes.addFlashAttribute("successMessage", "Kerja Sama baru berhasil diajukan!");
 
     
-        return "redirect:/pengajuan/daftar-pengajuan-saya";
+        return "redirect:/pengajuan";
     }
 
-    @GetMapping("/pengajuan/daftar-pengajuan-saya")
+    @GetMapping("/pengajuan")
     public String listPengajuanByMitra(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
@@ -143,24 +147,22 @@ public class PengajuanController {
         // Membuat list baru untuk menyimpan Pengajuan dengan username yang sesuai
         List<Pengajuan> listPengajuanUsername = new ArrayList<>();
 
-        // Iterasi melalui setiap Pengajuan di listPengajuan
-        for (Pengajuan pengajuan : listPengajuan) {
-            // Memeriksa apakah username pengajuan sama dengan username yang sedang diautentikasi
-            if (pengajuan.getUsername().equals(user.getUsername())) {
-                // Jika username sama, tambahkan pengajuan ke listPengajuanUsername
-                listPengajuanUsername.add(pengajuan);
+        if (user instanceof Mitra) {
+            for (Pengajuan pengajuan : listPengajuan) {
+                if (pengajuan.getUsername().equals(user.getUsername())) {
+                    listPengajuanUsername.add(pengajuan);
+                }
             }
+            model.addAttribute("listPengajuan", listPengajuanUsername);
+        } 
+        else{    
+             model.addAttribute("listPengajuan", listPengajuan);       
         }
-
-
-        // Menambahkan list pengajuan ke model untuk ditampilkan di halaman web
-        model.addAttribute("listPengajuan", listPengajuanUsername);
-
-        return "daftar-pengajuan-saya";
+        return "daftar-pengajuan";
     }
 
-    @GetMapping("/pengajuan/detail-pengajuan-saya/{id}")
-    public String detailAjuanByMitra(@PathVariable("id") String id, Model model) {
+    @GetMapping("/detail-pengajuan-{id}")
+    public String detailAjuan(@PathVariable("id") String id, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         Pengguna user = penggunaService.authenticate(auth.getName());
@@ -176,12 +178,20 @@ public class PengajuanController {
             if (optPengajuan.isPresent()) {
                 Pengajuan pengajuan = optPengajuan.get();
 
+                if(role.equals("admin_PROGRAM")){
+                    if (pengajuan.getStatus().equalsIgnoreCase("Diajukan")){
+                        pengajuan.setStatus("In Review");
+                    }
+                   
+                    pengajuanService.savePengajuan(pengajuan);
+                }
+
                 pengajuanService.handleKTP(pengajuan);
                 pengajuanService.handleRAB(pengajuan);
                 pengajuanService.handleDOC(pengajuan);
 
                 model.addAttribute("pengajuan", pengajuan);
-                return "detail-pengajuan-saya";
+                return "detail-pengajuan";
             } 
             else {
                 return "error-page";
@@ -191,61 +201,8 @@ public class PengajuanController {
         }
     } 
 
-    @GetMapping("/pengajuan/daftar-pengajuan-admin")
-    public String listPengajuanByAdmin(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String role = auth.getAuthorities().iterator().next().getAuthority();
-        Pengguna user = penggunaService.authenticate(auth.getName());
-        
-        model.addAttribute("role", role);
-        model.addAttribute("user", user);
 
-        List<Pengajuan> listPengajuan = pengajuanService.getAllPengajuan();
-        // Membuat list baru untuk menyimpan Pengajuan dengan username yang sesuai
-
-
-
-        // Menambahkan list pengajuan ke model untuk ditampilkan di halaman web
-        model.addAttribute("listPengajuan", listPengajuan);
-
-        return "daftar-pengajuan-admin";
-    }
-
-    @GetMapping("/pengajuan/review-pengajuan-admin/{id}")
-    public String reviewAjuanByAdmin(@PathVariable("id") String id, Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String role = auth.getAuthorities().iterator().next().getAuthority();
-        Pengguna user = penggunaService.authenticate(auth.getName());
-        
-        model.addAttribute("role", role);
-        model.addAttribute("user", user);
-
-        Long longId = Long.parseLong(id);
-        
-            var optPengajuan = pengajuanService.getPengajuanById(longId);
-            
-            if (optPengajuan.isPresent()) {
-                Pengajuan pengajuan = optPengajuan.get();
-
-                if (pengajuan.getStatus().equalsIgnoreCase("Diajukan")){
-                    pengajuan.setStatus("In Review");
-                }
-               
-                pengajuanService.savePengajuan(pengajuan);
-
-                pengajuanService.handleKTP(pengajuan);
-                pengajuanService.handleRAB(pengajuan);
-                pengajuanService.handleDOC(pengajuan);
-
-                model.addAttribute("pengajuan", pengajuan);
-                return "review-pengajuan-admin";
-            } 
-            else {
-                return "error-page";
-            }
- 
-    } 
-    @PostMapping("/pengajuan/review-pengajuan-admin/{id}")
+    @PostMapping("/review-pengajuan-admin-{id}")
     public String submitReviewByAdmin(@PathVariable("id") String id,
                                       @RequestParam(value="comment", required = false) String comment,
                                       @RequestParam("action") String action,
@@ -263,6 +220,15 @@ public class PengajuanController {
     
         if (optPengajuan.isPresent()) {
             Pengajuan pengajuan = optPengajuan.get();
+
+            LocalDateTime currentTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
+            String currentDateTimeString = currentTime.format(formatter);
+            String username = user.getUsername();
+
+    
+
+          
             
             // Set komentar pada pengajuan
             pengajuan.setKomentar(comment);
@@ -271,15 +237,21 @@ public class PengajuanController {
             switch (action) {
                 case "setujui":
                     pengajuan.setStatus("Menunggu Pencairan Dana");
+                    pengajuan.setReviewedBy("Disetujui oleh " + username + " pada " + currentDateTimeString);
                     break;
                 case "tolak":
                     pengajuan.setStatus("Ditolak");
+                    pengajuan.setReviewedBy("Ditolak oleh " + username + " pada " + currentDateTimeString);
+
                     break;
                 case "perlu-revisi":
                     pengajuan.setStatus("Perlu Revisi");
+                    pengajuan.setReviewedBy("Perlu revisi dari " + username + " pada " + currentDateTimeString);
                     break;
                 case "teruskan":
                     pengajuan.setStatus("Diteruskan ke Manajemen");
+                    pengajuan.setReviewedBy("Diteruskan ke Manajemen oleh " + username + " pada " + currentDateTimeString);
+
                     break;
                 default:
                     // Aksi tidak valid
@@ -290,69 +262,17 @@ public class PengajuanController {
             pengajuanService.savePengajuan(pengajuan);
             
             // Redirect kembali ke halaman review dengan mengirimkan ID pengajuan
-            return "redirect:/pengajuan/review-pengajuan-admin/" + id;
+            return "redirect:/detail-pengajuan-" + id;
         } else {
             // Pengajuan tidak ditemukan
             return "error-page";
         }
     }
 
-    @GetMapping("/pengajuan/daftar-pengajuan-manajemen")
-    public String listPengajuanByManajemen(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String role = auth.getAuthorities().iterator().next().getAuthority();
-        Pengguna user = penggunaService.authenticate(auth.getName());
-        
-        model.addAttribute("role", role);
-        model.addAttribute("user", user);
 
-        List<Pengajuan> listPengajuan = pengajuanService.getAllPengajuan();
-        List<Pengajuan> listPengajuanDiteruskan = new ArrayList<>();
 
-        // Iterasi melalui setiap Pengajuan di listPengajuan
-        for (Pengajuan pengajuan : listPengajuan) {
-            // Memeriksa apakah username pengajuan sama dengan username yang sedang diautentikasi
-            if (pengajuan.getStatus().equals("Diteruskan ke Manajemen")) {
-                // Jika username sama, tambahkan pengajuan ke listPengajuanUsername
-                listPengajuanDiteruskan.add(pengajuan);
-            }
-        }
-
-        // Menambahkan list pengajuan ke model untuk ditampilkan di halaman web
-        model.addAttribute("listPengajuan", listPengajuan);
-
-        return "daftar-pengajuan-manajemen";
-    }
-
-    @GetMapping("/pengajuan/review-pengajuan-manajemen/{id}")
-    public String reviewAjuanByManajemen(@PathVariable("id") String id, Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String role = auth.getAuthorities().iterator().next().getAuthority();
-        Pengguna user = penggunaService.authenticate(auth.getName());
-        
-        model.addAttribute("role", role);
-        model.addAttribute("user", user);
-
-        Long longId = Long.parseLong(id);
-        
-            var optPengajuan = pengajuanService.getPengajuanById(longId);
-            
-            if (optPengajuan.isPresent()) {
-                Pengajuan pengajuan = optPengajuan.get();
-
-                pengajuanService.handleKTP(pengajuan);
-                pengajuanService.handleRAB(pengajuan);
-                pengajuanService.handleDOC(pengajuan);
-
-                model.addAttribute("pengajuan", pengajuan);
-                return "review-pengajuan-manajemen";
-            } 
-            else {
-                return "error-page";
-            }
-    } 
     
-    @PostMapping("/pengajuan/review-pengajuan-manajemen/{id}")
+    @PostMapping("/review-pengajuan-manajemen-{id}")
     public String submitReviewByManejemen(@PathVariable("id") String id,
                                       @RequestParam(value="comment", required = false) String comment,
                                       @RequestParam("action") String action,
@@ -370,6 +290,10 @@ public class PengajuanController {
     
         if (optPengajuan.isPresent()) {
             Pengajuan pengajuan = optPengajuan.get();
+            LocalDateTime currentTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
+            String currentDateTimeString = currentTime.format(formatter);
+            String username = user.getUsername();
             
             // Set komentar pada pengajuan
             pengajuan.setKomentar(comment);
@@ -378,12 +302,18 @@ public class PengajuanController {
             switch (action) {
                 case "setujui":
                     pengajuan.setStatus("Menunggu Pencairan Dana");
+                    pengajuan.setReviewedBy("Disetujui oleh " + username + " pada " + currentDateTimeString);
+
                     break;
                 case "tolak":
                     pengajuan.setStatus("Ditolak");
+                    pengajuan.setReviewedBy("Ditolak oleh " + username + " pada " + currentDateTimeString);
+
                     break;
                 case "perlu-revisi":
                     pengajuan.setStatus("Perlu Revisi");
+                    pengajuan.setReviewedBy("Perlu revisi dari " + username + " pada " + currentDateTimeString);
+
                     break;
                 default:
                     // Aksi tidak valid
@@ -394,7 +324,7 @@ public class PengajuanController {
             pengajuanService.savePengajuan(pengajuan);
             
             // Redirect kembali ke halaman review dengan mengirimkan ID pengajuan
-            return "redirect:/pengajuan/review-pengajuan-manajemen/" + id;
+            return "redirect:/detail-pengajuan-" + id;
         } else {
             // Pengajuan tidak ditemukan
             return "error-page";
