@@ -148,8 +148,12 @@
                                     <td><span th:text="': ' + ${pengajuan.alamatLengkap} + ', ' + ${pengajuan.kecamatan} + ', ' + ${pengajuan.kabupatenKota} + ', ' + ${pengajuan.provinsi}"></span></td>                                    
                                 </tr>
                                 <tr class="no-border">
-                                    <td>Nominal Kebutuhan Dana </td>
-                                    <td th:text="': Rp ' + ${pengajuan.nominalKebutuhanDana}"></td>
+                                    <td>Nama Pemilik Rekening</td>
+                                    <td th:text="': ' + ${pengajuan.namaPemilikRekening}"></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Bank & Nomor Rekening</td>
+                                    <td><span th:text="': ' + ${pengajuan.bank} + ' - ' + ${pengajuan.nomorRekening}"></span></td>                                    
                                 </tr>
                             </table>
                             <h5 style="margin-top: 40px;">List Kebutuhan Dana</h5>
