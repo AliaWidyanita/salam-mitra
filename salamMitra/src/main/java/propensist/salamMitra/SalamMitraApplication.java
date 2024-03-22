@@ -40,9 +40,6 @@ public class SalamMitraApplication {
             lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dump", "Kota Dump 2", "Kec. C"));
             lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dump", "Kota Dump 2", "Kec. D"));
 
-
-
-
             // Simpan lokasi ke database menggunakan LokasiService
             if (lokasiService.getAllLokasi().isEmpty()) {
                 for (CreateLokasiRequestDTO lokasiDTO : lokasiDTOs) {
@@ -77,18 +74,16 @@ public class SalamMitraApplication {
                 manajemen.setContact(1234567890L);
                 penggunaService.saveManajemen(manajemen);
             }
-
             
-                // Mitra mitra = new Mitra();
-                // mitra.setUsername("mitra1");
-                // mitra.setEmail("manajemen1@salamsetara.com");
-                // mitra.setPassword(new BCryptPasswordEncoder().encode("Mitranad1"));
-                // mitra.setCompanyName("Com 2");
-                // mitra.setLocation("Address 2");
-                // mitra.setContact(1234567890L);
-                // penggunaService.saveMitra(mitra);
+            Mitra mitra = new Mitra();
+            mitra.setUsername("mitra1");
+            mitra.setEmail("mitra1@salamsetara.com");
+            mitra.setPassword(new BCryptPasswordEncoder().encode("Mitra123"));
+            mitra.setCompanyName("Company 0");
+            mitra.setLocation("Address 0");
+            mitra.setContact(1234567890L);
+            penggunaService.saveMitra(mitra);
             
-
             if (penggunaService.getAllAdmin().isEmpty()) {
                 Admin admin = new Admin();
                 admin.setUsername("adminprogram1");
@@ -121,7 +116,6 @@ public class SalamMitraApplication {
 
                 programKerjaService.saveProgramKerja(programKerja);
                 programKerjaService.saveProgramKerja(programKerja2);
-
             }
 		};	
 	}
