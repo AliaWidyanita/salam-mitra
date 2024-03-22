@@ -20,7 +20,6 @@ import propensist.salamMitra.dto.KebutuhanDanaMapper;
 import propensist.salamMitra.dto.PengajuanMapper;
 import propensist.salamMitra.dto.request.CreateKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.CreateListPengajuanKebutuhanDanaDTO;
-import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.model.Pengguna;
@@ -74,7 +73,6 @@ public class PengajuanController {
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
         model.addAttribute("daftarKategori", programKerjaService.getAllKategori());
 
-
         return "form-tambah-pengajuan";
     }
     
@@ -111,10 +109,8 @@ public class PengajuanController {
         pengajuan.setJumlahKebutuhanOperasional((long) 0);
         pengajuan.setUsername(user.getUsername());
                                 
-
         pengajuanService.savePengajuan(pengajuan);
         id = pengajuan.getId();
-
 
         for(CreateKebutuhanDanaDTO kebutuhanDanaDTO : listPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO()){
             kebutuhanDanaDTO.setPengajuan(pengajuan);
@@ -129,13 +125,12 @@ public class PengajuanController {
         model.addAttribute("id", id);
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
         redirectAttributes.addFlashAttribute("successMessage", "Kerja Sama baru berhasil diajukan!");
-
     
         return "redirect:/pengajuan";
     }
 
     @GetMapping("/pengajuan")
-    public String listPengajuanByMitra(Model model) {
+    public String listPengajuan(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         Pengguna user = penggunaService.authenticate(auth.getName());
@@ -161,7 +156,7 @@ public class PengajuanController {
         return "daftar-pengajuan";
     }
 
-    @GetMapping("/detail-pengajuan-{id}")
+    @GetMapping("/pengajuan-detail-{id}")
     public String detailAjuan(@PathVariable("id") String id, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
@@ -201,7 +196,6 @@ public class PengajuanController {
         }
     } 
 
-
     @PostMapping("/review-pengajuan-admin-{id}")
     public String submitReviewByAdmin(@PathVariable("id") String id,
                                       @RequestParam(value="comment", required = false) String comment,
@@ -226,10 +220,6 @@ public class PengajuanController {
             String currentDateTimeString = currentTime.format(formatter);
             String username = user.getUsername();
 
-    
-
-          
-            
             // Set komentar pada pengajuan
             pengajuan.setKomentar(comment);
             
@@ -268,9 +258,6 @@ public class PengajuanController {
             return "error-page";
         }
     }
-
-
-
     
     @PostMapping("/review-pengajuan-manajemen-{id}")
     public String submitReviewByManejemen(@PathVariable("id") String id,
@@ -330,9 +317,4 @@ public class PengajuanController {
             return "error-page";
         }
     }
-    
-
-    
-    
-
 }

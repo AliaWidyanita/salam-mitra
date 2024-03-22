@@ -111,7 +111,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/ubah-sandi/{id}")
+    @GetMapping("/ubah-sandi-{id}")
     public String ubahSandi(@PathVariable ("id") UUID id, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
