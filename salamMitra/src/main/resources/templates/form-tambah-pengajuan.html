@@ -10,400 +10,374 @@
 			padding-left: 15px;
 			padding-right: 15px;
 		}
+
 		.removeRow {
 			font-size: smaller; /* Anda dapat menyesuaikan nilai ini jika diperlukan */
 		}
-		.top-header-area {
-					background-color: #051922;
-				}
 		
-		.top-header-area a {
-			color: white;
+		.form-checkbox {
+			display: inline-block;
+			vertical-align: middle;
+		}
+		
+		.form-checkbox label {
+			display: inline-block;
+			margin-bottom: 0;
+		}
+		
+		.form-checkbox p {
+			display: inline;
+			vertical-align: middle;
+			margin-bottom: 0;
+			margin-right: 5px; /* Jarak antara teks dan kotak centang */
 		}
 	</style>
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: header}"></div>
-	<div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%;">
-			<div class="row justify-content-center">
-			<div class="col-md-20" data-aos="fade-up">
-                        <form class="form-register" th:action="@{/tambah-pengajuan}" th:object="${listPengajuanKebutuhanDanaDTO}" method="POST" enctype="multipart/form-data">
-                            <div id="form-total">
-                                <!-- SECTION 1 -->
-								<h2 style="text-align: center;">
-									<div class="step-text">
-									  <span class="step-inner-1">Formulir Pengajuan Kerja Sama</span>
+<div class="container">
+	<div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
+		<div class="container" data-aos="fade-up">
+			<div class="row d-flex justify-content-center">
+				<h2 class="text-center m-4">Formulir Pengajuan Kerja Sama</h2>
+				<div class="container">
+                    <form th:action="@{/tambah-pengajuan}" th:object="${listPengajuanKebutuhanDanaDTO}" method="POST">
+						<div id="form-total">
+
+							<!-- SECTION 1 -->
+							<section>
+								<div class="inner">
+									<div class="wizard-header">
+										<h3 class="heading">Informasi Umum</h3>
 									</div>
-								  </h2>
-								  
-                                <section>
-                                    <div class="inner">
-                                        <div class="wizard-header">
-                                            <h3 class="heading">Informasi Umum</h3>
-                                        </div>
-										<br>
-                                        <div class="form-row">
-                                            <div class="form-holder form-holder-2">
-                                                <label for="nama_mitra">Nama Mitra*</label>
-                                                <input type="text" name="nama_mitra" id="nama_mitra" placeholder="Nama Mitra" class="form-control" th:field="*{pengajuanDTO.namaMitra}" required>
-                                            </div>
-                                        </div>
-										<div class="form-row">
-											<div class="form-holder form-holder-2">
-												<label for="nama_program">Nama Program*</label>
-												<input type="text" name="nama_program" id="nama_program" placeholder="Nama Program" class="form-control"  th:field="*{pengajuanDTO.namaProgram}" required>
-											</div>
-										</div>
+									<br>
+									<div class="form-row">
 										<div class="form-holder form-holder-2">
-											<label for="kategori">Kategori*</label>
-											<select name="kategori" id="kategori" class="form-control"  th:field="*{pengajuanDTO.kategori}" required>
-												<option value="">--Pilih Kategori--</option>
-												<option th:each="kategori : ${daftarKategori}" th:value="${kategori}" th:text="${kategori}"></option>
-
-											</select>
+											<label for="nama_mitra">Nama Mitra*</label>
+											<input type="text" name="nama_mitra" id="nama_mitra" placeholder="Nama Mitra" class="form-control" th:field="*{pengajuanDTO.namaMitra}" required>
 										</div>
-										<br>
-										<div class="form-row">
-											<div class="form-holder form-holder-2">
-												<label for="nama_pic">Nama Person In Charge (PIC)*</label>
-												<input type="text" name="nama_pic" id="nama_pic" placeholder="Nama Person In Charge (PIC)" class="form-control"  th:field="*{pengajuanDTO.namaPIC}" required>
-											</div>
-										</div>
-										<div class="form-row">
-											<div class="form-holder form-holder-2">
-												<label for="kontak_pic">Kontak Person In Charge (PIC)*</label>
-												<input type="number" name="kontak_pic" id="kontak_pic" placeholder="08XX-XXXX-XXXX" class="form-control" th:field="*{pengajuanDTO.kontakPIC}" required oninput="validatePhoneNumber(this)">
-											</div>
-										</div>
-
-										<div class="form-row">
-											<div class="form-holder form-holder-2">
-												<label for="alamat">Alamat*</label>
-												<input type="text" name="alamat" id="alamat" placeholder="Alamat Kantor atau Rumah" class="form-control"  th:field="*{pengajuanDTO.alamatKantor}" required>
-											</div>
-										</div>
+									</div>
+									<div class="form-row">
 										<div class="form-holder form-holder-2">
+											<label for="nama_program">Nama Program*</label>
+											<input type="text" name="nama_program" id="nama_program" placeholder="Nama Program" class="form-control"  th:field="*{pengajuanDTO.namaProgram}" required>
+										</div>
+									</div>
+									<div class="form-holder form-holder-2">
+										<label for="kategori">Kategori*</label>
+										<select name="kategori" id="kategori" class="form-control"  th:field="*{pengajuanDTO.kategori}" required>
+											<option value="">--Pilih Kategori--</option>
+											<option th:each="kategori : ${daftarKategori}" th:value="${kategori}" th:text="${kategori}"></option>
+										</select>
+									</div>
+									<br>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+											<label for="nama_pic">Nama Person In Charge (PIC)*</label>
+											<input type="text" name="nama_pic" id="nama_pic" placeholder="Nama Person In Charge (PIC)" class="form-control"  th:field="*{pengajuanDTO.namaPIC}" required>
+										</div>
+									</div>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+											<label for="kontak_pic">Kontak Person In Charge (PIC)*</label>
+											<input type="number" name="kontak_pic" id="kontak_pic" placeholder="08XX-XXXX-XXXX" class="form-control" th:field="*{pengajuanDTO.kontakPIC}" required oninput="validatePhoneNumber(this)">
+										</div>
+									</div>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+											<label for="alamat">Alamat*</label>
+											<input type="text" name="alamat" id="alamat" placeholder="Alamat Kantor atau Rumah" class="form-control"  th:field="*{pengajuanDTO.alamatKantor}" required>
+										</div>
+									</div>
+									<div class="form-holder form-holder-2">
 										<label for="ktpPIC">KTP Person In Charge (PIC)*</label>
 										<input type="file" name="ktpPIC" accept=".jpg, .png, .jpeg" class="form-control-file form-control" required>
 										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
-										</div>
-										<br>
+									</div>
+									<br>
+								</div>
+							</section>
 
-
-                                    </div>
-                                </section>
-
-
-                                <!-- SECTION 2 -->
-                                <h2>
-                                    <div class="step-text">
-
-                                    </div>
-                                </h2>
-								<br>
-                                <section>
-                                    <div class="inner">
-                                        <div class="wizard-header">
-                                            <h3 class="heading">Kebutuhan Dana</h3>
-                                        </div>
-										<br>
-                                        <div>
-                                            <table class="table table-bordered" id="dataTable">
-                                                <thead class="bg-primary text-white text-center">
-                                                    <tr>
-                                                        <th scope="col">#</th>
-                                                        <th scope="col">Asnaf</th>
-                                                        <th scope="col">Jumlah Penerima</th>
-                                                        <th scope="col">Pilar</th>
-                                                        <th scope="col">Jenis Bantuan</th>
-														<th scope="col"></th>
-                                                        <th scope="col">Jumlah Dana</th>
-                                                        <th scope="col"></th>
-                                                    </tr>
-                                                </thead>
-												<tbody>
-													<tr th:each="kDana, iterationStatus : *{listKebutuhanDanaDTO}">
-														<td><span th:text="${iterationStatus.index + 1}"></span></td>
-														<td>
-															<select th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].asnaf}" class="form-control" style="width: auto;">
-																<option value="Fakir">Fakir</option>
-																<option value="Miskin">Miskin</option>
-																<option value="Mualaf">Mualaf</option>
-																<option value="Riqab">Riqab</option>
-																<option value="Gharimin">Gharimin</option>
-																<option value="Fi Sabilillah">Fi Sabilillah</option>
-																<option value="Ibnu Sabil">Ibnu Sabil</option>
-																
-															</select>
-														</td>				
-														<td>
-															<input type="number" placeholder="Jumlah Penerima" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jumlahPenerima}" class="form-control" style="width: auto;" required>
-														</td>
-														<td>
-															<select th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].pilar}" class="form-control" style="width: auto;">
-																<option value="" disabled selected>--Pilih Pilar--</option>
-																<option value="Pendidikan">Pendidikan</option>
-																<option value="Kesehatan">Kesehatan</option>
-																<option value="Ekonomi - Pemberdayaan">Ekonomi - Pemberdayaan</option>
-																<option value="Dakwah - Advokasi">Dakwah - Advokasi</option>
-																<option value="Bantuan Sosial - Kemanusiaan">Bantuan Sosial - Kemanusiaan</option>
-															</select>
-														</td>
-														<td>
-															<input type="text" placeholder="Jenis Bantuan" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jenisBantuan}" class="form-control" required>
-														</td>
-														<td>
-															<label for="Rp" class="sr-only" style="width: auto;">Rp.</label>
-														</td>
-														<td>
+							<!-- SECTION 2 -->
+							<h2>
+								<div class="step-text"></div>
+							</h2>
+							<br>
+							<section>
+								<div class="inner">
+									<div class="wizard-header">
+										<h3 class="heading">Kebutuhan Dana</h3>
+									</div>
+									<br>
+									<div>
+										<table class="table table-bordered" id="dataTable">
+											<thead class="bg-primary text-white text-center">
+												<tr>
+													<th scope="col">#</th>
+													<th scope="col">Asnaf</th>
+													<th scope="col">Jumlah Penerima</th>
+													<th scope="col">Pilar</th>
+													<th scope="col">Jenis Bantuan</th>
+													<th scope="col">Jumlah Dana</th>
+													<th scope="col"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="kDana, iterationStatus : *{listKebutuhanDanaDTO}">
+													<td><span th:text="${iterationStatus.index + 1}"></span></td>
+													<td>
+														<select th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].asnaf}" class="form-control" style="width: auto;">
+															<option value="Fakir">Fakir</option>
+															<option value="Miskin">Miskin</option>
+															<option value="Mualaf">Mualaf</option>
+															<option value="Riqab">Riqab</option>
+															<option value="Gharimin">Gharimin</option>
+															<option value="Fi Sabilillah">Fi Sabilillah</option>
+															<option value="Ibnu Sabil">Ibnu Sabil</option>
+														</select>
+													</td>				
+													<td>
+														<input type="number" placeholder="Jumlah Penerima" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jumlahPenerima}" class="form-control" style="width: auto;" required>
+													</td>
+													<td>
+														<select th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].pilar}" class="form-control" style="width: auto;">
+															<option value="" disabled selected>--Pilih Pilar--</option>
+															<option value="Pendidikan">Pendidikan</option>
+															<option value="Kesehatan">Kesehatan</option>
+															<option value="Ekonomi - Pemberdayaan">Ekonomi - Pemberdayaan</option>
+															<option value="Dakwah - Advokasi">Dakwah - Advokasi</option>
+															<option value="Bantuan Sosial - Kemanusiaan">Bantuan Sosial - Kemanusiaan</option>
+														</select>
+													</td>
+													<td>
+														<input type="text" placeholder="Jenis Bantuan" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jenisBantuan}" class="form-control" required>
+													</td>
+													<td>
+														<div class="input-group">
+															<span class="input-group-prepend">
+																<span class="input-group-text">Rp</span>
+															</span>
 															<input type="number" placeholder="Jumlah Dana" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jumlahDana}" class="form-control" style="width: auto;" required>
-														</td>	
-														<td>
-															<button type="button" class="btn btn-danger removeRow">
-																<i class="fas fa-trash-alt"></i>
-															</button>
-													</tr>
-												</tbody>
-												<button type="button" class="btn btn-success mt-3 btn-follow-text-width" id="addRow">+ Tambah Kebutuhan Dana</button>
-                                            </table>
-                                        </div>
-                                        <div class="form-row">
-											<div class="form-holder form-holder-2">
-												<label for="jumlah_kebutuhan" id="label_jumlah_kebutuhan">Jumlah Kebutuhan Operasional : </label>
-												<label for="nominal_kebutuhan">Nominal Kebutuhan Dana : </label>
-												<div class="input-group">
-													<span class="input-group-prepend">
-														<span class="input-group-text">Rp</span>
-													</span>
-													<span id="nominal_kebutuhan" class="form-control">0</span>
-												</div>
-											</div>                                    
+														</div>
+													</td>	
+													<td>
+														<button type="button" class="btn btn-danger removeRow" style="width: 50px;">
+															<i class="fas fa-trash-alt"></i>
+														</button>
+													</td>
+												</tr>
+											</tbody>
+											<button type="button" class="btn btn-success mt-3 btn-follow-text-width" id="addRow">+ Tambah Kebutuhan Dana</button>
+										</table>
+									</div>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+											<label for="jumlah_kebutuhan" id="label_jumlah_kebutuhan">Jumlah Kebutuhan Operasional : </label>
+											<label for="nominal_kebutuhan">Nominal Kebutuhan Dana : </label>
+											<div class="input-group">
+												<span class="input-group-prepend">
+													<span class="input-group-text">Rp</span>
+												</span>
+												<span id="nominal_kebutuhan" class="form-control">0</span>
+											</div>
+										</div>                                    
+									</div>
+								</div>
+							</section>
+							
+							<!-- SECTION 2.5 -->
+							<h2>
+								<div class="step-text"></div>
+							</h2>
+							<br>
+							<section>
+								<div class="inner">
+									<div class="wizard-header">
+										<h3 class="heading">Tujuan Pencairan Dana</h3>
+										<p class="info">Mohon pastikan bahwa informasi bank, nama pemilik, dan nomor rekening yang Anda berikan adalah akurat. Kesalahan dalam pengisian data dapat berdampak pada proses persetujuan pengajuan kerja sama Anda.</p>
+									</div>
+									<br>
+									<div class="form-holder form-holder-2">
+										<label for="bank">Bank*</label>
+										<select name="bank" id="bank" class="form-control" onchange="checkBank(this);" th:field="*{pengajuanDTO.bank}" required>
+											<option value="">--Pilih Bank--</option>
+											<option value="Bank Central Asia (BCA)">Bank Central Asia (BCA)</option>
+											<option value="Bank CIMB Niaga">Bank CIMB Niaga</option>
+											<option value="Bank Mandiri">Bank Mandiri</option>
+											<option value="Bank Mega">Bank Mega</option>
+											<option value="Bank Negara Indonesia (BNI)">Bank Negara Indonesia (BNI)</option>
+											<option value="Bank Rakyat Indonesia (BRI)">Bank Rakyat Indonesia (BRI)</option>
+											<option value="Bank Tabungan Negara (BTN)">Bank Tabungan Negara (BTN)</option>
+											<option value="Bank Syariah Mandiri">Bank Syariah Mandiri</option>
+											<!-- Tambahkan opsi untuk bank lainnya -->
+											<option value="Lainnya">Lainnya</option>
+										</select>
+										<br>
+										<input type="text" id="bank_lainnya" name="bank_lainnya" placeholder="Masukkan Nama Bank*" class="form-control" style="display: none;" oninput="replaceDropdownValue()">
+									</div>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+											<label for="nama_pemilik_rekening">Nama Pemilik Rekening*</label>
+											<input type="text" name="nama_pemilik_rekening" id="nama_pemilik_rekening" placeholder="Nama Pemilik Rekening" class="form-control" th:field="*{pengajuanDTO.namaPemilikRekening}">
 										</div>
+									</div>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+											<label for="nomor_rekening">No. Rekening*</label>
+											<input type="number" name="nomor_rekening" id="nomor_rekening" placeholder="Nomor Rekening" class="form-control" th:field="*{pengajuanDTO.nomorRekening}">
+										</div>
+									</div>
+								</div>
+							</section>
 
-                                    </div>
-                                </section>
-
-								
-								<!-- SECTION 2.5 -->
-								<h2>
-									<div class="step-text">
+							<!-- SECTION 3 -->
+							<h2>
+								<div class="step-text"></div>
+							</h2>
+							<section>
+								<div class="inner">
+									<div class="wizard-header">
+										<h3 class="heading">Dokumen</h3>
+									</div>
+									<br>
+									<div class="form-holder form-holder-2">
+										<label for="rab">Rancangan Anggaran Biaya (RAB)*</label>
+										<input type="file" name="rab" accept=".pdf" class="form-control-file form-control" required>
+										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
 
 									</div>
-								</h2>
+									<br>
+									<div class="form-holder form-holder-2">
+										<label for="dokumen">Dokumen Perizinan*</label>
+										<input type="file" name="dokumen" accept=".pdf" class="form-control-file form-control" required>
+										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
+									</div>
+								</div>						   
+							</section>
+
+							<!-- SECTION 4 -->
+							<h2>
+								<div class="step-text"></div>
 								<br>
-								<section>
-									<div class="inner">
-										<div class="wizard-header">
-											<h3 class="heading">Tujuan Pencairan Dana</h3>
-											<p class="info">Mohon pastikan bahwa informasi bank, nama pemilik, dan nomor rekening yang Anda berikan adalah akurat. Kesalahan dalam pengisian data dapat berdampak pada proses persetujuan pengajuan kerja sama Anda.</p>
-
-										</div>
-										<br>
-
+							</h2>
+							<section>
+								<div class="inner">
+									<div class="wizard-header">
+										<h3 class="heading">Tanggal Pelaksanaan & Laporan</h3>
+									</div>
+									<br>
+									<div class="form-row">
 										<div class="form-holder form-holder-2">
-											<label for="bank">Bank*</label>
-											<select name="bank" id="bank" class="form-control" onchange="checkBank(this);" th:field="*{pengajuanDTO.bank}" required>
-												<option value="">--Pilih Bank--</option>
-												<option value="Bank Central Asia (BCA)">Bank Central Asia (BCA)</option>
-												<option value="Bank CIMB Niaga">Bank CIMB Niaga</option>
-												<option value="Bank Mandiri">Bank Mandiri</option>
-												<option value="Bank Mega">Bank Mega</option>
-												<option value="Bank Negara Indonesia (BNI)">Bank Negara Indonesia (BNI)</option>
-												<option value="Bank Rakyat Indonesia (BRI)">Bank Rakyat Indonesia (BRI)</option>
-												<option value="Bank Tabungan Negara (BTN)">Bank Tabungan Negara (BTN)</option>
-												<option value="Bank Syariah Mandiri">Bank Syariah Mandiri</option>
-												<!-- Tambahkan opsi untuk bank lainnya -->
-												<option value="Lainnya">Lainnya</option>
+											<label for="tanggal_mulai">Tanggal Mulai Implementasi*</label>
+											<input type="date" name="tanggal_mulai" id="tanggal_mulai" placeholder="Tanggal Mulai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalMulai}"  required>
+										</div>
+									</div>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+											<label for="tanggal_selesai">Tanggal Selesai Implementasi*</label>
+											<!-- Atribut 'min' diatur ke tanggal mulai menggunakan JavaScript -->
+											<input type="date" name="tanggal_selesai" id="tanggal_selesai" placeholder="Tanggal Selesai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalSelesai}" required>
+										</div>
+									</div>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+											<label for="tanggal_laporan">Tanggal Selesai Laporan*</label>
+											<!-- Atribut 'min' diatur ke tanggal mulai menggunakan JavaScript -->
+											<input type="date" name="tanggal_laporan" id="tanggal_laporan" placeholder="Tanggal Selesai Laporan" class="form-control" th:field="*{pengajuanDTO.tanggalLaporan}" required>
+										</div>
+									</div>
+								</div>
+							</section>
+
+							<br>
+							<section>
+								<br>
+								<div class="inner">
+									<div class="wizard-header">
+										<h3 class="heading">Lokasi Penyaluran Dana</h3>
+									</div>
+									<br>
+									<div>
+										<div class="form-holder form-holder-2">
+											<label for="provinsi">Provinsi*</label>
+											<!-- Dropdown untuk provinsi -->
+											<select name="provinsi" id="provinsi" class="form-control" th:field="*{pengajuanDTO.provinsi}" required>
+												<option value="">--Pilih Provinsi--</option>
+												<!-- Iterasi melalui daftar provinsi dari model -->
+												<option th:each="provinsi : ${daftarProvinsi}" th:value="${provinsi}" th:text="${provinsi}"></option>
 											</select>
-											<br>
-											<input type="text" id="bank_lainnya" name="bank_lainnya" placeholder="Masukkan Nama Bank*" class="form-control" style="display: none;" oninput="replaceDropdownValue()">
-										</div>
-										<br>
-
-										<div class="form-row">
-											<div class="form-holder form-holder-2">
-												<label for="nama_pemilik_rekening">Nama Pemilik Rekening*</label>
-												<input type="text" name="nama_pemilik_rekening" id="nama_pemilik_rekening" placeholder="Nama Pemilik Rekening" class="form-control" th:field="*{pengajuanDTO.namaPemilikRekening}">
-											</div>
-										</div>
-										
-										<div class="form-row">
-											<div class="form-holder form-holder-2">
-												<label for="nomor_rekening">No. Rekening*</label>
-												<input type="number" name="nomor_rekening" id="nomor_rekening" placeholder="Nomor Rekening" class="form-control" th:field="*{pengajuanDTO.nomorRekening}">
-											</div>
-										</div>
-									</div>
-								</section>
-
-                                <!-- SECTION 3 -->
-                                <h2>
-                                    <div class="step-text">
-                                    </div>
-									<br>
-                                </h2>
-                                <section>
-									<div class="inner">
-										<div class="wizard-header">
-											<h3 class="heading">Dokumen</h3>
 										</div>
 										<br>
 										<div class="form-holder form-holder-2">
-											<label for="rab">Rancangan Anggaran Biaya (RAB)*</label>
-											<input type="file" name="rab" accept=".pdf" class="form-control-file form-control" required>
-											<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
-
+											<label for="kabupatenKota">Kabupaten/Kota*</label>
+											<select name="kabupatenKota" id="kabupatenKota" class="form-control" th:field="*{pengajuanDTO.kabupatenKota}" required>
+												<option value="">--Pilih Kabupaten/Kota--</option> <!-- Tambahkan atribut "value" kosong di sini -->
+											</select>
 										</div>
 										<br>
 										<div class="form-holder form-holder-2">
-											<label for="dokumen">Dokumen Perizinan*</label>
-											<input type="file" name="dokumen" accept=".pdf" class="form-control-file form-control" required>
-											<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
-										</div>
-									</div>                                
-								</section>
-                                <!-- SECTION 4 -->
-                                <h2>
-                                    <div class="step-text">
-										<br>
-                                    </div>
-                                </h2>
-                                <section>
-									<div class="inner">
-										<div class="wizard-header">
-											<h3 class="heading">Tanggal Pelaksanaan & Laporan</h3>
+											<label for="kecamatan">Kecamatan*</label>
+											<select name="kecamatan" id="kecamatan" class="form-control" th:field="*{pengajuanDTO.kecamatan}" required>
+												<option value="">--Pilih Kabupaten/Kota--</option> <!-- Tambahkan atribut "value" kosong di sini -->
+											</select>
 										</div>
 										<br>
 										<div class="form-row">
 											<div class="form-holder form-holder-2">
-												<label for="tanggal_mulai">Tanggal Mulai Implementasi*</label>
-												<input type="date" name="tanggal_mulai" id="tanggal_mulai" placeholder="Tanggal Mulai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalMulai}"  required>
-											</div>
-										</div>
-										<div class="form-row">
-											<div class="form-holder form-holder-2">
-												<label for="tanggal_selesai">Tanggal Selesai Implementasi*</label>
-												<!-- Atribut 'min' diatur ke tanggal mulai menggunakan JavaScript -->
-												<input type="date" name="tanggal_selesai" id="tanggal_selesai" placeholder="Tanggal Selesai Implementasi" class="form-control" th:field="*{pengajuanDTO.tanggalSelesai}" required>
-											</div>
-										</div>
-										<div class="form-row">
-											<div class="form-holder form-holder-2">
-												<label for="tanggal_laporan">Tanggal Selesai Laporan*</label>
-												<!-- Atribut 'min' diatur ke tanggal mulai menggunakan JavaScript -->
-												<input type="date" name="tanggal_laporan" id="tanggal_laporan" placeholder="Tanggal Selesai Laporan" class="form-control" th:field="*{pengajuanDTO.tanggalLaporan}" required>
-											</div>
-										</div>
-
-
-									</div>
-								</section>
-								<br>
-								<section>
-									<br>
-									<div class="inner">
-										<div class="wizard-header">
-											<h3 class="heading">Lokasi Penyaluran Dana</h3>
-										</div>
-										<br>
-										<div>
-											<div class="form-holder form-holder-2">
-												<label for="provinsi">Provinsi*</label>
-												<!-- Dropdown untuk provinsi -->
-												<select name="provinsi" id="provinsi" class="form-control" th:field="*{pengajuanDTO.provinsi}" required>
-													<option value="">--Pilih Provinsi--</option>
-													<!-- Iterasi melalui daftar provinsi dari model -->
-													<option th:each="provinsi : ${daftarProvinsi}" th:value="${provinsi}" th:text="${provinsi}"></option>
-												</select>
-											</div>
-											<br>
-											<div class="form-holder form-holder-2">
-												<label for="kabupatenKota">Kabupaten/Kota*</label>
-												<select name="kabupatenKota" id="kabupatenKota" class="form-control" th:field="*{pengajuanDTO.kabupatenKota}" required>
-													<option value="">--Pilih Kabupaten/Kota--</option> <!-- Tambahkan atribut "value" kosong di sini -->
-												</select>
-											</div>
-											<br>
-											<div class="form-holder form-holder-2">
-												<label for="kecamatan">Kecamatan*</label>
-												<select name="kecamatan" id="kecamatan" class="form-control" th:field="*{pengajuanDTO.kecamatan}" required>
-													<option value="">--Pilih Kabupaten/Kota--</option> <!-- Tambahkan atribut "value" kosong di sini -->
-												</select>
-											</div>
-											<br>
-											<div class="form-row">
-												<div class="form-holder form-holder-2">
 												<label for="alamatLengkap">Alamat Lengkap*</label>
 												<input type="text" name="alamatLengkap" id="alamatLengkap" placeholder="Alamat Lengkap" class="form-control"  th:field="*{pengajuanDTO.alamatLengkap}" required>
+											</div>
+										</div>
+									</div>
+								</div>
+							</section>
+
+							<!-- SECTION 5 -->
+							<h2>
+								<div class="step-text"></div>
+								<br>
+							</h2>
+							<section>
+								<div class="inner">
+									<div class="wizard-header">
+										<h3 class="heading">Privasi & Persetujuan</h3>
+									</div>
+									<br>
+									<div class="form-row">
+										<div class="form-holder form-holder-2">
+											<div class="content-inner">
+												<p>Dengan menggunakan layanan kami, Anda menyetujui pengumpulan, penggunaan, dan pengungkapan informasi yang terkait dengan layanan tersebut sesuai dengan Kebijakan Privasi kami. Kami menjamin bahwa informasi Anda akan diolah dengan keamanan tertinggi dan tidak akan disalahgunakan.
+
+												Dengan menekan tombol "Saya setuju", Anda menyatakan bahwa Anda telah membaca, memahami, dan menyetujui Kebijakan Privasi kami tanpa keberatan apapun. Jika Anda memiliki pertanyaan lebih lanjut tentang privasi atau penggunaan data Anda, jangan ragu untuk menghubungi kami melalui propensist@gmail.com.</p>
+													
+												<div class="form-checkbox">
+													<label class="container">
+														<p>Saya telah membaca dan memahami informasi di atas.</p>
+														<input type="checkbox" name="checkbox" required>
+														<span class="checkmark"></span>
+													</label>
 												</div>
 											</div>
 										</div>
 									</div>
-								</section>
-                                <!-- SECTION 5 -->
-                                <h2>
-                                    <div class="step-text">
-										<br>
-                                    </div>
-                                </h2>
-                                <section>
-									<div class="inner">
-										<div class="wizard-header">
-											<h3 class="heading">Privasi & Persetujuan</h3>
-										</div>
-										<br>
-										<div class="form-row">
-											<div class="form-holder form-holder-2">
-												<div class="content-inner">
-													<p>Dengan menggunakan layanan kami, Anda menyetujui pengumpulan, penggunaan, dan pengungkapan informasi yang terkait dengan layanan tersebut sesuai dengan Kebijakan Privasi kami. Kami menjamin bahwa informasi Anda akan diolah dengan keamanan tertinggi dan tidak akan disalahgunakan.
-
-													Dengan menekan tombol "Saya setuju", Anda menyatakan bahwa Anda telah membaca, memahami, dan menyetujui Kebijakan Privasi kami tanpa keberatan apapun. Jika Anda memiliki pertanyaan lebih lanjut tentang privasi atau penggunaan data Anda, jangan ragu untuk menghubungi kami melalui propensist@gmail.com.</p>
-													<style>
-														.form-checkbox {
-														  display: inline-block;
-														  vertical-align: middle;
-														}
-													  
-														.form-checkbox label {
-														  display: inline-block;
-														  margin-bottom: 0;
-														}
-													  
-														.form-checkbox p {
-														  display: inline;
-														  vertical-align: middle;
-														  margin-bottom: 0;
-														  margin-right: 5px; /* Jarak antara teks dan kotak centang */
-														}
-													  </style>
-													  
-													  <div class="form-checkbox">
-														<label class="container">
-														  <p>Saya telah membaca dan memahami informasi di atas.</p>
-														  <input type="checkbox" name="checkbox" required>
-														  <span class="checkmark"></span>
-														</label>
-													  </div>
-													  
-												</div>
-											</div>
-										</div>
-									</div>                                
-								</section>
-                            </div>
-                            <div class="text-center mb-3">
-                                <a href="/" class="btn btn-danger" style="margin-right: 10px;">Batal</a>
-                                <button type="submit" class="btn btn-primary mr-2" style="margin-left: 10px;">Simpan</button>
-                            </div>
-                        </form>
-                    </div>
+								</div>                                
+							</section>
+						</div>
+						<div class="text-center mb-3">
+							<button onclick="window.location.href='/pengajuan'" class="btn" style="background-color: #dc3545; width: 110px;">Batal</button>
+                            <button class="btn" type="submit" style="width: 110px;">Simpan</button>
+						</div>
+					</form>
                 </div>
             </div>
+        </div>
     </div>
 </div>
+
 <script src="" th:src="@{js/jquery-3.3.1.min.js}"></script>
 <script src="" th:src="@{js/jquery.steps.js}"></script>
 <script src="" th:src="@{js/main.js}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function validatePhoneNumber(input) {
         // Hapus karakter selain angka
@@ -422,10 +396,7 @@
         }
     }
 	input.value = '0' + phoneNumber;
-
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     function checkBank(select) {
         var selectedOption = select.options[select.selectedIndex].value;
@@ -451,9 +422,6 @@
         }
     }
 </script>
-
-
-
 <script>
     $(document).ready(function() {
         $('#provinsi').change(function() {
@@ -474,8 +442,6 @@
         });
     });
 </script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#provinsi, #kabupatenKota').change(function() {
@@ -534,10 +500,6 @@
         }
     });
 </script>
-
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
         // Fungsi untuk menambahkan baris kebutuhan dana
@@ -596,7 +558,7 @@
                 '</select>' +
                 '</td>' +
                 '<td><input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahPenerima" class="form-control" required min="1"></td>' +
-                '<td><select name="listKebutuhanDanaDTO[' + rowCount + '].pilar" class="form-control"style="width: auto;" required>' +
+                '<td><select name="listKebutuhanDanaDTO[' + rowCount + '].pilar" class="form-control" style="width: auto;" required>' +
                 '<option value="" disabled selected>--Pilih Pilar--</option>' +
                 '<option value="Pendidikan">Pendidikan</option>' +
                 '<option value="Kesehatan">Kesehatan</option>' +
@@ -604,11 +566,17 @@
                 '<option value="Dakwah - Advokasi">Dakwah - Advokasi</option>' +
                 '<option value="Bantuan Sosial - Kemanusiaan">Bantuan Sosial - Kemanusiaan</option>' +
                 '</select></td>' +
-                '<td><input type="text" name="listKebutuhanDanaDTO[' + rowCount + '].jenisBantuan"  class="form-control"  required></td>' +
-				'<td>Rp.</td>' +
-				'<td><input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahDana" class="form-control" required min="1"></td>' +
-                '<td><button type="button" class="btn btn-danger removeRow"><i class="fas fa-trash-alt"></i></button></td>' +
-                '</tr>';
+				'<td><input type="text" name="listKebutuhanDanaDTO[' + rowCount + '].jenisBantuan"  class="form-control"  required></td>' +
+				'<td>' +
+				'<div class="input-group">' +
+				'<span class="input-group-prepend">' +
+				'<span class="input-group-text">Rp</span>' +
+				'</span>' +
+				'<input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahDana" class="form-control" required min="1">' +
+				'</div>' +
+				'</td>' +
+				'<td><button type="button" class="btn btn-danger removeRow" style="width: 50px;"><i class="fas fa-trash-alt"></i></button></td>' +
+				'</tr>';
             $("#dataTable tbody").append(newRow);
             // Disable tombol hapus jika hanya ada satu baris
             if ($("#dataTable tbody tr").length === 1) {

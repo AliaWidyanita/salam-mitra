@@ -26,11 +26,11 @@
 <body>
 <div th:fragment="header">
 <!-- PreLoader-->
-<!-- <div class="loader">
+<div class="loader">
     <div class="loader-inner">
         <div class="circle"></div>
     </div>
-</div> -->
+</div>
 <!--PreLoader Ends -->
 
 <!-- header -->
@@ -78,8 +78,8 @@
                                     Program
                                 </a>
                             </li>
-                            <li th:if="${role == 'admin_PROGRAM' || role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}">
-                                <a th:href="@{/}">
+                            <li th:if="${role == 'admin_PROGRAM' || role == 'manajemen' || role == 'program_service'}">
+                                <a th:href="@{/pengajuan}">
                                     Ajuan Kerja Sama
                                 </a>
                             </li>
@@ -88,7 +88,7 @@
                                     Daftar Pengguna
                                 </a>
                             </li>
-                            <li th:if="${role == 'admin_PROGRAM' || role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}">
+                            <li th:if="${role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}">
                                 <a th:href="@{/}">
                                     Pencairan
                                 </a>
@@ -109,7 +109,7 @@
                                                         <a>Halo, <span th:text="${user.username}"></span></a>
                                                     </li>
                                                     <li style="margin-bottom: 10px;">
-                                                        <a th:href="@{/ubah-sandi/{id}(id=${user.id})}">Ubah Sandi</a>
+                                                        <a th:href="@{/ubah-sandi-{id}(id=${user.id})}">Ubah Sandi</a>
                                                     </li>
                                                     <li style="margin-bottom: 10px;">
                                                         <a th:href="@{/logout}" class="boxed-btn">Logout</a>

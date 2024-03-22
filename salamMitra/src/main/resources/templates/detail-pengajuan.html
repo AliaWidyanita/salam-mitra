@@ -27,13 +27,13 @@
                 <div class="row d-flex justify-content-center">
                     <div class="card">
                         <div class="card-header p-4">
-                            <div th:if="${role eq 'mitra'}" class="d-flex justify-content-between align-items-center">                              
+                            <div th:if="${role == 'mitra'}" class="d-flex justify-content-between align-items-center">                              
                                 <h1>Detail Ajuan</h1>
                             </div>
-                            <div th:if="${role eq 'admin_PROGRAM'}" class="d-flex justify-content-between align-items-center">                              
+                            <div th:if="${role == 'admin_PROGRAM' || role == 'program_service'}" class="d-flex justify-content-between align-items-center">                              
                                 <h1 class="card-title">Review Pengajuan Kerja Sama</h1>
                             </div>
-                            <div th:if="${role eq 'manajemen'}" class="d-flex justify-content-between align-items-center">                              
+                            <div th:if="${role == 'manajemen'}" class="d-flex justify-content-between align-items-center">                              
                                 <h1 class="card-title">Review Pengajuan yang Diteruskan</h1>
                             </div>
                         </div>
