@@ -41,7 +41,7 @@
 			<div class="row d-flex justify-content-center">
 				<h2 class="text-center m-4">Formulir Pengajuan Kerja Sama</h2>
 				<div class="container">
-                    <form th:action="@{/tambah-pengajuan}" th:object="${listPengajuanKebutuhanDanaDTO}" method="POST">
+                    <form th:action="@{/tambah-pengajuan}" th:object="${listPengajuanKebutuhanDanaDTO}" method="POST" enctype="multipart/form-data">
 						<div id="form-total">
 
 							<!-- SECTION 1 -->
@@ -137,7 +137,7 @@
 														</select>
 													</td>				
 													<td>
-														<input type="number" placeholder="Jumlah Penerima" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jumlahPenerima}" class="form-control" style="width: auto;" required>
+														<input type="number" placeholder="Jumlah Penerima" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jumlahPenerima}" class="form-control" style="width:80px;" required>
 													</td>
 													<td>
 														<select th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].pilar}" class="form-control" style="width: 160px; font-size: small;">
@@ -213,7 +213,7 @@
 											<option value="Lainnya">Lainnya</option>
 										</select>
 										<br>
-										<input type="text" id="bank_lainnya" name="bank_lainnya" placeholder="Masukkan Nama Bank*" class="form-control" style="display: none;" oninput="replaceDropdownValue()">
+										<input type="text" id="bank_lainnya" name="bank_lainnya" placeholder="Masukkan Nama Bank Anda" class="form-control" style="display: none;" margin-bottom: 20px; oninput="replaceDropdownValue()">
 									</div>
 									<div class="form-row">
 										<div class="form-holder form-holder-2">
@@ -557,7 +557,7 @@
                 '<option value="Ibnu Sabil">Ibnu Sabil</option>' +
                 '</select>' +
                 '</td>' +
-                '<td><input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahPenerima" class="form-control" style="width: auto; required min="1"></td>' +
+                '<td><input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahPenerima" class="form-control" style="width: 80px; required min="1"></td>' +
                 '<td><select name="listKebutuhanDanaDTO[' + rowCount + '].pilar" class="form-control" style="width: 160px; font-size: small;" required>' +
                 '<option value="" disabled selected>--Pilih Pilar--</option>' +
                 '<option value="Pendidikan">Pendidikan</option>' +

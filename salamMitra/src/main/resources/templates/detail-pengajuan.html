@@ -155,6 +155,10 @@
                                     <td>Bank & Nomor Rekening</td>
                                     <td><span th:text="': ' + ${pengajuan.bank} + ' - ' + ${pengajuan.nomorRekening}"></span></td>                                    
                                 </tr>
+                                <tr class="no-border">
+                                    <td>Nominal Kebutuhan Dana</td>
+                                    <td th:text="'Rp ' + ${pengajuan.nominalKebutuhanDana}"></td>
+                                </tr>
                             </table>
                             <h5 style="margin-top: 40px;">List Kebutuhan Dana</h5>
                             <table class="table table-bordered">

@@ -250,7 +250,7 @@ public class PengajuanController {
             pengajuanService.savePengajuan(pengajuan);
             
             // Redirect kembali ke halaman review dengan mengirimkan ID pengajuan
-            return "redirect:/detail-pengajuan-" + id;
+            return "redirect:/pengajuan-detail-" + id;
         } else {
             // Pengajuan tidak ditemukan
             return "error-page";
@@ -309,7 +309,7 @@ public class PengajuanController {
             pengajuanService.savePengajuan(pengajuan);
             
             // Redirect kembali ke halaman review dengan mengirimkan ID pengajuan
-            return "redirect:/detail-pengajuan-" + id;
+            return "redirect:/pengajuan-detail-" + id;
         } else {
             // Pengajuan tidak ditemukan
             return "error-page";
