@@ -44,14 +44,29 @@
                             </h4>                       
                         </div>
                         <div th:if="${role eq 'mitra'}" style="margin-top: 30px;">
-                            <h5 style="margin-bottom: 5px;">Terakhir diubah</h5>
+                            <h5 style="margin-bottom: 5px;">Status terakhir diperbarui</h5>
                             <div th:if="${pengajuan.reviewedBy == null}">
                                 <p style="margin: 0;">-</p>
                             </div>
                             <div th:if="${pengajuan.reviewedBy != null}">
                                 <p style="margin: 0;" th:text="${pengajuan.reviewedBy}"></p>
                             </div>
-                            <div>
+
+                            
+                            <!-- UPLOAD LAPORAN JIKA DANA PENCAIRAN TELAH SELESAI DICAIRKAN KE REKENING MITRA -->
+                            <div th:if="${pengajuan.status == 'Menunggu Laporan'}" style="margin-top: 30px; text-align: left;">
+                                <h5 style="margin-bottom: 5px;">Upload Laporan</h5>
+                                <div style="text-align: left;">
+                                    <small class="form-text text-muted" style="margin-bottom: 5px; color: red; margin-left: 0;">Mohon untuk mengumpulkan laporan sebelum <span th:text="${#dates.format(pengajuan.tanggalLaporan, 'dd/MM/yyyy')}"></span>23:59</small>
+                                    <form id="submitLaporan" th:action="@{/submit-laporan-{id}(id=${pengajuan.id})}" method="post" style="margin-bottom: 5px; margin-left: 0;">
+                                        <input type="file" name="laporan" accept=".pdf" class="form-control-file form-control" required style="margin-left: -10px;">
+                                        <small class="form-text text-muted" style="margin-left: -10px;">Ukuran file pdf minimum: 5MB</small>
+                                        <button type="submit" name="submit" value="submit" class="btn btn-success" style="display: inline; padding: 5px 10px; margin-left: -10px;">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div th:if="${pengajuan.komentar != null}" style="margin-top: 30px; text-align: left;">
                                 <h5 style="margin-top: 40px;">Komentar :</h5>
                                 <div class="sub-heading" style="border: 1px solid #ccc; background-color: #f9f9f9; padding: 10px;">
                                     <hr class="mt-1 mb-4">

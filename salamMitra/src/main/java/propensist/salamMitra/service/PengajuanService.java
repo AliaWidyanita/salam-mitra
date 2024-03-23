@@ -11,5 +11,4 @@ public interface PengajuanService {
     void handleKTP(Pengajuan pengajuan);
     void handleRAB(Pengajuan pengajuan);
     void handleDOC(Pengajuan pengajuan);
-
 }

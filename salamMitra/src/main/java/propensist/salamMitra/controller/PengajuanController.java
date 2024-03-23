@@ -181,8 +181,8 @@ public class PengajuanController {
 
                 pengajuanService.handleKTP(pengajuan);
                 pengajuanService.handleRAB(pengajuan);
-                pengajuanService.handleDOC(pengajuan);
-
+                pengajuanService.handleDOC(pengajuan);            
+                
                 model.addAttribute("pengajuan", pengajuan);
                 return "detail-pengajuan";
             } 
@@ -224,7 +224,7 @@ public class PengajuanController {
             // Sesuaikan status berdasarkan aksi yang dipilih
             switch (action) {
                 case "setujui":
-                    pengajuan.setStatus("Menunggu Pencairan Dana");
+                    pengajuan.setStatus("Menunggu Pencairan Dana oleh Program Service");
                     pengajuan.setReviewedBy("Disetujui oleh " + username + " pada " + currentDateTimeString);
                     break;
                 case "tolak":
@@ -286,7 +286,7 @@ public class PengajuanController {
             // Sesuaikan status berdasarkan aksi yang dipilih
             switch (action) {
                 case "setujui":
-                    pengajuan.setStatus("Menunggu Pencairan Dana");
+                    pengajuan.setStatus("Menunggu Pencairan Dana oleh Program Service");
                     pengajuan.setReviewedBy("Disetujui oleh " + username + " pada " + currentDateTimeString);
 
                     break;
@@ -304,6 +304,55 @@ public class PengajuanController {
                     // Aksi tidak valid
                     return "error-page";
             }
+            
+            // Simpan perubahan pada pengajuan
+            pengajuanService.savePengajuan(pengajuan);
+            
+            // Redirect kembali ke halaman review dengan mengirimkan ID pengajuan
+            return "redirect:/pengajuan-detail-" + id;
+        } else {
+            // Pengajuan tidak ditemukan
+            return "error-page";
+        }
+    }
+    @PostMapping("/submit-laporan-{id}")
+    public String submitLaporanByMitra(@PathVariable("id") String id,
+                                        @RequestParam(value="laporan", required = false) String laporan,
+                                        @RequestParam("submit") String submit,
+                                        Model model) throws IOException {
+        // Ambil informasi pengguna yang sedang login
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName ());
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+    
+        // Ubah ID menjadi tipe data Long
+        Long longId = Long.parseLong(id);
+        Optional<Pengajuan> optPengajuan = pengajuanService.getPengajuanById(longId);
+    
+        if (optPengajuan.isPresent()) {
+            Pengajuan pengajuan = optPengajuan.get();
+            LocalDateTime currentTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
+            String currentDateTimeString = currentTime.format(formatter);
+            String username = user.getUsername();
+
+            byte[] laporanBytes = laporan.getBytes();
+            pengajuan.setLaporan(laporanBytes);
+        
+            // Sesuaikan status berdasarkan aksi yang dipilih
+            switch (submit) {
+                case "submit":
+                    pengajuan.setStatus("Selesai");
+                    pengajuan.setReviewedBy("Laporan telah diupload oleh Mitra " + username + " pada " + currentDateTimeString);
+                    break;
+
+                default:
+                    // Aksi tidak valid
+                    return "error-page";
+            }
+
             
             // Simpan perubahan pada pengajuan
             pengajuanService.savePengajuan(pengajuan);
