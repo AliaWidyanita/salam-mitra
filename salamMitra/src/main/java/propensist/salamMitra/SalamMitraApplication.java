@@ -75,15 +75,6 @@ public class SalamMitraApplication {
                 penggunaService.saveManajemen(manajemen);
             }
             
-            Mitra mitra = new Mitra();
-            mitra.setUsername("mitra1");
-            mitra.setEmail("mitra1@salamsetara.com");
-            mitra.setPassword(new BCryptPasswordEncoder().encode("Mitra123"));
-            mitra.setCompanyName("Company 0");
-            mitra.setLocation("Address 0");
-            mitra.setContact(1234567890L);
-            penggunaService.saveMitra(mitra);
-            
             if (penggunaService.getAllAdmin().isEmpty()) {
                 Admin admin = new Admin();
                 admin.setUsername("adminprogram1");

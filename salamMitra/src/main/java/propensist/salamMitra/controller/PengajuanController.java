@@ -364,4 +364,45 @@ public class PengajuanController {
             return "error-page";
         }
     }
+
+    @GetMapping("/mitra-batal-{id}")
+    public String getBatalPengajuan(@PathVariable("id") String id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
+        Long longId = Long.parseLong(id);
+        Optional<Pengajuan> pengajuan = pengajuanService.getPengajuanById(longId);
+        model.addAttribute("pengajuan", pengajuan);
+
+        return "konfirmasi-batal-pengajuan";
+    }
+
+    @PostMapping("/mitra-batal-{id}")
+    public String batalPengajuan(@PathVariable ("id") String id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
+        Long longId = Long.parseLong(id);
+        Optional<Pengajuan> optPengajuan = pengajuanService.getPengajuanById(longId);
+
+        if (optPengajuan.isPresent()) {
+            Pengajuan pengajuan = optPengajuan.get();
+            pengajuan.setStatus("Dibatalkan");
+            pengajuanService.savePengajuan(pengajuan);
+
+            model.addAttribute("pengajuan", pengajuan);
+
+            return "redirect:/pengajuan";
+        } else {
+            return "error-page";
+        }
+    }
 }

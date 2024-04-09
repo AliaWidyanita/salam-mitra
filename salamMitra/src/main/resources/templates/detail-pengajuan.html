@@ -80,8 +80,8 @@
     
                                 </div>
                                 <div class="col-auto">
-                                    <a class="btn btn-secondary" href="/cancel" th:if="${pengajuan.status == 'Diajukan'}">Batalkan Ajuan</a>
-                                    <a class="btn btn-secondary" href="/cancel" th:if="${pengajuan.status == 'Perlu Revisi'}">Batalkan Ajuan</a>
+                                    <a class="btn btn-secondary" th:href="@{/mitra-batal-{id}(id=${pengajuan.id})}" th:if="${pengajuan.status == 'Diajukan'}">Batalkan Ajuan</a>
+                                    <a class="btn btn-secondary" th:href="@{/mitra-batal-{id}(id=${pengajuan.id})}">Batalkan Ajuan</a>
                                 </div>
                             </div>
                         </div>
