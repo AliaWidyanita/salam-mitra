@@ -88,8 +88,6 @@ public class Pengajuan {
     private byte[] dokumen;
     @Transient //For Document
     private String dokumenBase64; 
-
-
      
     @Column(name = "tanggalMulai", nullable = false)
     private Date tanggalMulai;
@@ -113,14 +111,7 @@ public class Pengajuan {
     private String alamatLengkap; 
 
     @Column(name = "username", nullable = false)
-    private String username; 
-
-    @Lob
-    @Column(name = "buktiPencairanDana")
-    private byte[] buktiPencairanDana;
-    @Transient //For KTP
-    private String buktiPencairanDanaBase64; // Add this field to store Base64 encoded image
-
+    private String username;
     
     @Column(name = "komentar")
     private String komentar; 
@@ -134,5 +125,7 @@ public class Pengajuan {
     @Column(name = "reviewedBy")
     private String reviewedBy; 
 
+    @OneToOne(mappedBy = "pengajuan", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Pencairan pencairan;
 
 }
