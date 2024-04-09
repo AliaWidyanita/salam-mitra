@@ -34,6 +34,8 @@ public class WebSecurityConfig {
                             .requestMatchers(new AntPathRequestMatcher("/pengajuan**")).hasAnyAuthority("mitra", "program_service", "manajemen", "admin_PROGRAM")
                             .requestMatchers(new AntPathRequestMatcher("/review-pengajuan-admin-**")).hasAuthority("admin_PROGRAM")
                             .requestMatchers(new AntPathRequestMatcher("/review-pengajuan-manajemen-**")).hasAuthority("manajemen")
+                            .requestMatchers(new AntPathRequestMatcher("/submit-laporan-**")).hasAuthority("mitra")
+
                             .requestMatchers(new AntPathRequestMatcher("/tambah-pengajuan")).hasAuthority("mitra")
                             .requestMatchers(new AntPathRequestMatcher("/getKabupatenKotaByProvinsi")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/getKecamatanByProvinsiKabupatenKota")).permitAll()
