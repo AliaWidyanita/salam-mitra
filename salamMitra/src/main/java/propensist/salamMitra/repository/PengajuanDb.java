@@ -1,6 +1,5 @@
 package propensist.salamMitra.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +12,4 @@ import propensist.salamMitra.model.Pengajuan;
 public interface PengajuanDb extends JpaRepository<Pengajuan, Long> {
     @SuppressWarnings("null")
     Optional<Pengajuan> findById(Long id);
-
-    List<Pengajuan> findByStatus(String string);
-
 }

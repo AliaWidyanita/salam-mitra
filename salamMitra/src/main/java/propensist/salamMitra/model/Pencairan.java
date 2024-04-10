@@ -2,6 +2,8 @@ package propensist.salamMitra.model;
 
 import java.util.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,40 +22,31 @@ public class Pencairan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "sourceOfFound", nullable = false)
+    @Column(name = "source_of_found", nullable = false)
     private String sourceOfFound;
 
     @Column(name = "channeling", nullable = false)
     private String channeling;
 
-    @Column(name = "jenisDana", nullable = false)
+    @Column(name = "jenis_dana", nullable = false)
     private String jenisDana;
 
-    @Column(name = "linkPencairan", nullable = false)
+    @Column(name = "link_pencairan", nullable = false)
     private String linkPencairan;
 
-    @Column(name = "tanggalPencairanSalamSetara", nullable = false)
+    @Column(name = "tanggal_pencairan_salam_setara", nullable = false)
+    @CreationTimestamp
     private Date tanggalPencairanSalamSetara;
 
-    @Column(name = "tanggalPencairanMitra", nullable = false)
+    @Column(name = "tanggal_pencairan_mitra")
     private Date tanggalPencairanMitra;
 
     @Lob
-    @Column(name = "buktiPencairanSalamSetara", nullable = false)
-    private byte[] buktiPencairanSalamSetara;
-    
-    @Transient 
-    private String buktiPencairanSalamSetaraBase;
-
-    @Lob
-    @Column(name = "buktiPencairanMitra", nullable = false)
+    @Column(name = "bukti_pencairan_mitra")
     private byte[] buktiPencairanMitra;
 
-    @Transient 
-    private String buktiPencairanMitraBase;
-    
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pengajuan_id", referencedColumnName = "id")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_pengajuan", referencedColumnName = "id")
     private Pengajuan pengajuan;
 
 }

@@ -125,7 +125,6 @@ public class Pengajuan {
     @Column(name = "reviewedBy")
     private String reviewedBy; 
 
-    @OneToOne(mappedBy = "pengajuan", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "pengajuan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Pencairan pencairan;
-
 }

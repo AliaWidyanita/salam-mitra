@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
-    <title>Daftar Pengajuan Kerja Sama</title>
+    <title>Daftar Pencairan</title>
     <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/css/datatables.css">
 
@@ -15,25 +15,14 @@
         <div class="container" data-aos="fade-up">
             <div class="row d-flex justify-content-center">
                 <div class="col-md-7">
-                    <th:block th:if="${role == 'mitra'}">
-                        <h3 class="text-center m-4">Daftar Ajuan Saya</h3>
-                    </th:block>
-                    <th:block th:if="${role == 'admin_PROGRAM' || role == 'program_service'}">
-                        <h3 class="text-center m-4">Daftar Pengajuan Kerja Sama</h3>
-                    </th:block> 
-                    <th:block th:if="${role == 'manajemen'}">
-                        <h3 class="text-center m-4">Daftar Pengajuan Kerja Sama yang Diteruskan</h3>
-                    </th:block>                      
+                    <h3 class="text-center m-4">Daftar Pencairan</h3>
+
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col">
                             <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
                         </div>
-                        <div class="col-sm-6 text-right">
-                            <th:block th:if="${role eq 'mitra'}">
-                                <a type="button" class="btn btn-primary btn-auto-width" href="/tambah-pengajuan">+ Buat Pengajuan</a>
-                            </th:block>
-                        </div>
                     </div>
+
                     <table class="table table-bordered" id="dataTable">
                         <thead class="bg-dark text-white text-center">
                         <tr>
@@ -52,15 +41,27 @@
                             </tr>
                         </tbody>
                         <tbody class="text-center" th:unless="${listPencairan.isEmpty()}">
-                            <tr th:each="pengajuan, iterationStatus: ${listPengajuan}">
+                            <tr th:each="pencairan, iterationStatus: ${listPencairan}">
                                 <td class="text-center" th:text="${iterationStatus.count}"></td>
-                                <td th:text="${pengajuan.id}"></td>
-                                <td th:text="${pengajuan.namaMitra}"></td>
-                                <td th:text="${pengajuan.nominalKebutuhanDana}"></td>
-                                <td th:text="${pengajuan.nomorRekening}"></td>
-                                <td th:text="${pengajuan.status}"></td>
+                                <td th:text="${pencairan.id}"></td>
+                                <td th:text="${pencairan.namaMitra}"></td>
+                                <td th:text="'Rp ' + ${pencairan.nominalKebutuhanDana}"></td>
+                                <td th:text="${pencairan.nomorRekening}"></td>
+                                <th:block th:if="${role == 'program_service'}">
+                                    <td>
+                                        <span th:if="${pencairan.status != 'Menunggu Pencairan oleh Program Service'}">Sudah Dicairkan</span>
+                                        <span th:unless="${pencairan.status != 'Menunggu Pencairan oleh Program Service'}" th:text="${pencairan.status}"></span>
+                                    </td>
+                                </th:block>
+                                <th:block th:if="${role == 'admin_FINANCE'}">
+                                    <td>
+                                        <span th:if="${pencairan.status != 'Menunggu Pencairan oleh Admin Finance'}">Sudah Dicairkan</span>
+                                        <span th:unless="${pencairan.status != 'Menunggu Pencairan oleh Admin Finance'}" th:text="${pencairan.status}"></span>
+                                    </td>
+                                </th:block>
+                                
                                 <td>
-                                    <a type="button" class="btn btn-md btn-secondary" th:href="@{/pencairan-detail-{id}(id=${pengajuan.id})}">Detail</a>
+                                    <a type="button" class="btn btn-md btn-secondary" th:href="@{/pencairan-detail-{id}(id=${pencairan.id})}">Detail</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -83,6 +84,14 @@
             "searching": false // Menonaktifkan fitur pencarian
         });
     });
+</script>
+<script>
+    // Menampilkan pesan sukses
+    document.getElementById("successMessage").style.display = "block";
+    // Mengatur waktu tampilan pesan sebelum menghilang
+    setTimeout(function() {
+        document.getElementById("successMessage").style.display = "none";
+    }, 3000); // 3000 milliseconds = 3 seconds
 </script>
 
 <!-- jquery -->

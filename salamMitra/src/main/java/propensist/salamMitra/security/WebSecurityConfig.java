@@ -3,7 +3,6 @@ package propensist.salamMitra.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,6 +38,7 @@ public class WebSecurityConfig {
                                     .requestMatchers(new AntPathRequestMatcher("/getKabupatenKotaByProvinsi")).permitAll()
                                     .requestMatchers(new AntPathRequestMatcher("/getKecamatanByProvinsiKabupatenKota")).permitAll()
                                     .requestMatchers(new AntPathRequestMatcher("/pencairan**")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
+                                    .requestMatchers(new AntPathRequestMatcher("/tambah-pencairan")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
                                     .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                     )
                     .formLogin((form) -> form
