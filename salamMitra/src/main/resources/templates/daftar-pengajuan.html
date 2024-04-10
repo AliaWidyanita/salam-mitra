@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
     <title>Daftar Pengajuan Kerja Sama</title>
     <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/css/datatables.css">
@@ -23,16 +23,19 @@
                     </th:block> 
                     <th:block th:if="${role == 'manajemen'}">
                         <h3 class="text-center m-4">Daftar Pengajuan Kerja Sama yang Diteruskan</h3>
-                    </th:block>                      
+                    </th:block>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
                         </div>
                         <div class="col-sm-6 text-right">
                             <th:block th:if="${role eq 'mitra'}">
-                                <a type="button" class="btn btn-primary btn-auto-width" href="/tambah-pengajuan">+ Buat Pengajuan</a>
+                                <a type="button" class="boxed-btn" href="/tambah-pengajuan">+ Buat Pengajuan</a>
                             </th:block>
                         </div>
+                    </div>
+                    <div style="text-align: left; margin-bottom: 10px;">
+                        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Cari pengajuan...">
                     </div>
                     <table class="table table-bordered" id="dataTable">
                         <thead class="bg-dark text-white text-center">
@@ -60,7 +63,7 @@
                                 <td th:text="${pengajuan.kategori}"></td>
                                 <td th:text="${pengajuan.status}"></td>
                                 <td>
-                                    <a type="button" class="btn btn-md btn-secondary" th:href="@{/pengajuan-detail-{id}(id=${pengajuan.id})}">Detail</a>
+                                    <a type="button" class="boxed-btn" style="width: 90px;" th:href="@{/pengajuan-detail-{id}(id=${pengajuan.id})}">Detail</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -75,12 +78,13 @@
 <!-- Sertakan referensi ke DataTables JavaScript di sini -->
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
 <!-- Inisialisasi DataTables dengan konfigurasi tertentu -->
 <script>
     $(document).ready(function() {
         $('#dataTable').DataTable({
             "ordering": false, // Menonaktifkan sorting
-            "searching": false // Menonaktifkan fitur pencarian
+            "searching": true // Menonaktifkan fitur pencarian
         });
     });
 </script>
@@ -92,6 +96,33 @@
     setTimeout(function() {
         document.getElementById("successMessage").style.display = "none";
     }, 3000); // 3000 milliseconds = 3 seconds
+</script>
+
+<script>
+    function searchTable() {
+        // Mendapatkan nilai input pencarian
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("dataTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop melalui semua baris tabel, sembunyikan yang tidak sesuai dengan query pencarian
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            for (var j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        break;
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    }
 </script>
 
 <!-- jquery -->
