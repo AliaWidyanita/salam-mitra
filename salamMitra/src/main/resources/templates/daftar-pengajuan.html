@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
     <title>Daftar Pengajuan Kerja Sama</title>
     <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/css/datatables.css">
@@ -23,14 +23,14 @@
                     </th:block> 
                     <th:block th:if="${role == 'manajemen'}">
                         <h3 class="text-center m-4">Daftar Pengajuan Kerja Sama yang Diteruskan</h3>
-                    </th:block>                      
+                    </th:block>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
                         </div>
                         <div class="col-sm-6 text-right">
                             <th:block th:if="${role eq 'mitra'}">
-                                <a type="button" class="btn btn-primary btn-auto-width" href="/tambah-pengajuan">+ Buat Pengajuan</a>
+                                <a type="button" class="boxed-btn" href="/tambah-pengajuan">+ Buat Pengajuan</a>
                             </th:block>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                                 <td th:text="${pengajuan.kategori}"></td>
                                 <td th:text="${pengajuan.status}"></td>
                                 <td>
-                                    <a type="button" class="btn btn-md btn-secondary" th:href="@{/pengajuan-detail-{id}(id=${pengajuan.id})}">Detail</a>
+                                    <a type="button" class="boxed-btn" style="width: 90px;" th:href="@{/pengajuan-detail-{id}(id=${pengajuan.id})}">Detail</a>
                                 </td>
                             </tr>
                         </tbody>

@@ -75,13 +75,10 @@
                             </div>
                             <div class="row justify-content-end">
                                 <div class="col-auto">
-                                    <a class="btn btn-secondary mr-2" href="/edit" th:if="${pengajuan.status == 'Diajukan'}">Revisi Ajuan</a>
-                                    <a class="btn btn-secondary mr-2" href="/edit" th:if="${pengajuan.status == 'Perlu Revisi'}">Revisi Ajuan</a>
-    
+                                    <a class="boxed-btn" th:href="@{/submit-revisi-{id}(id=${pengajuan.id})}" th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}">Revisi Ajuan</a>
                                 </div>
                                 <div class="col-auto">
-                                    <a class="btn btn-secondary" th:href="@{/submit-pembatalan-{id}(id=${pengajuan.id})}" th:if="${pengajuan.status == 'Diajukan'}">Batalkan Ajuan</a>
-                                    <a class="btn btn-secondary" th:href="@{/submit-pembatalan-{id}(id=${pengajuan.id})}" th:if="${pengajuan.status == 'Perlu Revisi'}">Batalkan Ajuan</a>
+                                    <a class="boxed-btn" style="background-color: #dc3545;" th:href="@{/submit-pembatalan-{id}(id=${pengajuan.id})}" th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}" onmouseover="this.style.color='black'" onmouseout="this.style.color='white'">Batalkan Ajuan</a>
                                 </div>
                             </div>
                         </div>
@@ -276,7 +273,7 @@
                                     </div>
 
                             <div class="text-center m-4" style="margin-top: 20px;">
-                                <a class="btn btn-secondary" href="/pengajuan" style="margin-right: 10px;">Kembali</a>
+                                <a class="boxed-btn" href="/pengajuan" style="margin-right: 10px;">Kembali</a>
                             </div>
 
 

@@ -56,11 +56,11 @@
 
     <div class="card">
         <div class="card-body">
-            <h2>Konfirmasi pembatalan pengajuan</h2>
-            <p>Apakah Anda yakin ingin membatalkan pengajuan dengan ID: <span th:text="${pengajuan.id}"></span>?</p>
-            <form th:action="@{/submit-pembatalan-{id}(id=${pengajuan.id})}" method="post">
-                <a href="/pengajuan" class="btn btn-secondary">Batal</a>
-                <button type="submit" class="btn btn-danger">Batal</button>
+            <h2>Konfirmasi Pembatalan Pengajuan</h2>
+            <p>Apakah Anda yakin ingin membatalkan pengajuan dengan ID <span th:text="${pengajuan.isPresent() ? pengajuan.get().getId() : ''}"></span>?</p>
+            <form th:action="@{/submit-pembatalan-{id}(id=${pengajuan.isPresent() ? pengajuan.get().getId() : ''})}" method="post">
+                <a href="/pengajuan" class="btn btn-secondary">Balik</a>
+                <button type="submit" name="submit" value="submit" class="btn btn-danger">Batal</button>
             </form>
         </div>
     </div>
