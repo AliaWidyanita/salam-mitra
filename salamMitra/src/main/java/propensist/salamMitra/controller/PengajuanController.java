@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
+import java.util.Collections;
+
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.KebutuhanDanaMapper;
 import propensist.salamMitra.dto.PengajuanMapper;
@@ -137,13 +139,33 @@ public class PengajuanController {
         model.addAttribute("user", user);
 
         List<Pengajuan> listPengajuan = pengajuanService.getAllPengajuan();
-        // Membuat list baru untuk menyimpan Pengajuan dengan username yang sesuai
-        List<Pengajuan> listPengajuanUsername = new ArrayList<>();
+        Collections.reverse(listPengajuan);
 
         if (user instanceof Mitra) {
+            List<Pengajuan> listPengajuanUsername = new ArrayList<>();
             for (Pengajuan pengajuan : listPengajuan) {
                 if (pengajuan.getUsername().equals(user.getUsername())) {
-                    listPengajuanUsername.add(pengajuan);
+                    if (pengajuan.getStatus().equalsIgnoreCase("Diajukan")) {
+                        listPengajuanUsername.add(pengajuan);
+                    } if (pengajuan.getStatus().equalsIgnoreCase("Perlu Revisi")) {
+                        listPengajuanUsername.add(pengajuan);
+                    } if (pengajuan.getStatus().equalsIgnoreCase("Sedang Diperiksa")) {
+                        listPengajuanUsername.add(pengajuan);
+                    } if (pengajuan.getStatus().equalsIgnoreCase("Diteruskan ke Manajemen")) {
+                        listPengajuanUsername.add(pengajuan);
+                    } if (pengajuan.getStatus().equalsIgnoreCase("Menunggu Pencairan Dana oleh Program Service")) {
+                        listPengajuanUsername.add(pengajuan);
+                    } if (pengajuan.getStatus().equalsIgnoreCase("Menunggu Pencairan Dana oleh Admin Finance")) {
+                        listPengajuanUsername.add(pengajuan);
+                    } if (pengajuan.getStatus().equalsIgnoreCase("Menunggu Laporan")) {
+                        listPengajuanUsername.add(pengajuan);
+                    } if (pengajuan.getStatus().equalsIgnoreCase("Selesai")) {
+                        listPengajuanUsername.add(pengajuan);
+                    } if (pengajuan.getStatus().equalsIgnoreCase("Ditolak")) {
+                        listPengajuanUsername.add(pengajuan);
+                    } if (pengajuan.getStatus().equalsIgnoreCase("Dibatalkan")) {
+                        listPengajuanUsername.add(pengajuan);
+                    }
                 }
             }
             model.addAttribute("listPengajuan", listPengajuanUsername);
@@ -173,7 +195,7 @@ public class PengajuanController {
 
                 if(role.equals("admin_PROGRAM")){
                     if (pengajuan.getStatus().equalsIgnoreCase("Diajukan")){
-                        pengajuan.setStatus("In Review");
+                        pengajuan.setStatus("Sedang Diperiksa");
                     }
                    
                     pengajuanService.savePengajuan(pengajuan);
@@ -353,7 +375,6 @@ public class PengajuanController {
                     return "error-page";
             }
 
-            
             // Simpan perubahan pada pengajuan
             pengajuanService.savePengajuan(pengajuan);
             
@@ -365,8 +386,10 @@ public class PengajuanController {
         }
     }
 
-    @GetMapping("/mitra-batal-{id}")
-    public String getBatalPengajuan(@PathVariable("id") String id, Model model) {
+    @GetMapping("/submit-pembatalan-{id}")
+    public String getBatalPengajuan(@PathVariable("id") String id,
+                                    @RequestParam("submit") String submit,
+                                    Model model) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         Pengguna user = penggunaService.authenticate(auth.getName());
@@ -381,8 +404,10 @@ public class PengajuanController {
         return "konfirmasi-batal-pengajuan";
     }
 
-    @PostMapping("/mitra-batal-{id}")
-    public String batalPengajuan(@PathVariable ("id") String id, Model model) {
+    @PostMapping("/submit-pembatalan-{id}")
+    public String batalPengajuan(@PathVariable("id") String id,
+                                @RequestParam("submit") String submit,
+                                Model model) throws IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         Pengguna user = penggunaService.authenticate(auth.getName());
@@ -395,7 +420,17 @@ public class PengajuanController {
 
         if (optPengajuan.isPresent()) {
             Pengajuan pengajuan = optPengajuan.get();
-            pengajuan.setStatus("Dibatalkan");
+
+            switch (submit) {
+                case "submit":
+                    pengajuan.setStatus("Dibatalkan");
+                    break;
+
+                default:
+                    // Aksi tidak valid
+                    return "error-page";
+            }
+
             pengajuanService.savePengajuan(pengajuan);
 
             model.addAttribute("pengajuan", pengajuan);

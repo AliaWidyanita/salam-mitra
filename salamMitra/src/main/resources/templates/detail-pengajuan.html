@@ -80,8 +80,8 @@
     
                                 </div>
                                 <div class="col-auto">
-                                    <a class="btn btn-secondary" th:href="@{/mitra-batal-{id}(id=${pengajuan.id})}" th:if="${pengajuan.status == 'Diajukan'}">Batalkan Ajuan</a>
-                                    <a class="btn btn-secondary" th:href="@{/mitra-batal-{id}(id=${pengajuan.id})}">Batalkan Ajuan</a>
+                                    <a class="btn btn-secondary" th:href="@{/submit-pembatalan-{id}(id=${pengajuan.id})}" th:if="${pengajuan.status == 'Diajukan'}">Batalkan Ajuan</a>
+                                    <a class="btn btn-secondary" th:href="@{/submit-pembatalan-{id}(id=${pengajuan.id})}" th:if="${pengajuan.status == 'Perlu Revisi'}">Batalkan Ajuan</a>
                                 </div>
                             </div>
                         </div>
@@ -221,8 +221,8 @@
                                     <p th:text="${pengajuan.komentar}" class="text-muted"></p>
                                 </div>
     
-                                    <!-- Form akan ditampilkan jika status "In Review" -->
-                                    <div th:if="${pengajuan.status == 'In Review'}">
+                                    <!-- Form akan ditampilkan jika status "Sedang Diperiksa" -->
+                                    <div th:if="${pengajuan.status == 'Sedang Diperiksa'}">
                                         <hr class="mt-1 mb-4">
                                         <form id="reviewForm" th:action="@{/review-pengajuan-admin-{id}(id=${pengajuan.id})}" method="post">
                                                 <textarea class="form-control" rows="3" name="comment" placeholder="Tulis komentar di sini..."></textarea>
@@ -254,7 +254,7 @@
                                         <p th:text="${pengajuan.komentar}" class="text-muted"></p>
                                     </div>
         
-                                        <!-- Form akan ditampilkan jika status "In Review" -->
+                                        <!-- Form akan ditampilkan jika status "Sedang Diperiksa" -->
                                         <div th:if="${pengajuan.status == 'Diteruskan ke Manajemen'}">
                                             <hr class="mt-1 mb-4">
                                             <form id="reviewForm" th:action="@{/review-pengajuan-manajemen-{id}(id=${pengajuan.id})}" method="post">

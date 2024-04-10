@@ -34,6 +34,9 @@
                             </th:block>
                         </div>
                     </div>
+                    <div style="text-align: left; margin-bottom: 10px;">
+                        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Cari pengajuan...">
+                    </div>
                     <table class="table table-bordered" id="dataTable">
                         <thead class="bg-dark text-white text-center">
                         <tr>
@@ -75,12 +78,13 @@
 <!-- Sertakan referensi ke DataTables JavaScript di sini -->
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
 <!-- Inisialisasi DataTables dengan konfigurasi tertentu -->
 <script>
     $(document).ready(function() {
         $('#dataTable').DataTable({
             "ordering": false, // Menonaktifkan sorting
-            "searching": false // Menonaktifkan fitur pencarian
+            "searching": true // Menonaktifkan fitur pencarian
         });
     });
 </script>
@@ -92,6 +96,33 @@
     setTimeout(function() {
         document.getElementById("successMessage").style.display = "none";
     }, 3000); // 3000 milliseconds = 3 seconds
+</script>
+
+<script>
+    function searchTable() {
+        // Mendapatkan nilai input pencarian
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("dataTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop melalui semua baris tabel, sembunyikan yang tidak sesuai dengan query pencarian
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            for (var j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        break;
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    }
 </script>
 
 <!-- jquery -->

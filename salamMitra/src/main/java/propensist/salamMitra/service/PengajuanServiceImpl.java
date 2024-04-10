@@ -31,13 +31,11 @@ public class PengajuanServiceImpl implements PengajuanService{
     public List<Pengajuan> getAllPengajuan() {
         return pengajuanDb.findAll();
     }
+
     @Override
     public Optional<Pengajuan> getPengajuanById(Long id) {
         return pengajuanDb.findById(id);
     }
-
-    
-
 
     @Override
     public void handleKTP(Pengajuan pengajuan) {
