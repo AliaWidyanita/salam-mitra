@@ -74,7 +74,6 @@ public class SalamMitraApplication {
                 penggunaService.saveManajemen(manajemen);
             }
             
-            
             if (penggunaService.getAllAdmin().isEmpty()) {
                 Admin admin = new Admin();
                 admin.setUsername("adminprogram1");

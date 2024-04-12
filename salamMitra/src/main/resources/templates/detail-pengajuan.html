@@ -267,17 +267,10 @@
                             </div>
                             <div class="row justify-content-end">
                                 <div class="col-auto">
-                                    <a class="btn btn-secondary mr-2" href="/edit"
-                                        th:if="${pengajuan.status == 'Diajukan'}">Revisi Ajuan</a>
-                                    <a class="btn btn-secondary mr-2" href="/edit"
-                                        th:if="${pengajuan.status == 'Perlu Revisi'}">Revisi Ajuan</a>
-
+                                    <a class="boxed-btn" th:href="@{/submit-revisi-{id}(id=${pengajuan.id})}" th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}">Revisi Ajuan</a>
                                 </div>
                                 <div class="col-auto">
-                                    <a class="btn btn-secondary" href="/cancel"
-                                        th:if="${pengajuan.status == 'Diajukan'}">Batalkan Ajuan</a>
-                                    <a class="btn btn-secondary" href="/cancel"
-                                        th:if="${pengajuan.status == 'Perlu Revisi'}">Batalkan Ajuan</a>
+                                    <a class="boxed-btn" style="background-color: #dc3545;" th:href="@{/submit-pembatalan-{id}(id=${pengajuan.id})}" th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}" onmouseover="this.style.color='black'" onmouseout="this.style.color='white'">Batalkan Ajuan</a>
                                 </div>
                             </div>
                         </div>
@@ -435,78 +428,65 @@
                                     <hr class="mt-1 mb-4">
                                     <p th:text="${pengajuan.komentar}" class="text-muted"></p>
                                 </div>
-
-                                <!-- Form akan ditampilkan jika status "In Review" -->
-                                <div th:if="${pengajuan.status == 'In Review'}">
-                                    <hr class="mt-1 mb-4">
-                                    <form id="reviewForm"
-                                        th:action="@{/review-pengajuan-admin-{id}(id=${pengajuan.id})}" method="post">
-                                        <textarea class="form-control" rows="3" name="comment"
-                                            placeholder="Tulis komentar di sini..."></textarea>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <!-- Jika NominalKebutuhanDana kurang dari 70.000.000 -->
-                                                <th:block th:if="${pengajuan.NominalKebutuhanDana lt 70000000}">
-                                                    <button type="submit" name="action" value="setujui"
-                                                        class="btn btn-success btn-block">Setujui</button>
-                                                </th:block>
-                                                <th:block th:unless="${pengajuan.NominalKebutuhanDana lt 70000000}">
-                                                    <button type="submit" name="action" value="teruskan"
-                                                        class="btn btn-primary btn-block"
-                                                        style="white-space: nowrap; min-width: 200px;">Teruskan ke
-                                                        Manajemen</button>
-                                                </th:block>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <button type="submit" name="action" value="tolak"
-                                                    class="btn btn-danger btn-block">Tolak</button>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <button type="submit" name="action" value="perlu-revisi"
-                                                    class="btn btn-warning btn-block">Perlu Revisi</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
-                            <div th:if="${role eq 'manajemen'}">
-                                <h5 style="margin-top: 40px;">Komentar Pengajuan</h5>
-                                <div class="sub-heading"
-                                    style="border: 1px solid #ccc; background-color: #f9f9f9; padding: 10px;">
-                                    <hr class="mt-1 mb-4">
-                                    <p th:text="${pengajuan.komentar}" class="text-muted"></p>
+    
+                                    <!-- Form akan ditampilkan jika status "Sedang Diperiksa" -->
+                                    <div th:if="${pengajuan.status == 'Sedang Diperiksa'}">
+                                        <hr class="mt-1 mb-4">
+                                        <form id="reviewForm" th:action="@{/review-pengajuan-admin-{id}(id=${pengajuan.id})}" method="post">
+                                                <textarea class="form-control" rows="3" name="comment" placeholder="Tulis komentar di sini..."></textarea>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <!-- Jika NominalKebutuhanDana kurang dari 70.000.000 -->
+                                                    <th:block th:if="${pengajuan.NominalKebutuhanDana lt 70000000}">
+                                                        <button type="submit" name="action" value="setujui" class="btn btn-success btn-block">Setujui</button>
+                                                    </th:block>
+                                                    <th:block th:unless="${pengajuan.NominalKebutuhanDana lt 70000000}">
+                                                        <button type="submit" name="action" value="teruskan" class="btn btn-primary btn-block" style="white-space: nowrap; min-width: 200px;">Teruskan ke Manajemen</button>
+                                                    </th:block>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <button type="submit" name="action" value="tolak" class="btn btn-danger btn-block">Tolak</button>
+                                                </div>
+                                                <div class="col-md-4">
+                                                        <button type="submit" name="action" value="perlu-revisi" class="btn btn-warning btn-block">Perlu Revisi</button>
+                                                </div>
+                                            </div>                                       
+                                        </form>   
+                                    </div>
                                 </div>
 
-                                <!-- Form akan ditampilkan jika status "In Review" -->
-                                <div th:if="${pengajuan.status == 'Diteruskan ke Manajemen'}">
-                                    <hr class="mt-1 mb-4">
-                                    <form id="reviewForm"
-                                        th:action="@{/review-pengajuan-manajemen-{id}(id=${pengajuan.id})}"
-                                        method="post">
-                                        <textarea class="form-control" rows="3" name="comment"
-                                            placeholder="Tulis komentar di sini..."></textarea>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <!-- Jika NominalKebutuhanDana kurang dari 70.000.000 -->
-                                                <button type="submit" name="action" value="setujui"
-                                                    class="btn btn-success btn-block">Setujui</button>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <button type="submit" name="action" value="tolak"
-                                                    class="btn btn-danger btn-block">Tolak</button>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <button type="submit" name="action" value="perlu-revisi"
-                                                    class="btn btn-warning btn-block">Perlu Revisi</button>
-                                            </div>
+                                <div th:if="${role eq 'manajemen'}">
+                                    <h5 style="margin-top: 40px;">Komentar Pengajuan</h5>
+                                    <div class="sub-heading" style="border: 1px solid #ccc; background-color: #f9f9f9; padding: 10px;">
+                                        <hr class="mt-1 mb-4">
+                                        <p th:text="${pengajuan.komentar}" class="text-muted"></p>
+                                    </div>
+        
+                                        <!-- Form akan ditampilkan jika status "Sedang Diperiksa" -->
+                                        <div th:if="${pengajuan.status == 'Diteruskan ke Manajemen'}">
+                                            <hr class="mt-1 mb-4">
+                                            <form id="reviewForm" th:action="@{/review-pengajuan-manajemen-{id}(id=${pengajuan.id})}" method="post">
+                                                    <textarea class="form-control" rows="3" name="comment" placeholder="Tulis komentar di sini..."></textarea>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <!-- Jika NominalKebutuhanDana kurang dari 70.000.000 -->
+                                                            <button type="submit" name="action" value="setujui" class="btn btn-success btn-block">Setujui</button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                            <button type="submit" name="action" value="tolak" class="btn btn-danger btn-block">Tolak</button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                            <button type="submit" name="action" value="perlu-revisi" class="btn btn-warning btn-block">Perlu Revisi</button>
+                                                    </div>
+                                                </div>                                       
+                                            </form>
                                         </div>
                                     </form>
                                 </div>
                             </div>
 
                             <div class="text-center m-4" style="margin-top: 20px;">
-                                <a class="btn btn-secondary" href="/pengajuan" style="margin-right: 10px;">Kembali</a>
+                                <a class="boxed-btn" href="/pengajuan" style="margin-right: 10px;">Kembali</a>
                             </div>
 
 
