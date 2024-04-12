@@ -99,7 +99,7 @@ public class PengajuanController {
         pengajuan.setKtpPIC(ktpPICBytes);
         pengajuan.setRab(rabBytes);
         pengajuan.setDokumen(dokumenBytes);
-        pengajuan.setStatus("Menunggu Pencairan oleh Program Service");
+        pengajuan.setStatus("Menunggu Pencairan Dana oleh Program Service");
 
         Long id = pengajuan.getId();
         Long nominalDana = 0L;
@@ -184,6 +184,7 @@ public class PengajuanController {
                 pengajuanService.handleDOC(pengajuan);            
                 
                 model.addAttribute("pengajuan", pengajuan);
+                model.addAttribute("status", pengajuan.getStatus());
                 return "detail-pengajuan";
             } 
             else {

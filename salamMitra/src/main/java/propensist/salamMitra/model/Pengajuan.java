@@ -20,10 +20,10 @@ public class Pengajuan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "waktuDibuat", nullable = false)
     @CreationTimestamp
     private Date waktuDibuat;
-
 
     @Column(name = "status", nullable = false)
     private String status;

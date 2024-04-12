@@ -88,14 +88,14 @@ public class PencairanController {
         } 
 
         ArrayList<String> allowedStatus = new ArrayList<>(Arrays.asList(
-            "Menunggu Pencairan oleh Program Service",
-            "Menunggu Pencairan oleh Admin Finance"
+            "Menunggu Pencairan Dana oleh Program Service",
+            "Menunggu Pencairan Dana oleh Admin Finance"
         ));
 
         if (allowedStatus.contains(pengajuan.getStatus())){
             if (user instanceof ProgramService) {
                 
-                if (!"Menunggu Pencairan oleh Program Service".equals(pengajuan.getStatus())) {
+                if (!"Menunggu Pencairan Dana oleh Program Service".equals(pengajuan.getStatus())) {
                     model.addAttribute("pengajuan", pengajuan);
                     return "detail-pencairan";
                 }                
@@ -139,7 +139,7 @@ public class PencairanController {
         Optional<Pengajuan> optPengajuan = pengajuanService.getPengajuanById(idPengajuan);
         if (optPengajuan.isPresent()) {
             Pengajuan pengajuan = optPengajuan.get();
-            pengajuan.setStatus("Menunggu Pencairan oleh Admin Finance");
+            pengajuan.setStatus("Menunggu Pencairan Dana oleh Admin Finance");
             pengajuanService.savePengajuan(pengajuan);
         }
 

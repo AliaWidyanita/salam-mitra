@@ -5,6 +5,7 @@ import java.util.Date;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,22 +23,26 @@ public class Pencairan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @Column(name = "source_of_found", nullable = false)
     private String sourceOfFound;
 
+    @NotNull
     @Column(name = "channeling", nullable = false)
     private String channeling;
 
+    @NotNull
     @Column(name = "jenis_dana", nullable = false)
     private String jenisDana;
 
+    @NotNull
     @Column(name = "link_pencairan", nullable = false)
     private String linkPencairan;
 
     @Column(name = "tanggal_pencairan_salam_setara", nullable = false)
     @CreationTimestamp
     private Date tanggalPencairanSalamSetara;
-
+    
     @Column(name = "tanggal_pencairan_mitra")
     private Date tanggalPencairanMitra;
 

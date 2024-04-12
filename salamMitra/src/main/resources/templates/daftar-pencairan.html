@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+
 <head>
     <meta charset="UTF-8" />
     <object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
@@ -8,60 +9,71 @@
     <link rel="stylesheet" type="text/css" href="/css/datatables.css">
 
 </head>
+
 <body>
-<div th:replace="~{fragments/navbar :: header}"></div>
-<div class="container">
-    <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
-        <div class="container" data-aos="fade-up">
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-7">
+    <div th:replace="~{fragments/navbar :: header}"></div>
+    <div class="container">
+        <div class="container-fluid"
+            style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
+            <div class="container" data-aos="fade-up">
+                <div class="row d-flex justify-content-center">
                     <h3 class="text-center m-4">Daftar Pencairan</h3>
 
                     <div class="row">
                         <div class="col">
-                            <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+                            <div class="alert alert-success" role="alert" th:text="${successMessage}"
+                                th:if="${successMessage}"></div>
                         </div>
                     </div>
 
                     <table class="table table-bordered" id="dataTable">
                         <thead class="bg-dark text-white text-center">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">ID Pengajuan</th>
-                            <th scope="col">Nama Mitra</th>
-                            <th scope="col">Nominal Kebutuhan Dana</th>
-                            <th scope="col">Nomor Rekening</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Action</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">ID Pengajuan</th>
+                                <th scope="col">Tanggal Pengajuan</th>
+                                <th scope="col">Nama Mitra</th>
+                                <th scope="col">Nominal Kebutuhan Dana</th>
+                                <th scope="col">Nomor Rekening</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                            </tr>
                         </thead>
                         <tbody class="text-center" th:if="${listPencairan.isEmpty()}">
                             <tr>
-                                <td colspan="4">Belum ada daftar pengajuan yang membutuhkan pencairan dana.</td>
+                                <td colspan="8">Belum ada daftar pengajuan yang membutuhkan pencairan dana.</td>
                             </tr>
                         </tbody>
                         <tbody class="text-center" th:unless="${listPencairan.isEmpty()}">
                             <tr th:each="pencairan, iterationStatus: ${listPencairan}">
                                 <td class="text-center" th:text="${iterationStatus.count}"></td>
                                 <td th:text="${pencairan.id}"></td>
+                                <td th:text="${#dates.format(pencairan.waktuDibuat, 'HH:mm:ss dd/MM/yyyy')}"></td>
                                 <td th:text="${pencairan.namaMitra}"></td>
                                 <td th:text="'Rp ' + ${pencairan.nominalKebutuhanDana}"></td>
                                 <td th:text="${pencairan.nomorRekening}"></td>
-                                <th:block th:if="${role == 'program_service'}">
+                                <th:block th:if="${role == 'program_service' || role == 'manajemen'}">
                                     <td>
-                                        <span th:if="${pencairan.status != 'Menunggu Pencairan oleh Program Service'}">Sudah Dicairkan</span>
-                                        <span th:unless="${pencairan.status != 'Menunggu Pencairan oleh Program Service'}" th:text="${pencairan.status}"></span>
+                                        <span
+                                            th:if="${pencairan.status == 'Menunggu Pencairan Dana oleh Program Service' || pencairan.status == 'Menunggu Pencairan Dana oleh Admin Finance'}"
+                                            th:text="${pencairan.status}"></span>
+                                        <span
+                                            th:unless="${pencairan.status == 'Menunggu Pencairan Dana oleh Program Service' || pencairan.status == 'Menunggu Pencairan Dana oleh Admin Finance'}">Sudah
+                                            Dicairkan</span>
                                     </td>
                                 </th:block>
                                 <th:block th:if="${role == 'admin_FINANCE'}">
                                     <td>
-                                        <span th:if="${pencairan.status != 'Menunggu Pencairan oleh Admin Finance'}">Sudah Dicairkan</span>
-                                        <span th:unless="${pencairan.status != 'Menunggu Pencairan oleh Admin Finance'}" th:text="${pencairan.status}"></span>
+                                        <span
+                                            th:if="${pencairan.status != 'Menunggu Pencairan Dana oleh Admin Finance'}">Sudah
+                                            Dicairkan</span>
+                                        <span th:unless="${pencairan.status != 'Menunggu Pencairan Dana oleh Admin Finance'}"
+                                            th:text="${pencairan.status}"></span>
                                     </td>
                                 </th:block>
-                                
                                 <td>
-                                    <a type="button" class="btn btn-md btn-secondary" th:href="@{/pencairan-detail-{id}(id=${pencairan.id})}">Detail</a>
+                                    <a type="button" class="btn btn-md btn-secondary"
+                                        th:href="@{/pencairan-detail-{id}(id=${pencairan.id})}">Detail</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -70,50 +82,51 @@
             </div>
         </div>
     </div>
-</div>
-<!-- Sertakan referensi ke jQuery di sini -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<!-- Sertakan referensi ke DataTables JavaScript di sini -->
-<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
-<!-- Inisialisasi DataTables dengan konfigurasi tertentu -->
-<script>
-    $(document).ready(function() {
-        $('#dataTable').DataTable({
-            "ordering": false, // Menonaktifkan sorting
-            "searching": false // Menonaktifkan fitur pencarian
+    
+    <!-- Sertakan referensi ke jQuery di sini -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Sertakan referensi ke DataTables JavaScript di sini -->
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+    <!-- Inisialisasi DataTables dengan konfigurasi tertentu -->
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                "ordering": false, // Menonaktifkan sorting
+                "searching": false // Menonaktifkan fitur pencarian
+            });
         });
-    });
-</script>
-<script>
-    // Menampilkan pesan sukses
-    document.getElementById("successMessage").style.display = "block";
-    // Mengatur waktu tampilan pesan sebelum menghilang
-    setTimeout(function() {
-        document.getElementById("successMessage").style.display = "none";
-    }, 3000); // 3000 milliseconds = 3 seconds
-</script>
+    </script>
+    <script>
+        // Menampilkan pesan sukses
+        document.getElementById("successMessage").style.display = "block";
+        // Mengatur waktu tampilan pesan sebelum menghilang
+        setTimeout(function () {
+            document.getElementById("successMessage").style.display = "none";
+        }, 3000); // 3000 milliseconds = 3 seconds
+    </script>
 
-<!-- jquery -->
-<script src="assets/js/jquery-1.11.3.min.js"></script>
-<!-- bootstrap -->
-<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-<!-- count down -->
-<script src="assets/js/jquery.countdown.js"></script>
-<!-- isotope -->
-<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
-<!-- waypoints -->
-<script src="assets/js/waypoints.js"></script>
-<!-- owl carousel -->
-<script src="assets/js/owl.carousel.min.js"></script>
-<!-- magnific popup -->
-<script src="assets/js/jquery.magnific-popup.min.js"></script>
-<!-- mean menu -->
-<script src="assets/js/jquery.meanmenu.min.js"></script>
-<!-- sticker js -->
-<script src="assets/js/sticker.js"></script>
-<!-- main js -->
-<script src="assets/js/main.js"></script>
+    <!-- jquery -->
+    <script src="assets/js/jquery-1.11.3.min.js"></script>
+    <!-- bootstrap -->
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <!-- count down -->
+    <script src="assets/js/jquery.countdown.js"></script>
+    <!-- isotope -->
+    <script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+    <!-- waypoints -->
+    <script src="assets/js/waypoints.js"></script>
+    <!-- owl carousel -->
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- magnific popup -->
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- mean menu -->
+    <script src="assets/js/jquery.meanmenu.min.js"></script>
+    <!-- sticker js -->
+    <script src="assets/js/sticker.js"></script>
+    <!-- main js -->
+    <script src="assets/js/main.js"></script>
 
 </body>
+
 </html>

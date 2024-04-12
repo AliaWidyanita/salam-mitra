@@ -1,6 +1,5 @@
 package propensist.salamMitra.service;
 
-import org.hibernate.mapping.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.Comparator;
 
 @Service
 public class PencairanServiceImpl implements PencairanService{
@@ -29,8 +30,8 @@ public class PencairanServiceImpl implements PencairanService{
         List<Pengajuan> listPencairan = new ArrayList<>();
         
         ArrayList<String> allowedStatus = new ArrayList<>(Arrays.asList(
-            "Menunggu Pencairan oleh Program Service",
-            "Menunggu Pencairan oleh Admin Finance",
+            "Menunggu Pencairan Dana oleh Program Service",
+            "Menunggu Pencairan Dana oleh Admin Finance",
             "Menunggu Laporan",
             "Selesai"
         ));
@@ -41,7 +42,8 @@ public class PencairanServiceImpl implements PencairanService{
                 listPencairan.add(pengajuan);
             }
         }
-        
+
+        listPencairan = sortListByTanggalDesc(listPencairan);
         return listPencairan;
     }
 
@@ -52,7 +54,7 @@ public class PencairanServiceImpl implements PencairanService{
         List<Pengajuan> listPencairan = new ArrayList<>();
 
         ArrayList<String> allowedStatus = new ArrayList<>(Arrays.asList(
-            "Menunggu Pencairan oleh Admin Finance",
+            "Menunggu Pencairan Dana oleh Admin Finance",
             "Menunggu Laporan",
             "Selesai"
         ));
@@ -64,7 +66,7 @@ public class PencairanServiceImpl implements PencairanService{
             }
         }
     
-        System.out.println(listPencairan);
+        listPencairan = sortListByTanggalDesc(listPencairan);
         return listPencairan;
     }
 
@@ -80,6 +82,14 @@ public class PencairanServiceImpl implements PencairanService{
     @Override
     public String convertByteToImage(byte[] byteArray) {
         return Base64.getEncoder().encodeToString(byteArray);
+    }
+
+    public List<Pengajuan> sortListByTanggalDesc(List<Pengajuan> listPencairan) {
+        
+        Comparator<Pengajuan> comparator = Comparator.comparing(Pengajuan::getWaktuDibuat).reversed();
+        Collections.sort(listPencairan, comparator);
+
+        return listPencairan;
     }
 }
 

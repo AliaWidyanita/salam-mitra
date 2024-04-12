@@ -13,12 +13,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.AdminMapper;
 import propensist.salamMitra.dto.request.CreateAdminRequestDTO;
+import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Pengguna;
+import propensist.salamMitra.model.Admin.AdminRole;
 import propensist.salamMitra.service.PenggunaService;
 
 import org.springframework.ui.Model;
@@ -42,15 +45,15 @@ public class PenggunaController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         Pengguna user = penggunaService.authenticate(auth.getName());
-        
+
         model.addAttribute("role", role);
         model.addAttribute("user", user);
-        
+
         List<Pengguna> listPengguna = penggunaService.getAllPengguna();
 
         System.out.println(listPengguna);
         model.addAttribute("listPengguna", listPengguna);
-        
+
         return "view-daftar-pengguna";
     }
 
@@ -59,19 +62,21 @@ public class PenggunaController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         Pengguna user = penggunaService.authenticate(auth.getName());
-        
+
         model.addAttribute("role", role);
         model.addAttribute("user", user);
-        
+
         var adminDTO = new CreateAdminRequestDTO();
+        adminDTO.setGender("");
         model.addAttribute("adminDTO", adminDTO);
-        
+
         return "form-tambah-admin";
     }
 
     @PostMapping("/pengguna-tambah-admin")
-    public String addAdmin(@Valid @ModelAttribute CreateAdminRequestDTO adminDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
-        
+    public String addAdmin(@Valid @ModelAttribute @RequestParam("adminRole") AdminRole adminRole , CreateAdminRequestDTO adminDTO,
+            BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getAllErrors()
                     .stream()
@@ -84,11 +89,12 @@ public class PenggunaController {
                     })
                     .collect(Collectors.toList());
 
-                    model.addAttribute("errors", errors);
+            model.addAttribute("errors", errors);
         }
 
         String encodedPassword = encoder.encode(adminDTO.getPassword());
         adminDTO.setPassword(encodedPassword);
+        adminDTO.setAdminRole(adminRole);
 
         var admin = adminMapper.createAdminRequestDTOToAdmin(adminDTO);
         penggunaService.saveAdmin(admin);
@@ -101,11 +107,11 @@ public class PenggunaController {
     }
 
     @GetMapping("/pengguna-hapus-{id}")
-    public String hapusPengguna(@PathVariable ("id") UUID id, Model model) {
+    public String hapusPengguna(@PathVariable("id") UUID id, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         Pengguna user = penggunaService.authenticate(auth.getName());
-        
+
         model.addAttribute("role", role);
         model.addAttribute("user", user);
 
@@ -116,7 +122,7 @@ public class PenggunaController {
     }
 
     @PostMapping("/pengguna-hapus-{id}")
-    public String postHapusPengguna(@PathVariable ("id") UUID id, Model model) {
+    public String postHapusPengguna(@PathVariable("id") UUID id, Model model) {
         Pengguna pengguna = penggunaService.findPenggunaById(id);
         penggunaService.deletePengguna(pengguna);
 
