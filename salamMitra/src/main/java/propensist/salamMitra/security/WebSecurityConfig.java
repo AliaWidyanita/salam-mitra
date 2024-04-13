@@ -3,6 +3,7 @@ package propensist.salamMitra.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,7 +22,7 @@ public class WebSecurityConfig {
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http
-                    .csrf(csrf -> csrf.disable())
+                .csrf(Customizer.withDefaults())
                     .authorizeHttpRequests(requests -> requests
                             .requestMatchers(new AntPathRequestMatcher("/assets/**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
@@ -34,30 +35,15 @@ public class WebSecurityConfig {
                             .requestMatchers(new AntPathRequestMatcher("/review-pengajuan-admin-**")).hasAuthority("admin_PROGRAM")
                             .requestMatchers(new AntPathRequestMatcher("/review-pengajuan-manajemen-**")).hasAuthority("manajemen")
                             .requestMatchers(new AntPathRequestMatcher("/submit-laporan-**")).hasAuthority("mitra")
-                            .requestMatchers(new AntPathRequestMatcher("/tambah-pengajuan")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/tambah-pengajuan")).hasAuthority("mitra")
                             .requestMatchers(new AntPathRequestMatcher("/getKabupatenKotaByProvinsi")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/getKecamatanByProvinsiKabupatenKota")).permitAll()
-                                    .requestMatchers(new AntPathRequestMatcher("/assets/**")).permitAll()
-                                    .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
-                                    .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
-                                    .requestMatchers(new AntPathRequestMatcher("/register")).anonymous()
-                                    .requestMatchers(new AntPathRequestMatcher("/login")).anonymous()
-                                    .requestMatchers(new AntPathRequestMatcher("/ubah-sandi**")).permitAll()
-                                    .requestMatchers(new AntPathRequestMatcher("/pengguna**")).hasAnyAuthority("program_service", "manajemen")
-                                    .requestMatchers(new AntPathRequestMatcher("/pengajuan**")).hasAnyAuthority("mitra", "program_service", "manajemen", "admin_PROGRAM")
-                                    .requestMatchers(new AntPathRequestMatcher("/review-pengajuan-admin-**")).hasAuthority("admin_PROGRAM")
-                                    .requestMatchers(new AntPathRequestMatcher("/review-pengajuan-manajemen-**")).hasAuthority("manajemen")
-                                    .requestMatchers(new AntPathRequestMatcher("/submit-laporan-**")).hasAuthority("mitra")
-                                    .requestMatchers(new AntPathRequestMatcher("/tambah-pengajuan")).hasAuthority("mitra")
-                                    .requestMatchers(new AntPathRequestMatcher("/getKabupatenKotaByProvinsi")).permitAll()
-                                    .requestMatchers(new AntPathRequestMatcher("/getKecamatanByProvinsiKabupatenKota")).permitAll()
-                                    .requestMatchers(new AntPathRequestMatcher("/pencairan**")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
-                                    .requestMatchers(new AntPathRequestMatcher("/tambah-pencairan")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
-                                    .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/getKecamatanByProvinsiKabupatenKota")).permitAll()  
+                            .requestMatchers(new AntPathRequestMatcher("/pencairan**")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
+                            .requestMatchers(new AntPathRequestMatcher("/tambah-pencairan")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
+                            .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/tambah-program**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/program**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/edit-program-**")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/getNamaProgramByKategori")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/getAsnafByNamaProgram")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/getDaftarProvinsiByNamaProgram")).permitAll()

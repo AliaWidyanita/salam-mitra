@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 
 import jakarta.validation.Valid;
@@ -31,6 +32,7 @@ import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.model.ProgramKerja;
 import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;
+import propensist.salamMitra.service.PencairanService;
 import propensist.salamMitra.service.PengajuanService;
 import propensist.salamMitra.service.PenggunaService;
 import propensist.salamMitra.service.ProgramKerjaService;
@@ -63,6 +65,9 @@ public class PengajuanController {
 
     @Autowired
     private PenggunaService penggunaService;
+
+    @Autowired
+    private PencairanService pencairanService;
 
     @GetMapping("/tambah-pengajuan")
     public String formTambahPengajuan(Model model) {
@@ -208,7 +213,25 @@ public class PengajuanController {
 
                 pengajuanService.handleKTP(pengajuan);
                 pengajuanService.handleRAB(pengajuan);
-                pengajuanService.handleDOC(pengajuan);            
+                pengajuanService.handleDOC(pengajuan); 
+                
+                if (pengajuan.getStatus().equalsIgnoreCase("Menunggu Laporan")){
+                    byte[] buktiPencairanMitraBytes = pengajuan.getPencairan().getBuktiPencairanMitra();
+                    String buktiPencairanMitra = pencairanService.convertByteToImage(buktiPencairanMitraBytes);
+
+                    // Menambahkan bukti pencairan mitra ke model
+                    model.addAttribute("buktiPencairanMitra", buktiPencairanMitra);
+
+                }
+                //Jika status pengajuan "Selesai", tangani laporan
+                if (pengajuan.getStatus().equalsIgnoreCase("Selesai")) {
+                    pengajuanService.handleLaporan(pengajuan);
+                    byte[] buktiPencairanMitraBytes = pengajuan.getPencairan().getBuktiPencairanMitra();
+                    String buktiPencairanMitra = pencairanService.convertByteToImage(buktiPencairanMitraBytes);
+
+                    // Menambahkan bukti pencairan mitra ke model
+                    model.addAttribute("buktiPencairanMitra", buktiPencairanMitra);
+                }
                 
                 model.addAttribute("pengajuan", pengajuan);
                 model.addAttribute("status", pengajuan.getStatus());
@@ -345,7 +368,7 @@ public class PengajuanController {
     }
     @PostMapping("/submit-laporan-{id}")
     public String submitLaporanByMitra(@PathVariable("id") String id,
-                                        @RequestParam(value="laporan", required = false) String laporan,
+                                        @RequestParam(value="laporan", required = false) MultipartFile laporan,
                                         @RequestParam("submit") String submit,
                                         Model model) throws IOException {
         // Ambil informasi pengguna yang sedang login
@@ -368,6 +391,8 @@ public class PengajuanController {
 
             byte[] laporanBytes = laporan.getBytes();
             pengajuan.setLaporan(laporanBytes);
+            String laporanBase64 = Base64.getEncoder().encodeToString(laporanBytes);
+            pengajuan.setLaporanBase64(laporanBase64);
         
             // Sesuaikan status berdasarkan aksi yang dipilih
             switch (submit) {
