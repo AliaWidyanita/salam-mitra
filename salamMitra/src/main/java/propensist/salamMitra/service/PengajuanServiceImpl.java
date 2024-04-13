@@ -7,7 +7,9 @@ import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.repository.PengajuanDb;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Base64;
+import java.util.HashMap;
 
 
 
@@ -57,6 +59,25 @@ public class PengajuanServiceImpl implements PengajuanService{
         byte[] dokumenByte = pengajuan.getDokumen();
         String dokumen = Base64.getEncoder().encodeToString(dokumenByte);
         pengajuan.setDokumenBase64(dokumen); 
+    }
+
+    @Override
+    public void handleLaporan(Pengajuan pengajuan) {
+        byte[] laporanByte = pengajuan.getLaporan();
+        String laporan = Base64.getEncoder().encodeToString(laporanByte);
+        pengajuan.setLaporanBase64(laporan); // Set the imageBase64 field
+    }
+
+    @Override
+    public Map<String, Long> jumlahPengajuanByStatus() {
+        List<Object[]> counts = pengajuanDb.jumlahPengajuanByStatus();
+        Map<String, Long> countMap = new HashMap<>();
+        for (Object[] obj : counts) {
+            String status = (String) obj[0];
+            Long count = (Long) obj[1];
+            countMap.put(status, count);
+        }
+        return countMap;
     }
 
 }

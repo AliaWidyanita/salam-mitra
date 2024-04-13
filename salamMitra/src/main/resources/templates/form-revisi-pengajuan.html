@@ -90,15 +90,11 @@
 										</div>
 									</div>
 									<div class="form-holder form-holder-2">
-										<label for="ktpPIC">KTP Person In Charge (PIC)*</label>
 										<!-- Display previous KtpPIC if available -->
-										<td>
-											<span th:text="': '"></span>
-											<img th:src="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" class="card-img-top" alt="KTP PIC" style="height: 50px; object-fit: cover;">
-											<a th:href="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" th:download="'KTP-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.jpg'">
-												Download KTP
-												<!-- <span th:text="'KTP-' + ${pengajuanDTO.id} + '-' + ${pengajuanDTO.namaMitra} +'.jpg'"></span> -->
-											</a>
+										<td colspan="2">
+											<div>KTP Person in Charge (PIC)*</div>
+											<img th:src="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" class="card-img-top" alt="KTP PIC" style="width: 100%; height: 100%; object-fit: cover;">
+											<a th:href="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" th:download="'KTP-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.jpg'">Download</a>
 										</td>
 										<input type="file" name="ktpPIC" accept=".jpg, .png, .jpeg" class="form-control-file form-control">
 										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
@@ -252,11 +248,20 @@
 									<div class="form-holder form-holder-2">
 										<label for="rab">Rancangan Anggaran Biaya (RAB)*</label>
 										<!-- Display previous Rab if available -->
-										<div th:if="${pengajuan.rabBase64}">
-											<a th:href="'data:application/pdf;base64,' + ${pengajuan.rabBase64}" th:download="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
-												<span th:text="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
-											</a>
-										</div>
+										<div id="rabContainer" style="width: 100%; height: 1000px; overflow: auto;">
+                                            <embed id="rabPreview"
+                                                   th:attr="src='data:application/pdf;base64,' + ${pengajuan.rabBase64}"
+                                                   type="application/pdf"
+                                                   style="width: 100%; height: 100%;" /> <!-- Set width and height to 100% -->
+                                        </div>
+                                        <div>
+                                            <button id="fullscreenButton" onclick="toggleFullScreen('rabPreview')">Fullscreen</button> <!-- Button to toggle full screen -->
+                                            <a th:href="'data:application/pdf;base64,' + ${pengajuan.rabBase64}" th:download="'Rab-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
+                                                <button id="downloadButton">Download</button> <!-- Button to download PDF -->
+                                            </a>
+                                        </div>
+										<br>
+										<label for="dokumen">Upload Rancangan Anggaran Baru</label>
 										<input type="file" name="rab" accept=".pdf" class="form-control-file form-control">
 										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
 									</div>
@@ -264,11 +269,20 @@
 									<div class="form-holder form-holder-2">
 										<label for="dokumen">Dokumen Perizinan*</label>
 										<!-- Display previous Dokumen if available -->
-										<div th:if="${pengajuan.dokumenBase64}">
-											<a th:href="'data:application/pdf;base64,' + ${pengajuan.dokumenBase64}" th:download="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
-												<span th:text="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
-											</a>
-										</div>
+										<div id="docContainer" style="width: 100%; height: 1000px; overflow: auto;">
+                                            <embed id="docPreview"
+                                                   th:attr="src='data:application/pdf;base64,' + ${pengajuan.dokumenBase64}"
+                                                   type="application/pdf"
+                                                   style="width: 100%; height: 100%;" /> <!-- Set width and height to 100% -->
+                                        </div>
+                                        <div>
+                                            <button id="fullscreenButton" onclick="toggleFullScreen('docPreview')">Fullscreen</button> <!-- Button to toggle full screen -->
+                                            <a th:href="'data:application/pdf;base64,' + ${pengajuan.dokumenBase64}" th:download="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
+                                                <button id="downloadButton">Download</button> <!-- Button to download PDF -->
+                                            </a>
+                                        </div>
+										<br>
+										<label for="dokumen">Upload Dokumen Perizinan Baru</label>
 										<input type="file" name="dokumen" accept=".pdf" class="form-control-file form-control">
 										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
 									</div>
@@ -636,6 +650,18 @@
             console.log("Form submitted");
         });
     });
+</script>
+<script>
+    function toggleFullScreen(containerId) {
+        var container = document.getElementById(containerId);
+        if (!document.fullscreenElement) {
+            container.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
 </script>
 
 <!-- jquery -->
