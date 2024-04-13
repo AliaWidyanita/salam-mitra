@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <style>
+        /* CSS untuk menambahkan ketinggian pada input file */
+        input[type="file"] {
+            height: 38px;
+        }
+        /* CSS untuk scroll pada checkbox provinsi dan kabupaten/kota */
+        .scrollable-checkbox {
+            max-height: 200px;
+            overflow-y: auto; 
+            border-radius: 5px;
+            padding: 10px;
+            border: 1.2px solid rgba(218,223,227,255);
+        }
+        /* CSS untuk menambahkan jarak di atas label field */
+        .form-group {
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: header}"></div>
+    <div class="container">
+        <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
+            <div class="container" data-aos="fade-up">
+                <div class="row d-flex justify-content-center">
+                    <h2 class="text-center m-4">Tambah Program</h2>
+                    <div class="container">
+                        <form id="formTambahProgram" class="row g-3" th:action="@{/tambah-program}" th:object="${programKerjaDTO}" method="POST" enctype="multipart/form-data">
+                            <div class="col-md-6 form-group">
+                                <label for="judul">Judul Program <sup>*</sup></label>
+                                <input type="text" name="judul" id="judul" placeholder="Judul program" class="form-control" th:field="*{judul}" required>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="kategoriProgram">Kategori <sup>*</sup></label>
+                                <select name="kategoriProgram" id="kategoriProgram" class="form-control"  th:field="*{kategoriProgram}" required>
+                                    <option value="">--Pilih kategori program--</option>
+                                    <option th:each="kategori : ${daftarKategoriProgram}" th:value="${kategori}" th:text="${kategori}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="kategoriAsnaf">Kategori Asnaf <sup>*</sup></label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div th:each="kategori, iterStat : ${daftarKategoriAsnaf}" th:if="${iterStat.index % 2 == 0}">
+                                            <input type="checkbox" th:id="${kategori}" th:name="kategoriAsnaf" th:value="${kategori}" />
+                                            <label th:for="${kategori}" th:text="${kategori}"></label><br>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div th:each="kategori, iterStat : ${daftarKategoriAsnaf}" th:if="${iterStat.index % 2 != 0}">
+                                            <input type="checkbox" th:id="${kategori}" th:name="kategoriAsnaf" th:value="${kategori}" />
+                                            <label th:for="${kategori}" th:text="${kategori}"></label><br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="provinsi">Provinsi <sup>*</sup></label>
+                                <div class="scrollable-checkbox">
+                                    <input type="checkbox" id="selectAllProvinsi" class="selectAllCheckbox" />
+                                    <label for="selectAllProvinsi">Seluruh Indonesia</label><br>
+
+                                    <div th:each="provinsi : ${daftarProvinsi}">
+                                        <input type="checkbox" class="provinsi" th:id="${provinsi}" th:name="provinsi" th:value="${provinsi}" />
+                                        <label th:for="${provinsi}" th:text="${provinsi}"></label><br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="kabupatenKota">Kabupaten/Kota</label>
+                                <div id="kabupatenKotaContainer" class="scrollable-checkbox"></div>
+                                <small class="form-text text-muted">- Opsi Kabupaten/Kota akan muncul sesuai dengan pilihan provinsi</small>
+                            </div>                            
+                            <div class="col-md-6 form-group">
+                                <label for="deskripsi">Deskripsi Program <sup>*</sup></label>
+                                <textarea type="text" name="deskripsi" id="deskripsi" placeholder="Deskripsi program" class="form-control" th:field="*{deskripsi}" required></textarea>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="fotoProgram">Foto Program</label>
+                                <input type="file" name="foto" id="fotoProgram" class="form-control-file form-control" accept=".jpg, .png, .jpeg">
+                                <small class="form-text text-muted">Ukuran file maksimum: 10MB</small>
+                            </div>
+                            <div class="text-center m-4">
+                                <a class="btn btn-danger " style="background-color: #e74454" href="/">Batal</a>
+                                <button class="btn btn-primary" style="background-color: #6793F6; color: #fff" type="submit">Simpan</button>                              
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Ketika checkbox provinsi diubah
+            $('.provinsi').change(function() {
+                var selectedProvinces = $('.provinsi:checked').map(function() {
+                    return this.value;
+                }).get(); // Ambil nilai provinsi yang dipilih
+
+                // Kosongkan kontainer kabupaten/kota
+                $('#kabupatenKotaContainer').empty();
+
+                // Jika tidak ada provinsi yang dipilih, hentikan eksekusi selanjutnya
+                if (!selectedProvinces || selectedProvinces.length === 0) return;
+
+                // Kirim permintaan AJAX untuk mendapatkan daftar kabupaten/kota berdasarkan provinsi yang dipilih
+                $.ajax({
+                    url: "/getKabupatenKotaByProvinsi",
+                    type: "GET",
+                    data: {
+                        provinsi: selectedProvinces.join(',')
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        // Tambahkan opsi "Seluruh Kabupaten/Kota" pertama kali jika belum ada
+                        if ($('#selectAllKabupatenKota').length === 0) {
+                            var selectAllCheckbox = $('<input>').attr({ type: 'checkbox', id: 'selectAllKabupatenKota' }).css('margin-right', '5px');
+                            var selectAllLabel = $('<label>').attr('for', 'selectAllKabupatenKota').text('Seluruh Kabupaten/Kota').css('margin-right', '10px');
+                            $('#kabupatenKotaContainer').append(selectAllCheckbox).append(selectAllLabel).append('<br>');
+                        }
+
+                        // Isi kontainer kabupaten/kota dengan opsi yang diperoleh dari respons
+                        $.each(data, function(index, kabupatenKota) {
+                            var checkbox = $('<input>').attr({ type: 'checkbox', name: 'kabupatenKota', value: kabupatenKota, id: kabupatenKota }).css('margin-right', '5px');
+                            var label = $('<label>').attr('for', kabupatenKota).text(kabupatenKota);
+                            $('#kabupatenKotaContainer').append(checkbox).append(label).append('<br>');
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("AJAX request failed: " + textStatus, errorThrown);
+                    }
+                });
+            });
+        
+            // Ketika checkbox "Select All" untuk kabupaten/kota diubah
+            $(document).on('change', '#selectAllKabupatenKota', function() {
+                var isChecked = $(this).is(':checked');
+                $('.kabupatenKota').prop('checked', isChecked).prop('disabled', isChecked);
+        
+                // Jika "Seluruh Kabupaten/Kota" dipilih, nonaktifkan semua pilihan kabupaten/kota lainnya
+                if (isChecked) {
+                    $('.kabupatenKota').not('#selectAllKabupatenKota').prop('checked', false).prop('disabled', true);
+                }
+            });
+        
+            // Ketika checkbox "Select All" diubah untuk provinsi
+            $('#selectAllProvinsi').change(function() {
+                var isChecked = $(this).is(':checked');
+                $('.provinsi').prop('checked', isChecked).change(); // Pemicu perubahan pada checkbox provinsi
+        
+                // Jika "Select All" dicentang, hilangkan centang dari semua provinsi kecuali "Seluruh Indonesia"
+                if (isChecked) {
+                    $('.provinsi').not('#selectAllProvinsi').prop('checked', false).prop('disabled', true);
+                } else {
+                    $('.provinsi').prop('disabled', false);
+                }
+            });
+        
+            $('#formTambahProgram').submit(function() {
+                var allProvinsiChecked = $('#selectAllProvinsi').is(':checked');
+                var allKabupatenKotaChecked = $('#selectAllKabupatenKota').is(':checked');
+                
+                // Clear previous hidden inputs
+                $('input[name="provinsi"]').remove();
+                $('input[name="kabupatenKota"]').remove();
+                
+                if (allProvinsiChecked) {
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'provinsi',
+                        value: 'Seluruh Indonesia'
+                    }).appendTo($(this));
+                } else {
+                    $('.provinsi:checked').each(function() {
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: 'provinsi',
+                            value: $(this).val()
+                        }).appendTo($(this).closest('form'));
+                    });
+                }
+                
+                if (allKabupatenKotaChecked) {
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'kabupatenKota',
+                        value: 'Seluruh Kabupaten/Kota'
+                    }).appendTo($(this));
+                } else {
+                    $('.kabupatenKota:checked').each(function() {
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: 'kabupatenKota',
+                            value: $(this).val()
+                        }).appendTo($(this).closest('form'));
+                    });
+                }
+            });
+        });
+        
+    </script>
+     
+
+    <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- jquery -->
+    <script src="assets/js/jquery-1.11.3.min.js"></script>
+    <!-- bootstrap -->
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <!-- count down -->
+    <script src="assets/js/jquery.countdown.js"></script>
+    <!-- isotope -->
+    <script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+    <!-- waypoints -->
+    <script src="assets/js/waypoints.js"></script>
+    <!-- owl carousel -->
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- magnific popup -->
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- mean menu -->
+    <script src="assets/js/jquery.meanmenu.min.js"></script>
+    <!-- sticker js -->
+    <script src="assets/js/sticker.js"></script>
+    <!-- main js -->
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
