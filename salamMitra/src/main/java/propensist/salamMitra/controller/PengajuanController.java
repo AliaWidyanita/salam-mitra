@@ -211,6 +211,7 @@ public class PengajuanController {
                 pengajuanService.handleDOC(pengajuan);            
                 
                 model.addAttribute("pengajuan", pengajuan);
+                model.addAttribute("status", pengajuan.getStatus());
                 return "detail-pengajuan";
             } 
             else {

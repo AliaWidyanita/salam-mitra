@@ -10,11 +10,72 @@
             padding: 0.375rem 0.75rem;
             font-size: 0.875rem;
         }
-    
+
+        .card {
+            margin-top: 50px;
+        }
+
         .disabled {
-            pointer-events: none; /* Menonaktifkan interaksi pengguna */
-            opacity: 0.65; /* Memberikan efek transparansi pada tombol yang dinonaktifkan */
-            cursor: not-allowed; /* Mengubah ikon kursor saat diarahkan ke tombol yang dinonaktifkan */
+            pointer-events: none;
+            /* Menonaktifkan interaksi pengguna */
+            opacity: 0.65;
+            /* Memberikan efek transparansi pada tombol yang dinonaktifkan */
+            cursor: not-allowed;
+            /* Mengubah ikon kursor saat diarahkan ke tombol yang dinonaktifkan */
+        }
+
+        .container .steps {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .steps .round {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+            width: 50px;
+            color: #999;
+            font-size: 22px;
+            font-weight: 500;
+            border-radius: 50%;
+            background: #fff;
+            border: 4px solid #e0e0e0;
+            transition: all 200ms ease;
+            transition-delay: 0s;
+        }
+
+        .steps .status-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-right: auto;
+        }
+
+        .steps .round.active {
+            transition-delay: 100ms;
+            border-color: #4070f4;
+            color: #4070f4;
+        }
+
+        .steps .progress-bar {
+            position: absolute;
+            height: 4px;
+            width: 100%;
+            background: #e0e0e0;
+            z-index: -1;
+        }
+
+        .progress-bar .indicator {
+            position: absolute;
+            height: 100%;
+            width: 0%;
+            background: #4070f4;
+            transition: all 300ms ease;
         }
     </style>
 </head>
@@ -22,26 +83,148 @@
 <body>
     <div th:replace="~{fragments/navbar :: header}"></div>
     <div class="container">
-        <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
+        <div class="container-fluid"
+            style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
             <div class="container" data-aos="fade-up">
                 <div class="row d-flex justify-content-center">
+
+                    <div class="steps">
+                        <div>
+                            <span class="round active"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-file-earmark-arrow-up-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.354 9.854a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 8.707V12.5a.5.5 0 0 1-1 0V8.707z" />
+                                </svg></span>
+                        </div>
+                        <th:block th:if="${pengajuan.status == 'Dibatalkan'}">
+                            <div>
+                                <span class="round"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+                                    </svg></span>
+                            </div>
+                        </th:block>
+                        <th:block th:unless="${pengajuan.status == 'Dibatalkan'}">
+                            <div>
+                                <th:block th:if="${pengajuan.status == 'Perlu Direvisi'}">
+                                    <span class="round"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-question-circle-fill" viewBox="0 0 16 16">
+                                            <path
+                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247m2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z" />
+                                        </svg></span>
+                                </th:block>
+                                <th:block th:unless="${pengajuan.status == 'Perlu Direvisi'}">
+                                    <span class="round"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-clipboard2-data-fill" viewBox="0 0 16 16">
+                                            <path
+                                                d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5" />
+                                            <path
+                                                d="M4.085 1H3.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1h-.585q.084.236.085.5V2a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 2v-.5q.001-.264.085-.5M10 7a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0zm-6 4a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0zm4-3a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1" />
+                                        </svg></span>
+                                </th:block>
+                            </div>
+                            <th:block th:if="${pengajuan.status == 'Ditolak'}">
+                                <div>
+                                    <span class="round"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-slash-circle-fill" viewBox="0 0 16 16">
+                                            <path
+                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.646-2.646a.5.5 0 0 0-.708-.708l-6 6a.5.5 0 0 0 .708.708z" />
+                                        </svg></span>
+                                </div>
+                            </th:block>
+                            <th:block th:unless="${pengajuan.status == 'Ditolak'}">
+                                <div>
+                                    <span class="round"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-credit-card-fill" viewBox="0 0 16 16">
+                                            <path
+                                                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0zm0 3v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7zm3 2h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1" />
+                                        </svg></span>
+                                </div>
+                                <div>
+                                    <span class="round"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-book-fill" viewBox="0 0 16 16">
+                                            <path
+                                                d="M8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783" />
+                                        </svg></span>
+                                </div>
+                                <div>
+                                    <span class="round"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                            <path
+                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                        </svg></span>
+                                </div>
+                            </th:block>
+                        </th:block>
+                        <div class="progress-bar">
+                            <span class="indicator"></span>
+                        </div>
+                    </div>
+
+                    <div class="steps">
+                        <div>
+                            <span class="status-label">Diajukan</span>
+                        </div>
+                        
+                        <th:block th:if="${pengajuan.status == 'Dibatalkan'}">
+                            <div>
+                                <span class="status-label">Dibatalkan</span>
+                            </div>
+                        </th:block>
+
+                        <th:block th:unless="${pengajuan.status == 'Dibatalkan'}">
+                            <div>
+                                <th:block th:if="${pengajuan.status == 'Perlu Direvisi'}">
+                                    <span class="status-label">Perlu Direvisi</span>
+                                </th:block>
+                                <th:block th:unless="${pengajuan.status == 'Perlu Direvisi'}">
+                                    <span class="status-label">Sedang Diperiksa</span>
+                                </th:block>
+                            </div>
+
+                            <th:block th:if="${pengajuan.status == 'Ditolak'}">
+                                <div>
+                                    <span class="status-label">Ditolak</span>
+                                </div>
+                            </th:block>
+
+                            <th:block th:unless="${pengajuan.status == 'Ditolak'}">
+                                <div>
+                                    <span class="status-label">Menunggu Pencairan Dana</span>
+                                </div>
+                                <div>
+                                    <span class="status-label">Menunggu Laporan</span>
+                                </div>
+                                <div>
+                                    <span class="status-label">Selesai</span>
+                                </div>
+                            </th:block>
+                        </th:block>
+                    </div>
+
+
+                    <div id="statusElement" th:text="${status}" style="display: none;"></div>
+
                     <div class="card">
                         <div class="card-header p-4">
-                            <div th:if="${role == 'mitra'}" class="d-flex justify-content-between align-items-center">                              
+                            <div th:if="${role == 'mitra'}" class="d-flex justify-content-between align-items-center">
                                 <h1>Detail Ajuan</h1>
                             </div>
-                            <div th:if="${role == 'admin_PROGRAM' || role == 'program_service'}" class="d-flex justify-content-between align-items-center">                              
+                            <div th:if="${role == 'admin_PROGRAM' || role == 'program_service'}"
+                                class="d-flex justify-content-between align-items-center">
                                 <h1 class="card-title">Review Pengajuan Kerja Sama</h1>
                             </div>
-                            <div th:if="${role == 'manajemen'}" class="d-flex justify-content-between align-items-center">                              
+                            <div th:if="${role == 'manajemen'}"
+                                class="d-flex justify-content-between align-items-center">
                                 <h1 class="card-title">Review Pengajuan yang Diteruskan</h1>
                             </div>
                         </div>
                         <div class="sub-heading">
                             <hr class="mt-1 mb-4">
-                            <h4>Status Ajuan : 
+                            <h4>Status Ajuan :
                                 <span th:text="${pengajuan.status}" class="text-success"></span>
-                            </h4>                       
+                            </h4>
                         </div>
                         <div th:if="${role eq 'mitra'}" style="margin-top: 30px;">
                             <h5 style="margin-bottom: 5px;">Status terakhir diperbarui</h5>
@@ -52,23 +235,32 @@
                                 <p style="margin: 0;" th:text="${pengajuan.reviewedBy}"></p>
                             </div>
 
-                            
+
                             <!-- UPLOAD LAPORAN JIKA DANA PENCAIRAN TELAH SELESAI DICAIRKAN KE REKENING MITRA -->
-                            <div th:if="${pengajuan.status == 'Menunggu Laporan'}" style="margin-top: 30px; text-align: left;">
+                            <div th:if="${pengajuan.status == 'Menunggu Laporan'}"
+                                style="margin-top: 30px; text-align: left;">
                                 <h5 style="margin-bottom: 5px;">Upload Laporan</h5>
                                 <div style="text-align: left;">
-                                    <small class="form-text text-muted" style="margin-bottom: 5px; color: red; margin-left: 0;">Mohon untuk mengumpulkan laporan sebelum <span th:text="${#dates.format(pengajuan.tanggalLaporan, 'dd/MM/yyyy')}"></span>23:59</small>
-                                    <form id="submitLaporan" th:action="@{/submit-laporan-{id}(id=${pengajuan.id})}" method="post" style="margin-bottom: 5px; margin-left: 0;">
-                                        <input type="file" name="laporan" accept=".pdf" class="form-control-file form-control" required style="margin-left: -10px;">
-                                        <small class="form-text text-muted" style="margin-left: -10px;">Ukuran file pdf minimum: 5MB</small>
-                                        <button type="submit" name="submit" value="submit" class="btn btn-success" style="display: inline; padding: 5px 10px; margin-left: -10px;">Submit</button>
+                                    <small class="form-text text-muted"
+                                        style="margin-bottom: 5px; color: red; margin-left: 0;">Mohon untuk mengumpulkan
+                                        laporan sebelum <span
+                                            th:text="${#dates.format(pengajuan.tanggalLaporan, 'dd/MM/yyyy')}"></span>23:59</small>
+                                    <form id="submitLaporan" th:action="@{/submit-laporan-{id}(id=${pengajuan.id})}"
+                                        method="post" style="margin-bottom: 5px; margin-left: 0;">
+                                        <input type="file" name="laporan" accept=".pdf"
+                                            class="form-control-file form-control" required style="margin-left: -10px;">
+                                        <small class="form-text text-muted" style="margin-left: -10px;">Ukuran file pdf
+                                            minimum: 5MB</small>
+                                        <button type="submit" name="submit" value="submit" class="btn btn-success"
+                                            style="display: inline; padding: 5px 10px; margin-left: -10px;">Submit</button>
                                     </form>
                                 </div>
                             </div>
 
                             <div th:if="${pengajuan.komentar != null}" style="margin-top: 30px; text-align: left;">
                                 <h5 style="margin-top: 40px;">Komentar :</h5>
-                                <div class="sub-heading" style="border: 1px solid #ccc; background-color: #f9f9f9; padding: 10px;">
+                                <div class="sub-heading"
+                                    style="border: 1px solid #ccc; background-color: #f9f9f9; padding: 10px;">
                                     <hr class="mt-1 mb-4">
                                     <p th:text="${pengajuan.komentar}" class="text-muted"></p>
                                 </div>
@@ -82,7 +274,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="card-body">
                             <table class="table table-borderless">
                                 <tr class="no-border">
@@ -91,7 +283,9 @@
                                 </tr>
                                 <tr class="no-border">
                                     <td>Waktu Dibuat</td>
-                                    <td><span th:text="': ' + ${#dates.format(pengajuan.waktuDibuat, 'HH:mm:ss dd/MM/yyyy')}"></span></td>
+                                    <td><span
+                                            th:text="': ' + ${#dates.format(pengajuan.waktuDibuat, 'HH:mm:ss dd/MM/yyyy')}"></span>
+                                    </td>
                                 </tr>
                                 <tr class="no-border">
                                     <td>Nama Mitra</td>
@@ -121,16 +315,20 @@
                                     <td>KTP Person in Charge (PIC)</td>
                                     <td>
                                         <span th:text="': '"></span>
-                                        <img th:src="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" class="card-img-top" alt="KTP PIC" style="height: 50px; object-fit: cover;">
-                                        <a th:href="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" th:download="'KTP-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.jpg'">Download</a>
+                                        <img th:src="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}"
+                                            class="card-img-top" alt="KTP PIC" style="height: 50px; object-fit: cover;">
+                                        <a th:href="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}"
+                                            th:download="'KTP-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.jpg'">Download</a>
                                     </td>
                                 </tr>
                                 <tr class="no-border">
                                     <td>Rancangan Anggaran Biaya (RAB)</td>
                                     <td>
                                         <!-- Download link for RAB PDF -->
-                                        <a th:href="'data:application/pdf;base64,' + ${pengajuan.rabBase64}" th:download="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
-                                            <span th:text="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
+                                        <a th:href="'data:application/pdf;base64,' + ${pengajuan.rabBase64}"
+                                            th:download="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
+                                            <span
+                                                th:text="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
                                         </a>
                                     </td>
                                 </tr>
@@ -138,26 +336,36 @@
                                     <td>Dokumen Perizinan</td>
                                     <td>
                                         <!-- Download link for RAB PDF -->
-                                        <a th:href="'data:application/pdf;base64,' + ${pengajuan.dokumenBase64}" th:download="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
-                                            <span th:text="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
+                                        <a th:href="'data:application/pdf;base64,' + ${pengajuan.dokumenBase64}"
+                                            th:download="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
+                                            <span
+                                                th:text="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
                                         </a>
                                     </td>
                                 </tr>
                                 <tr class="no-border">
                                     <td>Tanggal Mulai Implementasi</td>
-                                    <td><span th:text="': ' + ${#dates.format(pengajuan.tanggalMulai, 'dd/MM/yyyy')}"></span></td>
+                                    <td><span
+                                            th:text="': ' + ${#dates.format(pengajuan.tanggalMulai, 'dd/MM/yyyy')}"></span>
+                                    </td>
                                 </tr>
                                 <tr class="no-border">
                                     <td>Tanggal Selesai Implementasi</td>
-                                    <td><span th:text="': ' + ${#dates.format(pengajuan.tanggalSelesai, 'dd/MM/yyyy')}"></span></td>
+                                    <td><span
+                                            th:text="': ' + ${#dates.format(pengajuan.tanggalSelesai, 'dd/MM/yyyy')}"></span>
+                                    </td>
                                 </tr>
                                 <tr class="no-border">
                                     <td>Tanggal Selesai Laporan</td>
-                                    <td><span th:text="': ' + ${#dates.format(pengajuan.tanggalSelesai, 'dd/MM/yyyy')}"></span></td>
+                                    <td><span
+                                            th:text="': ' + ${#dates.format(pengajuan.tanggalSelesai, 'dd/MM/yyyy')}"></span>
+                                    </td>
                                 </tr>
                                 <tr class="no-border">
                                     <td>Lokasi Penyaluran Dana</td>
-                                    <td><span th:text="': ' + ${pengajuan.alamatLengkap} + ', ' + ${pengajuan.kecamatan} + ', ' + ${pengajuan.kabupatenKota} + ', ' + ${pengajuan.provinsi}"></span></td>                                    
+                                    <td><span
+                                            th:text="': ' + ${pengajuan.alamatLengkap} + ', ' + ${pengajuan.kecamatan} + ', ' + ${pengajuan.kabupatenKota} + ', ' + ${pengajuan.provinsi}"></span>
+                                    </td>
                                 </tr>
                                 <tr class="no-border">
                                     <td>Nama Pemilik Rekening</td>
@@ -165,7 +373,9 @@
                                 </tr>
                                 <tr class="no-border">
                                     <td>Bank & Nomor Rekening</td>
-                                    <td><span th:text="': ' + ${pengajuan.bank} + ' - ' + ${pengajuan.nomorRekening}"></span></td>                                    
+                                    <td><span
+                                            th:text="': ' + ${pengajuan.bank} + ' - ' + ${pengajuan.nomorRekening}"></span>
+                                    </td>
                                 </tr>
                                 <tr class="no-border">
                                     <td>Nominal Kebutuhan Dana</td>
@@ -188,11 +398,11 @@
                                     <tr th:each="kebutuhanDana, iterasi: ${pengajuan.listKebutuhanDana}">
                                         <td th:text="${iterasi.index + 1}"></td>
                                         <td th:text="${kebutuhanDana.asnaf}"></td>
-                                        <td th:text="${kebutuhanDana.jumlahPenerima}"></td>     
+                                        <td th:text="${kebutuhanDana.jumlahPenerima}"></td>
                                         <td th:text="${kebutuhanDana.pilar}"></td>
                                         <td th:text="${kebutuhanDana.jenisBantuan}"></td>
                                         <td th:text="'Rp ' + ${kebutuhanDana.jumlahDana}"></td>
-                                                                 
+
                                     </tr>
                                 </tbody>
                             </table>
@@ -206,14 +416,15 @@
                                     <p style="margin: 0;" th:text="${pengajuan.reviewedBy}"></p>
                                 </div>
                             </div>
-                            
-                            
-                            
-                                                      
 
-                            <div th:if="${role eq 'admin_PROGRAM'}">                                
+
+
+
+
+                            <div th:if="${role eq 'admin_PROGRAM'}">
                                 <h5 style="margin-top: 40px;">Komentar :</h5>
-                                <div class="sub-heading" style="border: 1px solid #ccc; background-color: #f9f9f9; padding: 10px;">
+                                <div class="sub-heading"
+                                    style="border: 1px solid #ccc; background-color: #f9f9f9; padding: 10px;">
                                     <hr class="mt-1 mb-4">
                                     <p th:text="${pengajuan.komentar}" class="text-muted"></p>
                                 </div>
@@ -270,14 +481,16 @@
                                                 </div>                                       
                                             </form>
                                         </div>
-                                    </div>
+                                    </form>
+                                </div>
+                            </div>
 
                             <div class="text-center m-4" style="margin-top: 20px;">
                                 <a class="boxed-btn" href="/pengajuan" style="margin-right: 10px;">Kembali</a>
                             </div>
 
 
-                            
+
 
                         </div>
                     </div>
@@ -286,37 +499,74 @@
         </div>
     </div>
 
-<!-- jquery -->
-<script src="assets/js/jquery-1.11.3.min.js"></script>
-<!-- bootstrap -->
-<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-<!-- count down -->
-<script src="assets/js/jquery.countdown.js"></script>
-<!-- isotope -->
-<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
-<!-- waypoints -->
-<script src="assets/js/waypoints.js"></script>
-<!-- owl carousel -->
-<script src="assets/js/owl.carousel.min.js"></script>
-<!-- magnific popup -->
-<script src="assets/js/jquery.magnific-popup.min.js"></script>
-<!-- mean menu -->
-<script src="assets/js/jquery.meanmenu.min.js"></script>
-<!-- sticker js -->
-<script src="assets/js/sticker.js"></script>
-<!-- main js -->
-<script src="assets/js/main.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var pengajuanStatus = "${pengajuan.status}";
-        var revisiButton = document.getElementById('revisiButton');
-        var cancelButton = document.getElementById('cancelButton');
+    <!-- jquery -->
+    <script src="assets/js/jquery-1.11.3.min.js"></script>
+    <!-- bootstrap -->
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <!-- count down -->
+    <script src="assets/js/jquery.countdown.js"></script>
+    <!-- isotope -->
+    <script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+    <!-- waypoints -->
+    <script src="assets/js/waypoints.js"></script>
+    <!-- owl carousel -->
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- magnific popup -->
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- mean menu -->
+    <script src="assets/js/jquery.meanmenu.min.js"></script>
+    <!-- sticker js -->
+    <script src="assets/js/sticker.js"></script>
+    <!-- main js -->
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var pengajuanStatus = "${pengajuan.status}";
+            var revisiButton = document.getElementById('revisiButton');
+            var cancelButton = document.getElementById('cancelButton');
 
-        if (pengajuanStatus !== 'Diajukan' && pengajuanStatus !== 'Perlu revisi') {
-            revisiButton.setAttribute('disabled', 'disabled');
-            cancelButton.setAttribute('disabled', 'disabled');
-        }
-    });
-</script>
+
+            if (pengajuanStatus !== 'Diajukan' && pengajuanStatus !== 'Perlu revisi') {
+                revisiButton.setAttribute('disabled', 'disabled');
+                cancelButton.setAttribute('disabled', 'disabled');
+            }
+        });
+    </script>
+    <script>
+        // Memanggil fungsi updateProgressBar saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function () {
+            const statusElement = document.getElementById('statusElement');
+            const status = statusElement.innerText.trim();
+
+            updateProgressBar(status);
+        });
+
+        // Definisikan fungsi updateProgressBar
+        const updateProgressBar = (status) => {
+            const rounds = document.querySelectorAll(".round"),
+                progressBar = document.querySelector(".indicator");
+
+            const statusToStep = {
+                "Diajukan": 1,
+                "Sedang Diperiksa": 2,
+                "Perlu Direvisi": 2,
+                "Dibatalkan": 2,
+                "Diteruskan ke Manajemen": 2,
+                "Menunggu Pencairan Dana oleh Program Service": 3,
+                "Menunggu Pencairan Dana oleh Admin Finance": 3,
+                "Ditolak": 3,
+                "Menunggu Laporan": 4,
+                "Selesai": 5
+            };
+
+            const currentStep = statusToStep[status];
+            rounds.forEach((round, index) => {
+                round.classList.toggle("active", index < currentStep);
+            });
+            progressBar.style.width = `${((currentStep - 1) / (rounds.length - 1)) * 100}%`;
+        };
+    </script>
+
 </body>
+
 </html>
