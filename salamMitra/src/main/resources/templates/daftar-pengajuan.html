@@ -61,7 +61,13 @@
                                 <td th:text="${pengajuan.namaMitra}"></td>
                                 <td th:text="${pengajuan.namaProgram}"></td>
                                 <td th:text="${pengajuan.kategori}"></td>
-                                <td th:text="${pengajuan.status}"></td>
+                                <td th:if="${role eq 'mitra'}">
+                                    <span th:if="${pengajuan.status eq 'Diteruskan ke Manajemen'}" >Sedang Diperiksa</span>
+                                    <span th:if="${pengajuan.status eq 'Menunggu Pencairan Dana oleh Program Service'}" >Menunggu Pencairan Dana</span>
+                                    <span th:if="${pengajuan.status eq 'Menunggu Pencairan Dana oleh Admin Finance'}">Menunggu Pencairan Dana</span>
+                                    <span th:unless="${pengajuan.status eq 'Diteruskan ke Manajemen' or pengajuan.status eq 'Menunggu Pencairan Dana oleh Program Service' or pengajuan.status eq 'Menunggu Pencairan Dana oleh Admin Finance'}" th:text="${pengajuan.status}"></span>
+                                </td>
+                                <td th:unless="${role eq 'mitra'}" th:text="${pengajuan.status}" ></td>
                                 <td>
                                     <a type="button" class="boxed-btn" style="width: 90px;" th:href="@{/pengajuan-detail-{id}(id=${pengajuan.id})}">Detail</a>
                                 </td>

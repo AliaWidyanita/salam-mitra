@@ -223,7 +223,15 @@
                         <div class="sub-heading">
                             <hr class="mt-1 mb-4">
                             <h4>Status Ajuan :
-                                <span th:text="${pengajuan.status}" class="text-success"></span>
+                                <div th:if="${role eq 'mitra'}">
+                                    <span th:if="${pengajuan.status eq 'Diteruskan ke Manajemen'}" class="text-success">Sedang Diperiksa</span>
+                                    <span th:if="${pengajuan.status eq 'Menunggu Pencairan Dana oleh Program Service'}" class="text-success">Menunggu Pencairan Dana</span>
+                                    <span th:if="${pengajuan.status eq 'Menunggu Pencairan Dana oleh Admin Finance'}" class="text-success">Menunggu Pencairan Dana</span>
+                                    <span th:unless="${pengajuan.status eq 'Diteruskan ke Manajemen' or pengajuan.status eq 'Menunggu Pencairan Dana oleh Program Service' or pengajuan.status eq 'Menunggu Pencairan Dana oleh Admin Finance'}" th:text="${pengajuan.status}" class="text-success"></span>
+                                </div>
+                                <div th:unless="${role eq 'mitra'}">
+                                    <span th:text="${pengajuan.status}" class="text-success"></span>
+                                </div>
                             </h4>
                         </div>
 
