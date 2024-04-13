@@ -14,11 +14,17 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.KebutuhanDanaMapper;
 import propensist.salamMitra.dto.PengajuanMapper;
 import propensist.salamMitra.dto.request.CreateKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.CreateListPengajuanKebutuhanDanaDTO;
+import propensist.salamMitra.dto.request.UpdateKebutuhanDanaDTO;
+import propensist.salamMitra.dto.request.UpdateListPengajuanKebutuhanDanaDTO;
+import propensist.salamMitra.model.KebutuhanDana;
 import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.model.Pengguna;
@@ -141,24 +147,36 @@ public class PengajuanController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         Pengguna user = penggunaService.authenticate(auth.getName());
-        
+            
         model.addAttribute("role", role);
         model.addAttribute("user", user);
 
         List<Pengajuan> listPengajuan = pengajuanService.getAllPengajuan();
-        // Membuat list baru untuk menyimpan Pengajuan dengan username yang sesuai
-        List<Pengajuan> listPengajuanUsername = new ArrayList<>();
+        Collections.reverse(listPengajuan);
 
         if (user instanceof Mitra) {
+            List<Pengajuan> listPengajuanUsername = new ArrayList<>();
             for (Pengajuan pengajuan : listPengajuan) {
                 if (pengajuan.getUsername().equals(user.getUsername())) {
                     listPengajuanUsername.add(pengajuan);
                 }
             }
+            // Custom comparator to sort based on specified status order
+            Collections.sort(listPengajuanUsername, (p1, p2) -> {
+                List<String> statusOrder = Arrays.asList(
+                    "Diajukan", "Perlu Revisi", "Sedang Diperiksa", 
+                    "Diteruskan ke Manajemen", "Menunggu Pencairan Dana oleh Program Service", 
+                    "Menunggu Pencairan Dana oleh Admin Finance", "Menunggu Laporan", 
+                    "Selesai", "Ditolak", "Dibatalkan"
+                );
+                int index1 = statusOrder.indexOf(p1.getStatus());
+                int index2 = statusOrder.indexOf(p2.getStatus());
+                return Integer.compare(index1, index2);
+            });
             model.addAttribute("listPengajuan", listPengajuanUsername);
         } 
-        else{    
-             model.addAttribute("listPengajuan", listPengajuan);       
+        else {    
+            model.addAttribute("listPengajuan", listPengajuan);       
         }
         return "daftar-pengajuan";
     }
@@ -182,7 +200,7 @@ public class PengajuanController {
 
                 if(role.equals("admin_PROGRAM")){
                     if (pengajuan.getStatus().equalsIgnoreCase("Diajukan")){
-                        pengajuan.setStatus("In Review");
+                        pengajuan.setStatus("Sedang Diperiksa");
                     }
                    
                     pengajuanService.savePengajuan(pengajuan);
@@ -193,6 +211,7 @@ public class PengajuanController {
                 pengajuanService.handleDOC(pengajuan);            
                 
                 model.addAttribute("pengajuan", pengajuan);
+                model.addAttribute("status", pengajuan.getStatus());
                 return "detail-pengajuan";
             } 
             else {
@@ -370,6 +389,59 @@ public class PengajuanController {
             return "redirect:/pengajuan-detail-" + id;
         } else {
             // Pengajuan tidak ditemukan
+            return "error-page";
+        }
+    }
+    
+    @GetMapping("/submit-pembatalan-{id}")
+    public String getBatalPengajuan(@PathVariable("id") String id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
+        Long longId = Long.parseLong(id);
+        Optional<Pengajuan> pengajuan = pengajuanService.getPengajuanById(longId);
+        model.addAttribute("pengajuan", pengajuan);
+
+        return "konfirmasi-batal-pengajuan";
+    }
+
+    @PostMapping("/submit-pembatalan-{id}")
+    public String batalPengajuan(@PathVariable("id") String id,
+                                @RequestParam("submit") String submit,
+                                Model model) throws IOException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
+        Long longId = Long.parseLong(id);
+        Optional<Pengajuan> optPengajuan = pengajuanService.getPengajuanById(longId);
+
+        if (optPengajuan.isPresent()) {
+            Pengajuan pengajuan = optPengajuan.get();
+
+            switch (submit) {
+                case "submit":
+                    pengajuan.setStatus("Dibatalkan");
+                    break;
+
+                default:
+                    // Aksi tidak valid
+                    return "error-page";
+            }
+
+            pengajuanService.savePengajuan(pengajuan);
+
+            model.addAttribute("pengajuan", pengajuan);
+
+            return "redirect:/pengajuan";
+        } else {
             return "error-page";
         }
     }

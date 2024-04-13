@@ -13,7 +13,6 @@ import propensist.salamMitra.dto.request.CreateLokasiRequestDTO;
 import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Lokasi;
 import propensist.salamMitra.model.Manajemen;
-import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.ProgramKerja;
 import propensist.salamMitra.model.ProgramService;
 import propensist.salamMitra.service.LokasiService;
@@ -78,7 +77,6 @@ public class SalamMitraApplication {
                 manajemen.setContact(1234567890L);
                 penggunaService.saveManajemen(manajemen);
             }
-            
             
             if (penggunaService.getAllAdmin().isEmpty()) {
                 Admin admin = new Admin();

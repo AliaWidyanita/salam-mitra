@@ -77,7 +77,7 @@ public class PenggunaServiceImpl implements PenggunaService{
 
     @Override
     public List<Pengguna> getAllPengguna() {
-        return penggunaDb.findAllByIsDeletedFalse();
+        return penggunaDb.findAllByIsDeletedFalseOrderByWaktuDibuatDesc();
     }
 
     @Override
