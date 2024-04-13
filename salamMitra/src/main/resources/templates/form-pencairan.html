@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <title>Detail Pencairan</title>
+    <style>
+        .btn {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .card {
+            width: 1000px;
+            padding: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            height: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-control {
+            box-sizing: border-box;
+            padding: 0.1rem 0.1rem;
+        }
+
+        .form-holder {
+            margin-bottom: 20px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        form {
+            padding: 0rem 0rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="~{fragments/navbar :: header}"></div>
+    <div class="container">
+        <div class="container-fluid"
+            style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
+            <div class="container" data-aos="fade-up">
+                <div class="row d-flex justify-content-center">
+
+                    <h2 th:text="'Pencairan Pengajuan ' + ${pengajuanMenungguPencairan.id}"></h2>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>Status Pencairan :
+                                <th:block th:if="${role == 'program_service'}">
+                                    <span
+                                        th:if="${pengajuanMenungguPencairan.status != 'Menunggu Pencairan Dana oleh Program Service'}"
+                                        class="text-success">Sudah
+                                        Dicairkan</span>
+                                    <span
+                                        th:unless="${pengajuanMenungguPencairan.status != 'Menunggu Pencairan Dana oleh Program Service'}"
+                                        th:text="${pengajuanMenungguPencairan.status}" class="text-danger"></span>
+                                </th:block>
+                                <th:block th:if="${role == 'admin_FINANCE'}">
+                                    <span
+                                        th:if="${pengajuanMenungguPencairan.status != 'Menunggu Pencairan Dana oleh Admin Finance'}"
+                                        class="text-success">Sudah
+                                        Dicairkan</span>
+                                    <span
+                                        th:unless="${pengajuanMenungguPencairan.status != 'Menunggu Pencairan Dana oleh Admin Finance'}"
+                                        th:text="${pengajuanMenungguPencairan.status}" class="text-danger"></span>
+                                </th:block>
+                            </h4>
+                            <hr>
+                            <table class="table table-borderless">
+                                <tr class="no-border">
+                                    <td>ID Pengajuan</td>
+                                    <td><span th:text="': ' + ${pengajuanMenungguPencairan.id}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Waktu Dibuat</td>
+                                    <td><span
+                                            th:text="': ' + ${#dates.format(pengajuanMenungguPencairan.waktuDibuat, 'HH:mm:ss dd/MM/yyyy')}"></span>
+                                    </td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Nama Mitra</td>
+                                    <td><span th:text="': ' + ${pengajuanMenungguPencairan.namaMitra}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Nama Program</td>
+                                    <td><span th:text="': ' + ${pengajuanMenungguPencairan.namaProgram}"></span></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Nama Pemilik Rekening</td>
+                                    <td th:text="': ' + ${pengajuanMenungguPencairan.namaPemilikRekening}"></td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Bank & Nomor Rekening</td>
+                                    <td><span
+                                            th:text="': ' + ${pengajuanMenungguPencairan.bank} + ' - ' + ${pengajuanMenungguPencairan.nomorRekening}"></span>
+                                    </td>
+                                </tr>
+                                <tr class="no-border">
+                                    <td>Nominal Kebutuhan Dana</td>
+                                    <td th:text="': Rp ' + ${pengajuanMenungguPencairan.nominalKebutuhanDana}"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <th:block th:if="${role == 'program_service'}">
+                        <form th:action="@{/tambah-pencairan}" th:object="${pencairanDTO}" method="POST"
+                            enctype="multipart/form-data">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="heading">Informasi Pencairan ke Rekening Salam Setara</h3>
+                                </div>
+
+                                <input type="hidden" th:field="*{pengajuan}" />
+
+                                <div class="card-body">
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="source_of_fund">Source of Fund*</label>
+                                            <input type="text" placeholder="Source of fund" class="form-control"
+                                                th:field="*{sourceOfFound}" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="channeling">Channeling*</label>
+                                            <input type="text" placeholder="Channeling" class="form-control"
+                                                th:field="*{channeling}" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="jenis_dana">Jenis Dana*</label>
+                                            <input type="text" placeholder="Jenis Dana" class="form-control"
+                                                th:field="*{jenisDana}" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="link_pencairan">Link Pencairan*</label>
+                                            <input type="text" placeholder="Link Pencairan" class="form-control"
+                                                th:field="*{linkPencairan}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mb-3">
+                                <button onclick="window.location.href='/pencairan'" class="btn"
+                                    style="background-color: #dc3545; width: 200px;">Batal</button>
+                                <button class="btn" type="submit" style="width: 200px;">Sudah Dicairkan</button>
+                            </div>
+                        </form>
+                    </th:block>
+
+                    <th:block th:if="${role == 'admin_FINANCE'}">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="heading">Informasi Pencairan ke Rekening Salam Setara</h3>
+                            </div>
+
+                            <div class="card-body">
+                                <table class="table table-borderless">
+                                    <tr class="no-border">
+                                        <td>Source of Fund</td>
+                                        <td><span
+                                                th:text="': ' + ${pengajuanMenungguPencairan.pencairan.sourceOfFound}"></span>
+                                        </td>
+                                    </tr>
+                                    <tr class="no-border">
+                                        <td>Channeling</td>
+                                        <td><span
+                                                th:text="': ' + ${pengajuanMenungguPencairan.pencairan.channeling}"></span>
+                                        </td>
+                                    </tr>
+                                    <tr class="no-border">
+                                        <td>Jenis Dana</td>
+                                        <td><span
+                                                th:text="': ' + ${pengajuanMenungguPencairan.pencairan.jenisDana}"></span>
+                                        </td>
+                                    </tr>
+                                    <tr class="no-border">
+                                        <td>Link Pencairan</td>
+                                        <td><a th:href="${pengajuanMenungguPencairan.pencairan.linkPencairan}"
+                                                target="_blank"
+                                                th:text="': ' + ${pengajuanMenungguPencairan.pencairan.linkPencairan}"></a></td>
+                                    </tr>
+                                    <tr class="no-border">
+                                        <td>Tanggal Pencairan</td>
+                                        <td><span
+                                                th:text="': ' + ${#dates.format(pengajuanMenungguPencairan.pencairan.tanggalPencairanSalamSetara, 'HH:mm:ss dd/MM/yyyy')}"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <form th:action="@{/pencairan-mitra}" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="idPengajuan" th:value="${pengajuanMenungguPencairan.id}"
+                                required>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="heading">Informasi Pencairan ke Rekening Mitra</h3>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="ktpPIC">Bukti Pencairan*</label>
+                                        <input type="file" name="buktiPencairanMitra" accept=".jpg, .png, .jpeg"
+                                            class="form-control-file form-control" required>
+                                        <small class="form-text text-muted">Ukuran file maksimum: 25MB</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mb-3">
+                                <button onclick="window.location.href='/pencairan'" class="btn"
+                                    style="background-color: #dc3545; width: 200px;">Batal</button>
+                                <button class="btn" type="submit" style="width: 200px;">Sudah Dicairkan</button>
+                            </div>
+                        </form>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+
+    <!-- jquery -->
+    <script src="assets/js/jquery-1.11.3.min.js"></script>
+    <!-- bootstrap -->
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <!-- count down -->
+    <script src="assets/js/jquery.countdown.js"></script>
+    <!-- isotope -->
+    <script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+    <!-- waypoints -->
+    <script src="assets/js/waypoints.js"></script>
+    <!-- owl carousel -->
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- magnific popup -->
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- mean menu -->
+    <script src="assets/js/jquery.meanmenu.min.js"></script>
+    <!-- sticker js -->
+    <script src="assets/js/sticker.js"></script>
+    <!-- main js -->
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

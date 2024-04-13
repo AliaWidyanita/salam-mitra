@@ -26,11 +26,11 @@
 <body>
 <div th:fragment="header">
 <!-- PreLoader-->
-<div class="loader">
+<!-- <div class="loader">
     <div class="loader-inner">
         <div class="circle"></div>
     </div>
-</div>
+</div> -->
 <!--PreLoader Ends -->
 
 <!-- header -->
@@ -89,7 +89,7 @@
                                 </a>
                             </li>
                             <li th:if="${role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}">
-                                <a th:href="@{/}">
+                                <a th:href="@{/pencairan}">
                                     Pencairan
                                 </a>
                             </li>

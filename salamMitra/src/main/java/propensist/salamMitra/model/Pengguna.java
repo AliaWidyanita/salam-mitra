@@ -9,7 +9,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Setter
 @Getter
@@ -27,6 +30,10 @@ public class Pengguna implements Serializable {
     @NotNull
     @Column(name = "username", nullable = false, unique = true)
     private String username;
+
+    @Column(name = "waktu_dibuat", nullable = false)
+    @CreationTimestamp
+    private Date waktuDibuat;
 
     @NotNull
     @Size(max = 50)

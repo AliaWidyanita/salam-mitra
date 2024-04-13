@@ -3,10 +3,9 @@ package propensist.salamMitra.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import propensist.salamMitra.model.ProgramKerja;
-
+import propensist.salamMitra.model.Pencairan;
 
 @Repository
-public interface ProgramKerjaDb extends JpaRepository<ProgramKerja, Long> {
-    
+public interface PencairanDb extends JpaRepository<Pencairan, Long> {
+  
 }

@@ -28,6 +28,7 @@ import propensist.salamMitra.model.KebutuhanDana;
 import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.model.Pengguna;
+import propensist.salamMitra.model.ProgramKerja;
 import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;
 import propensist.salamMitra.service.PengajuanService;
@@ -75,8 +76,16 @@ public class PengajuanController {
         var listPengajuanKebutuhanDanaDTO = new CreateListPengajuanKebutuhanDanaDTO();
         model.addAttribute("listPengajuanKebutuhanDanaDTO", listPengajuanKebutuhanDanaDTO);
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
-        model.addAttribute("daftarKategori", programKerjaService.getAllKategori());
+        model.addAttribute("daftarKategori", programKerjaService.getAllKategoriProgram());
+        
+        List<ProgramKerja> programKerja = programKerjaService.getAllProgramKerja();
+        List<String> daftarProgram = new ArrayList<>();
 
+        for(ProgramKerja program : programKerja) {
+            daftarProgram.add(program.getJudul());
+        }
+
+        model.addAttribute("daftarProgram", daftarProgram);
         return "form-tambah-pengajuan";
     }
     
@@ -202,6 +211,7 @@ public class PengajuanController {
                 pengajuanService.handleDOC(pengajuan);            
                 
                 model.addAttribute("pengajuan", pengajuan);
+                model.addAttribute("status", pengajuan.getStatus());
                 return "detail-pengajuan";
             } 
             else {
@@ -333,6 +343,7 @@ public class PengajuanController {
             return "error-page";
         }
     }
+    
     @PostMapping("/submit-laporan-{id}")
     public String submitLaporanByMitra(@PathVariable("id") String id,
                                         @RequestParam(value="laporan", required = false) String laporan,
