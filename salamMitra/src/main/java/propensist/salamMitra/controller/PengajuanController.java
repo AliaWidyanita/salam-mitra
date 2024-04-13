@@ -464,6 +464,7 @@ public class PengajuanController {
             var pengajuan = pengajuanMapper.updatePengajuanRequestDTOToPengajuan(updateListPengajuanKebutuhanDanaDTO.getPengajuanDTO());
             pengajuan.setId(getPengajuan.getId());
             pengajuan.setUsername(getPengajuan.getUsername());
+            pengajuan.setKategori(getPengajuan.getKategori());
             pengajuan.setNamaProgram(getPengajuan.getNamaProgram());
             pengajuan.setWaktuDibuat(getPengajuan.getWaktuDibuat());
             pengajuan.setStatus("Diajukan");
@@ -483,6 +484,8 @@ public class PengajuanController {
             } else {
                 pengajuan.setDokumen(getPengajuan.getDokumen());
             }
+
+            kebutuhanDanaService.clearKebutuhanDanaByPengajuan(getPengajuan);
 
             Long nominalDana = 0L;
             for (UpdateKebutuhanDanaDTO kebutuhanDanaDTO : updateListPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO()) {
@@ -551,7 +554,7 @@ public class PengajuanController {
 
             model.addAttribute("pengajuan", pengajuan);
 
-            return "redirect:/pengajuan";
+            return "redirect:/pengajuan-detail-" + id;
         } else {
             return "error-page";
         }

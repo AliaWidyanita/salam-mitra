@@ -59,17 +59,12 @@
 									</div>
 									<div class="form-holder form-holder-2">
 										<label for="kategori">Kategori Program*</label>
-										<select name="kategori" id="kategori" class="form-control" required>
-											<option value="">--Pilih Kategori--</option>
-											<option th:each="kategori : ${daftarKategori}" th:value="${kategori}" th:text="${kategori}"></option>
-										</select>
+										<input type="text" name="kategori" id="kategori" placeholder="Kategori Program" class="form-control"  th:field="*{pengajuanDTO.kategori}" disabled>
 									</div>
 									<br>
 									<div class="form-holder form-holder-2">
 										<label for="nama_program">Nama Program*</label>
-										<select name="program" id="program" class="form-control" disabled>
-											<option value="">--Pilih Program--</option>
-										</select>
+										<input type="text" name="program" id="program" placeholder="Nama Program" class="form-control"  th:field="*{pengajuanDTO.namaProgram}" disabled>
 									</div>
 									<br>
 									<div class="form-row">
@@ -92,15 +87,15 @@
 									</div>
 									<div class="form-holder form-holder-2">
 										<label for="ktpPIC">KTP Person In Charge (PIC)*</label>
-										<!-- Display previous KtpPIC if available -->
-										<td>
-											<span th:text="': '"></span>
-											<img th:src="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" class="card-img-top" alt="KTP PIC" style="height: 50px; object-fit: cover;">
-											<a th:href="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" th:download="'KTP-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.jpg'">
-												Download KTP
-												<!-- <span th:text="'KTP-' + ${pengajuanDTO.id} + '-' + ${pengajuanDTO.namaMitra} +'.jpg'"></span> -->
-											</a>
-										</td>
+										<div>
+											<small class="form-text text-muted">Lihat Upload KTP Sebelumnya:</small>
+											<td>
+												<img th:src="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" class="card-img-top" alt="KTP PIC" style="height: 50px; object-fit: cover;">
+												<a th:href="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" th:download="'KTP-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.jpg'">
+													Download KTP
+												</a>
+											</td>
+										</div>
 										<input type="file" name="ktpPIC" accept=".jpg, .png, .jpeg" class="form-control-file form-control">
 										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
 									</div>
@@ -246,11 +241,14 @@
 									<br>
 									<div class="form-holder form-holder-2">
 										<label for="rab">Rancangan Anggaran Biaya (RAB)*</label>
-										<!-- Display previous Rab if available -->
-										<div th:if="${pengajuan.rabBase64}">
-											<a th:href="'data:application/pdf;base64,' + ${pengajuan.rabBase64}" th:download="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
-												<span th:text="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
-											</a>
+										<div>
+											<small class="form-text text-muted">Lihat Upload RAB Sebelumnya:</small>
+											<!-- Display previous Rab if available -->
+											<div th:if="${pengajuan.rabBase64}">
+												<a th:href="'data:application/pdf;base64,' + ${pengajuan.rabBase64}" th:download="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
+													<span th:text="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
+												</a>
+											</div>
 										</div>
 										<input type="file" name="rab" accept=".pdf" class="form-control-file form-control">
 										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
@@ -258,11 +256,14 @@
 									<br>
 									<div class="form-holder form-holder-2">
 										<label for="dokumen">Dokumen Perizinan*</label>
-										<!-- Display previous Dokumen if available -->
-										<div th:if="${pengajuan.dokumenBase64}">
-											<a th:href="'data:application/pdf;base64,' + ${pengajuan.dokumenBase64}" th:download="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
-												<span th:text="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
-											</a>
+										<div>
+											<small class="form-text text-muted">Lihat Upload Dokumen Sebelumnya:</small>
+											<!-- Display previous Dokumen if available -->
+											<div th:if="${pengajuan.dokumenBase64}">
+												<a th:href="'data:application/pdf;base64,' + ${pengajuan.dokumenBase64}" th:download="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
+													<span th:text="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
+												</a>
+											</div>
 										</div>
 										<input type="file" name="dokumen" accept=".pdf" class="form-control-file form-control">
 										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
@@ -438,9 +439,10 @@
     }
 </script>
 <script>
-    // Tangani perubahan pada dropdown "Provinsi" dan "Nama Program"
+    // Tangani perubahan pada dropdown "Provinsi", "Nama Program", dan "Kabupaten/Kota"
     document.getElementById("provinsi").addEventListener("change", updateKabKotaOptions);
     document.getElementById("program").addEventListener("change", updateKabKotaOptions);
+    document.getElementById("kabupatenKota").addEventListener("change", updateKecamatanOptions);
 
     function updateKabKotaOptions() {
         var provinsi = document.getElementById("provinsi").value;
@@ -452,7 +454,7 @@
             .then(data => {
                 // Bersihkan dropdown "Kabupaten/Kota"
                 var kabupatenKotaDropdown = document.getElementById("kabupatenKota");
-                kabupatenKotaDropdown.innerHTML = '<option value="">--Pilih Kabupaten/Kota--</option>';
+                kabupatenKotaDropdown.innerHTML = '';
 
                 // Isi dropdown "Kabupaten/Kota" dengan opsi yang diterima dari server
                 data.forEach(function(kabKota) {
@@ -461,36 +463,50 @@
                     option.text = kabKota;
                     kabupatenKotaDropdown.appendChild(option);
                 });
+
+                // Memperbarui opsi yang dipilih untuk "Kabupaten/Kota" jika ada yang sebelumnya dipilih
+                var selectedKabKota = document.getElementById("kabupatenKota").getAttribute("data-selected");
+                if (selectedKabKota) {
+                    document.getElementById("kabupatenKota").value = selectedKabKota;
+                }
+
+                // Panggil fungsi untuk mengisi dropdown "Kecamatan" saat Kabupaten/Kota berubah
+                updateKecamatanOptions();
+            })
+            .catch(error => console.error("Error:", error));
+    }
+
+    function updateKecamatanOptions() {
+        var provinsi = document.getElementById("provinsi").value;
+        var kabupatenKota = document.getElementById("kabupatenKota").value;
+
+        // Mengirimkan permintaan ke server untuk mendapatkan daftar kecamatan berdasarkan kabupaten/kota yang dipilih
+        fetch("/getKecamatanByProvinsiKabupatenKota?provinsi=" + encodeURIComponent(provinsi) + "&kabupatenKota=" + encodeURIComponent(kabupatenKota))
+            .then(response => response.json())
+            .then(data => {
+                // Bersihkan dropdown "Kecamatan"
+                var kecamatanDropdown = document.getElementById("kecamatan");
+                kecamatanDropdown.innerHTML = '';
+
+                // Isi dropdown "Kecamatan" dengan opsi yang diterima dari server
+                data.forEach(function(kecamatan) {
+                    var option = document.createElement("option");
+                    option.value = kecamatan;
+                    option.text = kecamatan;
+                    kecamatanDropdown.appendChild(option);
+                });
+
+                // Memperbarui opsi yang dipilih untuk "Kecamatan" jika ada yang sebelumnya dipilih
+                var selectedKecamatan = document.getElementById("kecamatan").getAttribute("data-selected");
+                if (selectedKecamatan) {
+                    document.getElementById("kecamatan").value = selectedKecamatan;
+                }
             })
             .catch(error => console.error("Error:", error));
     }
 
     // Panggil fungsi untuk mengisi dropdown "Kabupaten/Kota" saat halaman dimuat
     updateKabKotaOptions();
-</script>
-<script>
-    $(document).ready(function() {
-        $('#provinsi, #kabupatenKota').change(function() {
-            var provinsi = $('#provinsi').val();
-            var kabupatenKota = $('#kabupatenKota').val(); // Ubah nama variabel kabupaten menjadi kabupatenKota
-
-            // Mengirimkan permintaan AJAX ke server untuk mendapatkan daftar kecamatan berdasarkan kabupaten/kota yang dipilih
-            $.get("/getKecamatanByProvinsiKabupatenKota", {provinsi: provinsi, kabupatenKota: kabupatenKota}, function(data) {
-                // Menghapus opsi yang sudah ada pada dropdown kecamatan
-                $('#kecamatan').empty();
-
-                // Menambahkan opsi "--Pilih Kecamatan--" di dropdown kecamatan jika belum ada kabupaten/kota yang dipilih
-                if (kabupatenKota === "") {
-                    $('#kecamatan').append($('<option>').text("--Pilih Kecamatan--").attr('value', ""));
-                }
-
-                // Menambahkan opsi-opsi baru berdasarkan data yang diterima dari server
-                $.each(data, function(index, kecamatan) {
-                    $('#kecamatan').append($('<option>').text(kecamatan).attr('value', kecamatan));
-                });
-            });
-        });
-    });
 </script>
 <script>
     // Mendapatkan elemen input tanggal mulai, tanggal selesai implementasi, dan tanggal selesai laporan
@@ -563,9 +579,6 @@
 </script>
 <script>
     $(document).ready(function () {
-        // Tambahkan baris permanen saat halaman dimuat
-        addRow();
-
         // Fungsi untuk menambahkan baris kebutuhan dana
         function addRow() {
             var rowCount = $("#dataTable tbody tr").length;
@@ -662,30 +675,34 @@
 	});
 </script>
 <script type="text/javascript">
-	// Tangani perubahan pada dropdown "Nama Program"
-	document.getElementById("program").addEventListener("change", function() {
-		var namaProgram = this.value;
-		var asnafDropdown = document.getElementById("asnafDropdown");
+    // Tangani perubahan pada dropdown "Nama Program"
+    document.getElementById("program").addEventListener("change", function() {
+        var namaProgram = this.value;
+        var asnafDropdown = document.getElementById("asnafDropdown");
+        var selectedAsnaf = asnafDropdown.value; // Simpan nilai ASNaf yang dipilih sebelumnya
 
-		// Bersihkan dropdown "ASNaf"
-		asnafDropdown.innerHTML = '<option value="">--Pilih Asnaf--</option>';
+        // Bersihkan dropdown "ASNaf"
+        asnafDropdown.innerHTML = '<option value="">--Pilih Asnaf--</option>';
 
-		// Jika nama program tidak kosong, kirim permintaan ke endpoint untuk mendapatkan ASNaf
-		if (namaProgram !== "") {
-			fetch("/getAsnafByNamaProgram?namaProgram=" + encodeURIComponent(namaProgram))
-				.then(response => response.json())
-				.then(data => {
-					// Isi dropdown "ASNaf" dengan ASNaf yang diterima dari server
-					data.forEach(function(asnaf) {
-						var option = document.createElement("option");
-						option.value = asnaf;
-						option.text = asnaf;
-						asnafDropdown.appendChild(option);
-					});
-				})
-				.catch(error => console.error("Error:", error));
-		}
-	});
+        // Jika nama program tidak kosong, kirim permintaan ke endpoint untuk mendapatkan ASNaf
+        if (namaProgram !== "") {
+            fetch("/getAsnafByNamaProgram?namaProgram=" + encodeURIComponent(namaProgram))
+                .then(response => response.json())
+                .then(data => {
+                    // Isi dropdown "ASNaf" dengan ASNaf yang diterima dari server
+                    data.forEach(function(asnaf) {
+                        var option = document.createElement("option");
+                        option.value = asnaf;
+                        option.text = asnaf;
+                        asnafDropdown.appendChild(option);
+                    });
+
+                    // Set nilai ASNaf yang dipilih sebelumnya
+                    asnafDropdown.value = selectedAsnaf;
+                })
+                .catch(error => console.error("Error:", error));
+        }
+    });
 </script>
 <script>
 	// Tangani perubahan pada dropdown "Nama Program"
