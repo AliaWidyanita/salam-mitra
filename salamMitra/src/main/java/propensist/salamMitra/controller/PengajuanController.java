@@ -343,7 +343,7 @@ public class PengajuanController {
             return "error-page";
         }
     }
-    
+
     @PostMapping("/submit-laporan-{id}")
     public String submitLaporanByMitra(@PathVariable("id") String id,
                                         @RequestParam(value="laporan", required = false) String laporan,
@@ -432,7 +432,7 @@ public class PengajuanController {
 
             model.addAttribute("updateListPengajuanKebutuhanDanaDTO", updateListPengajuanKebutuhanDanaDTO);
             model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
-            model.addAttribute("daftarKategori", programKerjaService.getAllKategori());
+            model.addAttribute("daftarKategori", programKerjaService.getAllKategoriProgram());
 
             return "form-revisi-pengajuan";
         } else {
