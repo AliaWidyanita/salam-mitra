@@ -99,7 +99,7 @@ public class PengajuanController {
         pengajuan.setKtpPIC(ktpPICBytes);
         pengajuan.setRab(rabBytes);
         pengajuan.setDokumen(dokumenBytes);
-        pengajuan.setStatus("Menunggu Pencairan Dana oleh Program Service");
+        pengajuan.setStatus("Diajukan");
 
         Long id = pengajuan.getId();
         Long nominalDana = 0L;
