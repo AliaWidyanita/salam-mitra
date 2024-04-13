@@ -33,14 +33,10 @@ public class WebSecurityConfig {
                                     .requestMatchers(new AntPathRequestMatcher("/pengajuan**")).hasAnyAuthority("mitra", "program_service", "manajemen", "admin_PROGRAM")
                                     .requestMatchers(new AntPathRequestMatcher("/review-pengajuan-admin-**")).hasAuthority("admin_PROGRAM")
                                     .requestMatchers(new AntPathRequestMatcher("/review-pengajuan-manajemen-**")).hasAuthority("manajemen")
-                            .requestMatchers(new AntPathRequestMatcher("/submit-laporan-**")).hasAuthority("mitra")
                                     .requestMatchers(new AntPathRequestMatcher("/submit-laporan-**")).hasAuthority("mitra")
-                                    .requestMatchers(new AntPathRequestMatcher("/tambah-pengajuan")).permitAll()
+                                    .requestMatchers(new AntPathRequestMatcher("/tambah-pengajuan")).hasAuthority("mitra")
                                     .requestMatchers(new AntPathRequestMatcher("/getKabupatenKotaByProvinsi")).permitAll()
                                     .requestMatchers(new AntPathRequestMatcher("/getKecamatanByProvinsiKabupatenKota")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/tambah-program**")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/program**")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/edit-program-**")).permitAll()
                                     .requestMatchers(new AntPathRequestMatcher("/pencairan**")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
                                     .requestMatchers(new AntPathRequestMatcher("/tambah-pencairan")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
                                     .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
@@ -52,13 +48,6 @@ public class WebSecurityConfig {
                             .requestMatchers(new AntPathRequestMatcher("/getAsnafByNamaProgram")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/getDaftarProvinsiByNamaProgram")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/getKabKotaByProvinsiAndNamaProgram")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/getNamaProgramByKategori")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/getAsnafByNamaProgram")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/getDaftarProvinsiByNamaProgram")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/getKabKotaByProvinsiAndNamaProgram")).permitAll()
-                            
-
-
                     ) 
                     .formLogin((form) -> form
                                     .loginPage("/login")

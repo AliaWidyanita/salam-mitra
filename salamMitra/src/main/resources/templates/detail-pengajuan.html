@@ -228,7 +228,6 @@
                         </div>
                         <div th:if="${role eq 'mitra'}" style="margin-top: 30px;">
                             <h5 style="margin-bottom: 5px;">Status terakhir diperbarui</h5>
-                            <h5 style="margin-bottom: 5px;">Status terakhir diperbarui</h5>
                             <div th:if="${pengajuan.reviewedBy == null}">
                                 <p style="margin: 0;">-</p>
                             </div>
@@ -377,10 +376,6 @@
                                     <td><span
                                             th:text="': ' + ${pengajuan.bank} + ' - ' + ${pengajuan.nomorRekening}"></span>
                                     </td>
-                                </tr>
-                                <tr class="no-border">
-                                    <td>Nominal Kebutuhan Dana</td>
-                                    <td th:text="': Rp ' + ${pengajuan.nominalKebutuhanDana}"></td>
                                 </tr>
                                 <tr class="no-border">
                                     <td>Nominal Kebutuhan Dana</td>
