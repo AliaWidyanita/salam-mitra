@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import propensist.salamMitra.model.KebutuhanDana;
 
+
 @Repository
 public interface KebutuhanDanaDb extends JpaRepository<KebutuhanDana, Long> {
 

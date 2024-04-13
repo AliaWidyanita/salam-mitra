@@ -13,7 +13,6 @@ import propensist.salamMitra.dto.request.CreateLokasiRequestDTO;
 import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Lokasi;
 import propensist.salamMitra.model.Manajemen;
-import propensist.salamMitra.model.ProgramKerja;
 import propensist.salamMitra.model.ProgramService;
 import propensist.salamMitra.service.LokasiService;
 import propensist.salamMitra.service.PenggunaService;
@@ -38,6 +37,10 @@ public class SalamMitraApplication {
             lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dump", "Kota Dump 1", "Kec. B"));
             lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dump", "Kota Dump 2", "Kec. C"));
             lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dump", "Kota Dump 2", "Kec. D"));
+            lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dua", "Kota 1", "Kec. 12"));
+            lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dua", "Kota 1", "Kec. 14"));
+            lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dua", "Kota 2", "Kec. DO"));
+            lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dua", "Kota 2", "Kec. DI"));
 
             // Simpan lokasi ke database menggunakan LokasiService
             if (lokasiService.getAllLokasi().isEmpty()) {
@@ -87,26 +90,26 @@ public class SalamMitraApplication {
                 penggunaService.saveAdmin(admin);
             }
 
-            if (programKerjaService.getAllProgramKerja().isEmpty()){
-                ProgramKerja programKerja = new ProgramKerja();
-                programKerja.setJudul("Judul1");
-                programKerja.setKategori("Pendidikan");
-                programKerja.setDeskripsi("Desc1");
-                programKerja.setEligibilitas("Eli1");
-                programKerja.setSyarat("Syarat1");
-                programKerja.setForm("Dummy1");
+            // if (programKerjaService.getAllProgramKerja().isEmpty()){
+            //     ProgramKerja programKerja = new ProgramKerja();
+            //     programKerja.setJudul("Judul1");
+            //     programKerja.setKategori("Pendidikan");
+            //     programKerja.setDeskripsi("Desc1");
+            //     programKerja.setEligibilitas("Eli1");
+            //     programKerja.setSyarat("Syarat1");
+            //     programKerja.setForm("Dummy1");
 
-                ProgramKerja programKerja2 = new ProgramKerja();
-                programKerja2.setJudul("Judul2");
-                programKerja2.setKategori("Kesehatan");
-                programKerja2.setDeskripsi("Des");
-                programKerja2.setEligibilitas("El21");
-                programKerja.setSyarat("Syarat2");
-                programKerja2.setForm("Dummy2");
+            //     ProgramKerja programKerja2 = new ProgramKerja();
+            //     programKerja2.setJudul("Judul2");
+            //     programKerja2.setKategori("Kesehatan");
+            //     programKerja2.setDeskripsi("Des");
+            //     programKerja2.setEligibilitas("El21");
+            //     programKerja.setSyarat("Syarat2");
+            //     programKerja2.setForm("Dummy2");
 
-                programKerjaService.saveProgramKerja(programKerja);
-                programKerjaService.saveProgramKerja(programKerja2);
-            }
+            //     programKerjaService.saveProgramKerja(programKerja);
+            //     programKerjaService.saveProgramKerja(programKerja2);
+            // }
 		};	
 	}
 }

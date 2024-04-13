@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 
 import jakarta.validation.Valid;
@@ -22,14 +23,13 @@ import propensist.salamMitra.dto.KebutuhanDanaMapper;
 import propensist.salamMitra.dto.PengajuanMapper;
 import propensist.salamMitra.dto.request.CreateKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.CreateListPengajuanKebutuhanDanaDTO;
-import propensist.salamMitra.dto.request.UpdateKebutuhanDanaDTO;
-import propensist.salamMitra.dto.request.UpdateListPengajuanKebutuhanDanaDTO;
-import propensist.salamMitra.model.KebutuhanDana;
 import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.model.Pengguna;
+import propensist.salamMitra.model.ProgramKerja;
 import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;
+import propensist.salamMitra.service.PencairanService;
 import propensist.salamMitra.service.PengajuanService;
 import propensist.salamMitra.service.PenggunaService;
 import propensist.salamMitra.service.ProgramKerjaService;
@@ -63,6 +63,9 @@ public class PengajuanController {
     @Autowired
     private PenggunaService penggunaService;
 
+    @Autowired
+    private PencairanService pencairanService;
+
     @GetMapping("/tambah-pengajuan")
     public String formTambahPengajuan(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -75,8 +78,16 @@ public class PengajuanController {
         var listPengajuanKebutuhanDanaDTO = new CreateListPengajuanKebutuhanDanaDTO();
         model.addAttribute("listPengajuanKebutuhanDanaDTO", listPengajuanKebutuhanDanaDTO);
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
-        model.addAttribute("daftarKategori", programKerjaService.getAllKategori());
+        model.addAttribute("daftarKategori", programKerjaService.getAllKategoriProgram());
+        
+        List<ProgramKerja> programKerja = programKerjaService.getAllProgramKerja();
+        List<String> daftarProgram = new ArrayList<>();
 
+        for(ProgramKerja program : programKerja) {
+            daftarProgram.add(program.getJudul());
+        }
+
+        model.addAttribute("daftarProgram", daftarProgram);
         return "form-tambah-pengajuan";
     }
     
@@ -199,7 +210,25 @@ public class PengajuanController {
 
                 pengajuanService.handleKTP(pengajuan);
                 pengajuanService.handleRAB(pengajuan);
-                pengajuanService.handleDOC(pengajuan);            
+                pengajuanService.handleDOC(pengajuan); 
+                
+                if (pengajuan.getStatus().equalsIgnoreCase("Menunggu Laporan")){
+                    byte[] buktiPencairanMitraBytes = pengajuan.getPencairan().getBuktiPencairanMitra();
+                    String buktiPencairanMitra = pencairanService.convertByteToImage(buktiPencairanMitraBytes);
+
+                    // Menambahkan bukti pencairan mitra ke model
+                    model.addAttribute("buktiPencairanMitra", buktiPencairanMitra);
+
+                }
+                //Jika status pengajuan "Selesai", tangani laporan
+                if (pengajuan.getStatus().equalsIgnoreCase("Selesai")) {
+                    pengajuanService.handleLaporan(pengajuan);
+                    byte[] buktiPencairanMitraBytes = pengajuan.getPencairan().getBuktiPencairanMitra();
+                    String buktiPencairanMitra = pencairanService.convertByteToImage(buktiPencairanMitraBytes);
+
+                    // Menambahkan bukti pencairan mitra ke model
+                    model.addAttribute("buktiPencairanMitra", buktiPencairanMitra);
+                }
                 
                 model.addAttribute("pengajuan", pengajuan);
                 model.addAttribute("status", pengajuan.getStatus());
@@ -336,7 +365,7 @@ public class PengajuanController {
     }
     @PostMapping("/submit-laporan-{id}")
     public String submitLaporanByMitra(@PathVariable("id") String id,
-                                        @RequestParam(value="laporan", required = false) String laporan,
+                                        @RequestParam(value="laporan", required = false) MultipartFile laporan,
                                         @RequestParam("submit") String submit,
                                         Model model) throws IOException {
         // Ambil informasi pengguna yang sedang login
@@ -359,6 +388,8 @@ public class PengajuanController {
 
             byte[] laporanBytes = laporan.getBytes();
             pengajuan.setLaporan(laporanBytes);
+            String laporanBase64 = Base64.getEncoder().encodeToString(laporanBytes);
+            pengajuan.setLaporanBase64(laporanBase64);
         
             // Sesuaikan status berdasarkan aksi yang dipilih
             switch (submit) {
@@ -372,6 +403,7 @@ public class PengajuanController {
                     return "error-page";
             }
 
+            
             // Simpan perubahan pada pengajuan
             pengajuanService.savePengajuan(pengajuan);
             
@@ -382,118 +414,7 @@ public class PengajuanController {
             return "error-page";
         }
     }
-
-    @GetMapping("/submit-revisi-{id}")
-    public String formRevisiPengajuan(@PathVariable("id") String id, Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String role = auth.getAuthorities().iterator().next().getAuthority();
-        Pengguna user = penggunaService.authenticate(auth.getName());
-
-        model.addAttribute("role", role);
-        model.addAttribute("user", user);
-
-        Long longId = Long.parseLong(id);
-        var optPengajuan = pengajuanService.getPengajuanById(longId);
-
-        if (optPengajuan.isPresent()) {
-            Pengajuan pengajuan = optPengajuan.get();
-            var updateListPengajuanKebutuhanDanaDTO = new UpdateListPengajuanKebutuhanDanaDTO();
-            var pengajuanDTO = pengajuanMapper.pengajuanToUpdatePengajuanRequestDTO(pengajuan);
-            pengajuanDTO.setId(pengajuan.getId());
-            
-            // Set previously uploaded files for download
-            pengajuanService.handleKTP(pengajuan);
-            pengajuanService.handleRAB(pengajuan);
-            pengajuanService.handleDOC(pengajuan);
-
-            // Add pengajuan object to the model
-            model.addAttribute("pengajuan", pengajuan);
-
-            var kebutuhanDanaDTOList = new ArrayList<UpdateKebutuhanDanaDTO>();
-            for (KebutuhanDana kebutuhanDana : pengajuan.getListKebutuhanDana()) {
-                kebutuhanDana.setPengajuan(pengajuan);
-                var kebutuhanDanaDTO = kebutuhanDanaMapper.kebutuhanDanaToUpdateKebutuhanDanaDTO(kebutuhanDana);
-                kebutuhanDanaDTO.setId(kebutuhanDana.getId());
-                kebutuhanDanaDTOList.add(kebutuhanDanaDTO);
-            }
-
-            updateListPengajuanKebutuhanDanaDTO.setPengajuanDTO(pengajuanDTO);
-            updateListPengajuanKebutuhanDanaDTO.setListKebutuhanDanaDTO(kebutuhanDanaDTOList);
-
-            model.addAttribute("updateListPengajuanKebutuhanDanaDTO", updateListPengajuanKebutuhanDanaDTO);
-            model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
-            model.addAttribute("daftarKategori", programKerjaService.getAllKategori());
-
-            return "form-revisi-pengajuan";
-        } else {
-            return "error-page";
-        }
-    }
-
-    @PostMapping("/submit-revisi-{id}")
-    public String revisiPengajuan(@PathVariable("id") String id,
-                                @Valid @ModelAttribute UpdateListPengajuanKebutuhanDanaDTO updateListPengajuanKebutuhanDanaDTO,
-                                @RequestParam("ktpPIC") MultipartFile ktpPIC,
-                                @RequestParam("rab") MultipartFile rab,
-                                @RequestParam("dokumen") MultipartFile dokumen,
-                                RedirectAttributes redirectAttributes,
-                                Model model) throws IOException {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String role = auth.getAuthorities().iterator().next().getAuthority();
-        Pengguna user = penggunaService.authenticate(auth.getName());
-
-        model.addAttribute("role", role);
-        model.addAttribute("user", user);
-
-        Long longId = Long.parseLong(id);
-        var optPengajuan = pengajuanService.getPengajuanById(longId);
-
-        if (optPengajuan.isPresent()) {
-            Pengajuan getPengajuan = optPengajuan.get();
-            var pengajuan = pengajuanMapper.updatePengajuanRequestDTOToPengajuan(updateListPengajuanKebutuhanDanaDTO.getPengajuanDTO());
-            pengajuan.setId(getPengajuan.getId());
-            pengajuan.setUsername(getPengajuan.getUsername());
-            pengajuan.setNamaProgram(getPengajuan.getNamaProgram());
-            pengajuan.setWaktuDibuat(getPengajuan.getWaktuDibuat());
-            pengajuan.setStatus("Diajukan");
-
-            if (ktpPIC != null && !ktpPIC.isEmpty()) {
-                pengajuan.setKtpPIC(ktpPIC.getBytes());
-            } else {
-                pengajuan.setKtpPIC(getPengajuan.getKtpPIC());
-            }
-            if (rab != null && !rab.isEmpty()) {
-                pengajuan.setRab(rab.getBytes());
-            } else {
-                pengajuan.setRab(getPengajuan.getRab());
-            }
-            if (dokumen != null && !dokumen.isEmpty()) {
-                pengajuan.setDokumen(dokumen.getBytes());
-            } else {
-                pengajuan.setDokumen(getPengajuan.getDokumen());
-            }
-
-            Long nominalDana = 0L;
-            for (UpdateKebutuhanDanaDTO kebutuhanDanaDTO : updateListPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO()) {
-                kebutuhanDanaDTO.setPengajuan(pengajuan);
-                var kebutuhanDana = kebutuhanDanaMapper.updateKebutuhanDanaDTOToKebutuhanDana(kebutuhanDanaDTO);
-                nominalDana += kebutuhanDana.getJumlahDana();
-                kebutuhanDanaService.saveKebutuhanDana(kebutuhanDana);
-            }
-            pengajuan.setJumlahKebutuhanOperasional(Long.valueOf(updateListPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO().size()));
-            pengajuan.setNominalKebutuhanDana(nominalDana);
-            pengajuanService.savePengajuan(pengajuan);
-
-            // Redirect ke halaman daftar pengajuan
-            model.addAttribute("pengajuan", pengajuan);
-            redirectAttributes.addFlashAttribute("successMessage", "Pengajuan berhasil direvisi!");
-            return "redirect:/pengajuan";
-        } else {
-            return "error-page";
-        }
-    }
-
+    
     @GetMapping("/submit-pembatalan-{id}")
     public String getBatalPengajuan(@PathVariable("id") String id, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

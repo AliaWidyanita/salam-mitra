@@ -2,25 +2,93 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 	<head>
 		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+            integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <style>
+                .card {
+                    width: 100%;
+                    height: 100%;
+                    padding: 20px;
+                    margin-bottom: 20px;
+                }
+                .shape-text {
+                    border-radius: 10px;
+                    padding: 10px;
+                    background-color: rgba(253,126,20, 0.5);
+                    width: fit-content; 
+                    margin: 0 auto;
+                }
+
+        </style>
 	</head>
 <body>
 	
 <div th:replace="~{fragments/navbar :: header}"></div>
 
 <div class="container">
-    <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
-        <div class="container" data-aos="fade-up">
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-7">
-                    <div class="d-flex justify-content-center mb-2 mt-3">
-                        <h3 class="text-center" style="text-transform: uppercase;">Dashboard <span th:text="${user.username}"></span></h3>
+        <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%;">
+            <div class="container" data-aos="fade-up">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-center mb-2 mt-3">
+                            <h3 class="text-center" style="text-transform: uppercase;">Dashboard <span th:text="${user.username}"></span></h3>
+                        </div>
+                        <br>
+
+                        <div class="shape-text text-center">
+                            <h5 class="text-center">Total Pengajuan Per Bulan</h5>
+                                        <div th:if="${not #lists.isEmpty(totalPengajuanPerMonth)}">
+                                            <h2 class="text-center" th:each="entry : ${totalPengajuanPerMonth}" th:text="${entry.key}"></h2>
+                                            <h1 class="text-center" th:each="entry : ${totalPengajuanPerMonth}" th:text="${entry.value}"></h1>
+                                        </div>
+                                        <div th:if="${#lists.isEmpty(totalPengajuanPerMonth)}">
+                                            <p class="text-center">Tidak ada data pengajuan untuk bulan ini.</p>
+                                        </div>
+
+                        </div>
+                        <br>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Pie Chart</h5>
+                                        <canvas id="pieChart" width="400" height="400"></canvas>
+                                    </div>
+                                    <a href="/">See Details</a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Laporan Chart</h5>
+                                        <canvas id="laporanChart" width="400" height="400"></canvas>
+                                        <a href="/pengajuan">See Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-3 mx-auto">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Pengajuan Chart</h5>
+                                            <canvas id="pengajuanChart" width="925" height="400"></canvas>
+                                            <div th:if="${#lists.isEmpty(jumlahPengajuanByStatus)}">
+                                                <!-- jika belum ada data -->
+                                                <p>Belum ada pengajuan.</p>
+                                            </div>
+                                            <a href="/pengajuan">See Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
 <!-- jquery -->
 <script src="assets/js/jquery-1.11.3.min.js"></script>
 <!-- bootstrap -->
@@ -42,5 +110,170 @@
 <!-- main js -->
 <script src="assets/js/main.js"></script>
 
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    // Mengambil data dari model dan mengonversinya ke format yang dapat digunakan oleh Chart.js
+    var jumlahProgramKerjaPerKategori = /*[[${jumlahProgramKerjaPerKategori}]]*/ {};
+
+    var labels = Object.keys(jumlahProgramKerjaPerKategori);
+    var data = Object.values(jumlahProgramKerjaPerKategori);
+
+    // Menghitung total program kerja
+    var totalProgramKerja = data.reduce((acc, cur) => acc + cur, 0);
+
+    // Menghitung persentase dan menambahkan label
+    var percentages = data.map(value => ((value / totalProgramKerja) * 100).toFixed(2) + '%');
+
+    // Membuat pie chart
+    var ctx = document.getElementById('pieChart').getContext('2d');
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels.map((label, index) => label + ' (' + percentages[index] + ' - ' + data[index] + ')'),
+            datasets: [{
+                label: 'Persentase Program Kerja per Kategori',
+                data: data,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: false, 
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var dataset = data.datasets[tooltipItem.datasetIndex];
+                        var total = dataset.data.reduce((acc, cur) => acc + cur, 0);
+                        var currentValue = dataset.data[tooltipItem.index];
+                        var percentage = ((currentValue / total) * 100).toFixed(2) + "%";
+                        return label = dataset.labels[tooltipItem.index] + ': ' + percentage;
+                    }
+                }
+            }
+        }
+    });
+
+    /*]]>*/
+</script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // Mendapatkan data jumlah pengajuan per status dari model
+    var jumlahPengajuanByStatus = /*[[${jumlahPengajuanByStatus}]]*/ {};
+
+    // Tentukan urutan status pengajuan
+    var labels = [
+        "Diajukan", 
+        "Perlu Revisi", 
+        "Sedang Diperiksa", 
+        "Diteruskan ke Manajemen", 
+        "Menunggu Pencairan Dana oleh Program Service", 
+        "Menunggu Pencairan Dana oleh Admin Finance", 
+        "Menunggu Laporan", 
+        "Selesai", 
+        "Ditolak", 
+        "Dibatalkan"
+    ];
+
+    // Membuat array data berdasarkan urutan status
+    var data = labels.map(function(label) {
+        return jumlahPengajuanByStatus[label] || 0;
+    });
+
+    // Membuat bar chart
+    var ctx = document.getElementById('pengajuanChart').getContext('2d');
+    var myBarChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Jumlah Pengajuan per Status',
+                data: data,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(220, 20, 60, 0.5)', 
+                    'rgba(0, 128, 0, 0.5)', 
+                    'rgba(255, 165, 0, 0.5)', 
+                    'rgba(128, 128, 128, 0.5)' 
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(220, 20, 60, 1)', 
+                    'rgba(0, 128, 0, 1)', 
+                    'rgba(255, 165, 0, 1)', 
+                    'rgba(128, 128, 128, 1)' 
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0 
+                    }
+                }
+            }
+        }
+    });
+    /*]]>*/
+</script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // Mendapatkan data jumlah pengajuan per status dari model
+    var jumlahPengajuanByStatus = /*[[${jumlahPengajuanByStatus}]]*/ {};
+
+    // Mengekstrak jumlah pengajuan dengan status "Selesai" dan "Menunggu laporan"
+    var jumlahSelesai = jumlahPengajuanByStatus['Selesai'] || 0;
+    var jumlahMenungguLaporan = jumlahPengajuanByStatus['Menunggu Laporan'] || 0;
+
+    // Membuat doughnut chart
+    var ctx = document.getElementById('laporanChart').getContext('2d');
+    var myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Selesai', 'Menunggu Laporan'],
+            datasets: [{
+                label: 'Jumlah Pengajuan per Status',
+                data: [jumlahSelesai, jumlahMenungguLaporan],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)', // Warna untuk "Selesai"
+                    'rgba(54, 162, 235, 0.5)'   // Warna untuk "Menunggu laporan"
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            
+        }
+    });
+    /*]]>*/
+</script>
 </body>
 </html>
