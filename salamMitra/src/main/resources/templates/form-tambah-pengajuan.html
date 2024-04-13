@@ -58,7 +58,7 @@
 									</div>
 									<div class="form-holder form-holder-2">
 										<label for="kategori">Kategori Program*</label>
-										<select name="kategori" id="kategori" class="form-control" required>
+										<select name="kategori" id="kategori" class="form-control" th:field="*{pengajuanDTO.kategori}" required>
 											<option value="">--Pilih Kategori--</option>
 											<option th:each="kategori : ${daftarKategori}" th:value="${kategori}" th:text="${kategori}"></option>
 										</select>
@@ -66,7 +66,7 @@
 									<br>
 									<div class="form-holder form-holder-2">
 										<label for="nama_program">Nama Program*</label>
-										<select name="program" id="program" class="form-control" required>
+										<select name="program" id="program" class="form-control" th:field="*{pengajuanDTO.namaProgram}" required>
 											<option value="">--Pilih Program--</option>
 										</select>
 									</div>
@@ -540,63 +540,93 @@
     });
 </script>
 <script>
-    $(document).ready(function () {
-        // Tambahkan baris permanen saat halaman dimuat
+$(document).ready(function () {
+    // Memastikan dropdown ASNaf pada baris pertama terisi saat halaman dimuat
+    populateAsnafDropdown(0);
+
+    // Ketika nama program berubah, isi ulang dropdown ASNaf pada baris pertama
+    $("#program").change(function () {
+        populateAsnafDropdown(0);
+    });
+	addRow();
+
+    // Fungsi untuk menambahkan baris kebutuhan dana
+    function addRow() {
+        var rowCount = $("#dataTable tbody tr").length;
+        var newRow = '<tr>' +
+            '<td>' + (rowCount + 1) + '</td>' +
+            '<td>' +
+            '<select id="asnafDropdown' + rowCount + '" name="listKebutuhanDanaDTO[' + rowCount + '].asnaf" class="form-control asnafDropdown" style="width: 130px; font-size: small;" required>' +
+            '<option value="" disabled selected>--Pilih Asnaf--</option>' +
+            '</select>' +
+            '</td>' +
+            '<td><input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahPenerima" class="form-control" style="width: 80px; required min="1"></td>' +
+            '<td><select name="listKebutuhanDanaDTO[' + rowCount + '].pilar" class="form-control" style="width: 160px; font-size: small;" required>' +
+            '<option value="" disabled selected>--Pilih Pilar--</option>' +
+            '<option value="Pendidikan">Pendidikan</option>' +
+            '<option value="Kesehatan">Kesehatan</option>' +
+            '<option value="Ekonomi-Pemberdayaan">Ekonomi-Pemberdayaan</option>' +
+            '<option value="Dakwah-Advokasi">Dakwah-Advokasi</option>' +
+            '<option value="Bantuan Sosial">Bantuan Sosial</option>' +
+            '</select></td>' +
+            '<td><input type="text" name="listKebutuhanDanaDTO[' + rowCount + '].jenisBantuan"  class="form-control"  required></td>' +
+            '<td>' +
+            '<div class="input-group">' +
+            '<span class="input-group-prepend">' +
+            '<span class="input-group-text">Rp</span>' +
+            '</span>' +
+            '<input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahDana" class="form-control" style="width: 150px; required min="1">' +
+            '</div>' +
+            '</td>' +
+            '<td><button type="button" class="btn btn-danger removeRow" style="width: 50px;"><i class="fas fa-trash-alt"></i></button></td>' +
+            '</tr>';
+        $("#dataTable tbody").append(newRow);
+        // Memastikan dropdown ASNaf pada baris baru terisi
+        populateAsnafDropdown(rowCount);
+		// Disable tombol hapus jika hanya ada satu baris
+		if ($("#dataTable tbody tr").length === 1) {
+			$("#dataTable tbody tr .removeRow").prop("disabled", true);
+			}
+		// Update jumlah kebutuhan operasional label
+		updateJumlahKebutuhanOperasional();
+
+    }
+
+    // Ketika tombol tambah baris ditekan, tambahkan baris dan isi dropdown ASNaf
+    $("#addRow").click(function () {
         addRow();
+    });
 
-        // Fungsi untuk menambahkan baris kebutuhan dana
-        function addRow() {
-            var rowCount = $("#dataTable tbody tr").length;
-            var newRow = '<tr>' +
-                '<td>' + (rowCount + 1) + '</td>' +
-                '<td>' +
-                '<select id="asnafDropdown" name="listKebutuhanDanaDTO[' + rowCount + '].asnaf" class="form-control" style="width: 130px; font-size: small;" required>' +
-                '<option value="" disabled selected>--Pilih Asnaf--</option>' +
-                '</select>' +
-                '</td>' +
-                '<td><input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahPenerima" class="form-control" style="width: 80px; required min="1"></td>' +
-                '<td><select name="listKebutuhanDanaDTO[' + rowCount + '].pilar" class="form-control" style="width: 160px; font-size: small;" required>' +
-                '<option value="" disabled selected>--Pilih Pilar--</option>' +
-                '<option value="Pendidikan">Pendidikan</option>' +
-                '<option value="Kesehatan">Kesehatan</option>' +
-                '<option value="Ekonomi-Pemberdayaan">Ekonomi-Pemberdayaan</option>' +
-                '<option value="Dakwah-Advokasi">Dakwah-Advokasi</option>' +
-                '<option value="Bantuan Sosial">Bantuan Sosial</option>' +
-                '</select></td>' +
-				'<td><input type="text" name="listKebutuhanDanaDTO[' + rowCount + '].jenisBantuan"  class="form-control"  required></td>' +
-				'<td>' +
-				'<div class="input-group">' +
-				'<span class="input-group-prepend">' +
-				'<span class="input-group-text">Rp</span>' +
-				'</span>' +
-				'<input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahDana" class="form-control" style="width: 150px; required min="1">' +
-				'</div>' +
-				'</td>' +
-				'<td><button type="button" class="btn btn-danger removeRow" style="width: 50px;"><i class="fas fa-trash-alt"></i></button></td>' +
-				'</tr>';
-            $("#dataTable tbody").append(newRow);
-            // Disable tombol hapus jika hanya ada satu baris
-            if ($("#dataTable tbody tr").length === 1) {
-                $("#dataTable tbody tr .removeRow").prop("disabled", true);
-            }
-            // Update jumlah kebutuhan operasional label
-            updateJumlahKebutuhanOperasional();
+    // Fungsi untuk mengisi dropdown ASNaf berdasarkan nama program pada baris tertentu
+    function populateAsnafDropdown(rowIndex) {
+        var namaProgram = $("#program").val();
+        var asnafDropdown = $("#asnafDropdown" + rowIndex);
+
+        // Bersihkan dropdown "ASNaf"
+        asnafDropdown.empty();
+
+        // Jika nama program tidak kosong, kirim permintaan ke endpoint untuk mendapatkan ASNaf
+        if (namaProgram !== "") {
+            fetch("/getAsnafByNamaProgram?namaProgram=" + encodeURIComponent(namaProgram))
+                .then(response => response.json())
+                .then(data => {
+                    // Isi dropdown "ASNaf" dengan ASNaf yang diterima dari server
+                    data.forEach(function(asnaf) {
+                        asnafDropdown.append($("<option></option>").attr("value", asnaf).text(asnaf));
+                    });
+                })
+                .catch(error => console.error("Error:", error));
         }
+    }
 
-        // Tambah baris kebutuhan dana saat tombol "Tambah Kebutuhan Dana" ditekan
-        $("#addRow").click(function () {
-            // Tambahkan baris
-            addRow();
-        });
+    // Fungsi untuk memperbarui label jumlah kebutuhan operasional
+    function updateJumlahKebutuhanOperasional() {
+        var rowCount = $("#dataTable tbody tr").length;
+        $("#label_jumlah_kebutuhan").text("Jumlah Kebutuhan Operasional: " + rowCount);
+    }
 
-        // Fungsi untuk memperbarui label jumlah kebutuhan operasional
-        function updateJumlahKebutuhanOperasional() {
-            var rowCount = $("#dataTable tbody tr").length;
-            $("#label_jumlah_kebutuhan").text("Jumlah Kebutuhan Operasional: " + rowCount);
-        }
-
-        // Remove row when delete button is clicked (starting from the second row)
-        $(document).on("click", ".removeRow", function () {
+	// Remove row when delete button is clicked (starting from the second row)
+	$(document).on("click", ".removeRow", function () {
             $(this).closest('tr').remove();
             // Enable delete button if more than one row exists
             if ($("#dataTable tbody tr").length > 1) {
@@ -604,16 +634,19 @@
             }
             // Update jumlah kebutuhan operasional label after removing row
             updateJumlahKebutuhanOperasional();
-        });
-
-        // Submit form
-        $("#pengajuanForm").submit(function (event) {
-            event.preventDefault();
-            // Lakukan submit form ke server di sini
-            console.log("Form submitted");
-        });
     });
+
+
+
+    // Submit form
+    $("#pengajuanForm").submit(function (event) {
+        event.preventDefault();
+        // Lakukan submit form ke server di sini
+        console.log("Form submitted");
+    });
+});
 </script>
+
 
 <script type="text/javascript">
 document.getElementById("kategori").addEventListener("change", function() {
