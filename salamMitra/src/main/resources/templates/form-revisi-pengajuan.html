@@ -57,17 +57,18 @@
 											<input type="text" name="nama_mitra" id="nama_mitra" placeholder="Nama Mitra" class="form-control" th:field="*{pengajuanDTO.namaMitra}" required>
 										</div>
 									</div>
-									<div class="form-row">
-										<div class="form-holder form-holder-2">
-											<label for="nama_program">Nama Program*</label>
-											<input type="text" name="nama_program" id="nama_program" placeholder="Nama Program" class="form-control"  th:field="*{pengajuanDTO.namaProgram}" disabled>
-										</div>
-									</div>
 									<div class="form-holder form-holder-2">
-										<label for="kategori">Kategori*</label>
-										<select name="kategori" id="kategori" class="form-control"  th:field="*{pengajuanDTO.kategori}" required>
+										<label for="kategori">Kategori Program*</label>
+										<select name="kategori" id="kategori" class="form-control" required>
 											<option value="">--Pilih Kategori--</option>
 											<option th:each="kategori : ${daftarKategori}" th:value="${kategori}" th:text="${kategori}"></option>
+										</select>
+									</div>
+									<br>
+									<div class="form-holder form-holder-2">
+										<label for="nama_program">Nama Program*</label>
+										<select name="program" id="program" class="form-control" disabled>
+											<option value="">--Pilih Program--</option>
 										</select>
 									</div>
 									<br>
@@ -135,14 +136,8 @@
 												<tr th:each="kDana, iterationStatus : *{listKebutuhanDanaDTO}">
 													<td><span th:text="${iterationStatus.index + 1}"></span></td>
 													<td>
-														<select th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].asnaf}" class="form-control" style="width: 130px; font-size: small;">
-															<option value="Fakir">Fakir</option>
-															<option value="Miskin">Miskin</option>
-															<option value="Mualaf">Mualaf</option>
-															<option value="Riqab">Riqab</option>
-															<option value="Gharimin">Gharimin</option>
-															<option value="Fi Sabilillah">Fi Sabilillah</option>
-															<option value="Ibnu Sabil">Ibnu Sabil</option>
+														<select id="asnafDropdown" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].asnaf}" class="form-control" style="width: 130px; font-size: small;">
+															<option value="">--Pilih Asnaf--</option>
 														</select>
 													</td>				
 													<td>
@@ -338,7 +333,7 @@
 										<div class="form-holder form-holder-2">
 											<label for="kecamatan">Kecamatan*</label>
 											<select name="kecamatan" id="kecamatan" class="form-control" th:field="*{pengajuanDTO.kecamatan}" required>
-												<option value="">--Pilih Kabupaten/Kota--</option> <!-- Tambahkan atribut "value" kosong di sini -->
+												<option value="">--Pilih Kecamatan--</option> <!-- Tambahkan atribut "value" kosong di sini -->
 											</select>
 										</div>
 										<br>
@@ -443,24 +438,35 @@
     }
 </script>
 <script>
-    $(document).ready(function() {
-        $('#provinsi').change(function() {
-            var provinsi = $(this).val(); // Mendapatkan nilai provinsi yang dipilih
+    // Tangani perubahan pada dropdown "Provinsi" dan "Nama Program"
+    document.getElementById("provinsi").addEventListener("change", updateKabKotaOptions);
+    document.getElementById("program").addEventListener("change", updateKabKotaOptions);
 
-            $.get("/getKabupatenKotaByProvinsi", {provinsi: provinsi}, function(data) {
-                // Mengosongkan dropdown kabupaten/kota
-                $('#kabupatenKota').empty();
+    function updateKabKotaOptions() {
+        var provinsi = document.getElementById("provinsi").value;
+        var namaProgram = document.getElementById("program").value;
 
-                // Menambahkan opsi default "--Pilih Kabupaten/Kota--"
-                $('#kabupatenKota').append($('<option>').text('--Pilih Kabupaten/Kota--').attr('value', ''));
+        // Buat permintaan ke endpoint untuk mendapatkan daftar kabupaten/kota berdasarkan provinsi dan nama program
+        fetch("/getKabKotaByProvinsiAndNamaProgram?provinsi=" + encodeURIComponent(provinsi) + "&namaProgram=" + encodeURIComponent(namaProgram))
+            .then(response => response.json())
+            .then(data => {
+                // Bersihkan dropdown "Kabupaten/Kota"
+                var kabupatenKotaDropdown = document.getElementById("kabupatenKota");
+                kabupatenKotaDropdown.innerHTML = '<option value="">--Pilih Kabupaten/Kota--</option>';
 
-                // Mengisi dropdown kabupaten/kota dengan daftar kabupaten/kota dari respons
-                $.each(data, function(index, kabupatenKota) {
-                    $('#kabupatenKota').append($('<option>').text(kabupatenKota).attr('value', kabupatenKota));
+                // Isi dropdown "Kabupaten/Kota" dengan opsi yang diterima dari server
+                data.forEach(function(kabKota) {
+                    var option = document.createElement("option");
+                    option.value = kabKota;
+                    option.text = kabKota;
+                    kabupatenKotaDropdown.appendChild(option);
                 });
-            });
-        });
-    });
+            })
+            .catch(error => console.error("Error:", error));
+    }
+
+    // Panggil fungsi untuk mengisi dropdown "Kabupaten/Kota" saat halaman dimuat
+    updateKabKotaOptions();
 </script>
 <script>
     $(document).ready(function() {
@@ -566,15 +572,8 @@
             var newRow = '<tr>' +
                 '<td>' + (rowCount + 1) + '</td>' +
                 '<td>' +
-                '<select name="listKebutuhanDanaDTO[' + rowCount + '].asnaf" class="form-control" style="width: 130px; font-size: small;" required>' +
+                '<select id="asnafDropdown" name="listKebutuhanDanaDTO[' + rowCount + '].asnaf" class="form-control" style="width: 130px; font-size: small;" required>' +
                 '<option value="" disabled selected>--Pilih Asnaf--</option>' +
-                '<option value="Fakir">Fakir</option>' +
-                '<option value="Miskin">Miskin</option>' +
-                '<option value="Mualaf">Mualaf</option>' +
-                '<option value="Riqab">Riqab</option>' +
-                '<option value="Gharimin">Gharimin</option>' +
-                '<option value="Fi Sabilillah">Fi Sabilillah</option>' +
-                '<option value="Ibnu Sabil">Ibnu Sabil</option>' +
                 '</select>' +
                 '</td>' +
                 '<td><input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahPenerima" class="form-control" style="width: 80px; required min="1"></td>' +
@@ -636,6 +635,83 @@
             console.log("Form submitted");
         });
     });
+</script>
+<script type="text/javascript">
+	document.getElementById("kategori").addEventListener("change", function() {
+		var selectedKategori = this.value;
+		var programDropdown = document.getElementById("program");
+		
+		// Reset dropdown "Nama Program"
+		programDropdown.innerHTML = '<option value="">--Pilih Program--</option>';
+	
+		// Jika kategori yang dipilih tidak kosong, kirim permintaan ke endpoint REST
+		if (selectedKategori !== "") {
+			fetch("/getNamaProgramByKategori?kategori=" + selectedKategori)
+				.then(response => response.json())
+				.then(data => {
+					// Isi dropdown "Nama Program" dengan nama program yang diterima dari server
+					data.forEach(function(namaProgram) {
+						var option = document.createElement("option");
+						option.value = namaProgram;
+						option.text = namaProgram;
+						programDropdown.appendChild(option);
+					});
+				})
+				.catch(error => console.error("Error:", error));
+		}
+	});
+</script>
+<script type="text/javascript">
+	// Tangani perubahan pada dropdown "Nama Program"
+	document.getElementById("program").addEventListener("change", function() {
+		var namaProgram = this.value;
+		var asnafDropdown = document.getElementById("asnafDropdown");
+
+		// Bersihkan dropdown "ASNaf"
+		asnafDropdown.innerHTML = '<option value="">--Pilih Asnaf--</option>';
+
+		// Jika nama program tidak kosong, kirim permintaan ke endpoint untuk mendapatkan ASNaf
+		if (namaProgram !== "") {
+			fetch("/getAsnafByNamaProgram?namaProgram=" + encodeURIComponent(namaProgram))
+				.then(response => response.json())
+				.then(data => {
+					// Isi dropdown "ASNaf" dengan ASNaf yang diterima dari server
+					data.forEach(function(asnaf) {
+						var option = document.createElement("option");
+						option.value = asnaf;
+						option.text = asnaf;
+						asnafDropdown.appendChild(option);
+					});
+				})
+				.catch(error => console.error("Error:", error));
+		}
+	});
+</script>
+<script>
+	// Tangani perubahan pada dropdown "Nama Program"
+	document.getElementById("program").addEventListener("change", function() {
+		var namaProgram = this.value;
+		var provinsiDropdown = document.getElementById("provinsi");
+
+		// Bersihkan dropdown "Provinsi"
+		provinsiDropdown.innerHTML = '<option value="">--Pilih Provinsi--</option>';
+
+		// Jika nama program tidak kosong, kirim permintaan ke endpoint untuk mendapatkan daftar provinsi
+		if (namaProgram !== "") {
+			fetch("/getDaftarProvinsiByNamaProgram?namaProgram=" + encodeURIComponent(namaProgram))
+				.then(response => response.json())
+				.then(data => {
+					// Isi dropdown "Provinsi" dengan daftar provinsi yang diterima dari server
+					data.forEach(function(provinsi) {
+						var option = document.createElement("option");
+						option.value = provinsi;
+						option.text = provinsi;
+						provinsiDropdown.appendChild(option);
+					});
+				})
+				.catch(error => console.error("Error:", error));
+		}
+	});
 </script>
 
 <!-- jquery -->
