@@ -13,7 +13,6 @@ import propensist.salamMitra.dto.request.CreateLokasiRequestDTO;
 import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Lokasi;
 import propensist.salamMitra.model.Manajemen;
-import propensist.salamMitra.model.ProgramKerja;
 import propensist.salamMitra.model.ProgramService;
 import propensist.salamMitra.service.LokasiService;
 import propensist.salamMitra.service.PenggunaService;

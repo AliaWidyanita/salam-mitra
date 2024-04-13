@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 
 import jakarta.validation.Valid;
@@ -22,15 +23,13 @@ import propensist.salamMitra.dto.KebutuhanDanaMapper;
 import propensist.salamMitra.dto.PengajuanMapper;
 import propensist.salamMitra.dto.request.CreateKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.CreateListPengajuanKebutuhanDanaDTO;
-import propensist.salamMitra.dto.request.UpdateKebutuhanDanaDTO;
-import propensist.salamMitra.dto.request.UpdateListPengajuanKebutuhanDanaDTO;
-import propensist.salamMitra.model.KebutuhanDana;
 import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.model.ProgramKerja;
 import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;
+import propensist.salamMitra.service.PencairanService;
 import propensist.salamMitra.service.PengajuanService;
 import propensist.salamMitra.service.PenggunaService;
 import propensist.salamMitra.service.ProgramKerjaService;
@@ -63,6 +62,9 @@ public class PengajuanController {
 
     @Autowired
     private PenggunaService penggunaService;
+
+    @Autowired
+    private PencairanService pencairanService;
 
     @GetMapping("/tambah-pengajuan")
     public String formTambahPengajuan(Model model) {
@@ -208,7 +210,25 @@ public class PengajuanController {
 
                 pengajuanService.handleKTP(pengajuan);
                 pengajuanService.handleRAB(pengajuan);
-                pengajuanService.handleDOC(pengajuan);            
+                pengajuanService.handleDOC(pengajuan); 
+                
+                if (pengajuan.getStatus().equalsIgnoreCase("Menunggu Laporan")){
+                    byte[] buktiPencairanMitraBytes = pengajuan.getPencairan().getBuktiPencairanMitra();
+                    String buktiPencairanMitra = pencairanService.convertByteToImage(buktiPencairanMitraBytes);
+
+                    // Menambahkan bukti pencairan mitra ke model
+                    model.addAttribute("buktiPencairanMitra", buktiPencairanMitra);
+
+                }
+                //Jika status pengajuan "Selesai", tangani laporan
+                if (pengajuan.getStatus().equalsIgnoreCase("Selesai")) {
+                    pengajuanService.handleLaporan(pengajuan);
+                    byte[] buktiPencairanMitraBytes = pengajuan.getPencairan().getBuktiPencairanMitra();
+                    String buktiPencairanMitra = pencairanService.convertByteToImage(buktiPencairanMitraBytes);
+
+                    // Menambahkan bukti pencairan mitra ke model
+                    model.addAttribute("buktiPencairanMitra", buktiPencairanMitra);
+                }
                 
                 model.addAttribute("pengajuan", pengajuan);
                 model.addAttribute("status", pengajuan.getStatus());

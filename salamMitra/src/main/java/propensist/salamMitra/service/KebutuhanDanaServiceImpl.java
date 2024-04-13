@@ -17,11 +17,8 @@ public class KebutuhanDanaServiceImpl implements KebutuhanDanaService{
 
     @Override
     public void saveKebutuhanDana(KebutuhanDana kebutuhanDana) {
-        if (kebutuhanDana != null) {
-            kebutuhanDanaDb.save(kebutuhanDana);
-        } else {
-            throw new IllegalArgumentException("Lokasi tidak bboleh kosong.");
-        }
+        
+        kebutuhanDanaDb.save(kebutuhanDana);
     }
 
     @Override
