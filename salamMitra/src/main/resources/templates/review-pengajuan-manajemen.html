@@ -69,29 +69,46 @@
                                     <td><span th:text="': ' + ${pengajuan.alamatKantor}"></span></td>
                                 </tr>
                                 <tr class="no-border">
-                                    <td>KTP Person in Charge (PIC)</td>
-                                    <td>
-                                        <span th:text="': '"></span>
-                                        <img th:src="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" class="card-img-top" alt="KTP PIC" style="height: 50px; object-fit: cover;">
+                                    <td colspan="2">
+                                        <div>KTP Person in Charge (PIC)</div>
+                                        <img th:src="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" class="card-img-top" alt="KTP PIC" style="width: 100%; height: 100%; object-fit: cover;">
                                         <a th:href="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" th:download="'KTP-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.jpg'">Download</a>
                                     </td>
                                 </tr>
                                 <tr class="no-border">
-                                    <td>Rancangan Anggaran Biaya (RAB)</td>
-                                    <td>
-                                        <!-- Download link for RAB PDF -->
-                                        <a th:href="'data:application/pdf;base64,' + ${pengajuan.rabBase64}" th:download="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
-                                            <span th:text="'RAB-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
-                                        </a>
+                                    <td colspan="2">
+                                        <div>Dokumen Perizinan</div>
+                                        <!-- Embed PDF within the webpage with dynamic dimensions -->
+                                        <div id="rabContainer" style="width: 100%; height: 1000px; overflow: auto;">
+                                            <embed id="rabPreview"
+                                                   th:attr="src='data:application/pdf;base64,' + ${pengajuan.rabBase64}"
+                                                   type="application/pdf"
+                                                   style="width: 100%; height: 100%;" /> <!-- Set width and height to 100% -->
+                                        </div>
+                                        <div>
+                                            <button id="fullscreenButton" onclick="toggleFullScreen('rabPreview')">Fullscreen</button> <!-- Button to toggle full screen -->
+                                            <a th:href="'data:application/pdf;base64,' + ${pengajuan.rabBase64}" th:download="'Rab-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
+                                                <button id="downloadButton">Download</button> <!-- Button to download PDF -->
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr class="no-border">
-                                    <td>Dokumen Perizinan</td>
-                                    <td>
-                                        <!-- Download link for RAB PDF -->
-                                        <a th:href="'data:application/pdf;base64,' + ${pengajuan.dokumenBase64}" th:download="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
-                                            <span th:text="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'"></span>
-                                        </a>
+                                    <td colspan="2">
+                                        <div>Dokumen Perizinan</div>
+                                        <!-- Embed PDF within the webpage with dynamic dimensions -->
+                                        <div id="docContainer" style="width: 100%; height: 1000px; overflow: auto;">
+                                            <embed id="docPreview"
+                                                   th:attr="src='data:application/pdf;base64,' + ${pengajuan.dokumenBase64}"
+                                                   type="application/pdf"
+                                                   style="width: 100%; height: 100%;" /> <!-- Set width and height to 100% -->
+                                        </div>
+                                        <div>
+                                            <button id="fullscreenButton" onclick="toggleFullScreen('docPreview')">Fullscreen</button> <!-- Button to toggle full screen -->
+                                            <a th:href="'data:application/pdf;base64,' + ${pengajuan.dokumenBase64}" th:download="'Doc-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
+                                                <button id="downloadButton">Download</button> <!-- Button to download PDF -->
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr class="no-border">
@@ -185,6 +202,18 @@
             cancelButton.setAttribute('disabled', 'disabled');
         }
     });
+</script>
+<script>
+    function toggleFullScreen(containerId) {
+        var container = document.getElementById(containerId);
+        if (!document.fullscreenElement) {
+            container.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
 </script>
 </body>
 </html>

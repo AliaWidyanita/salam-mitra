@@ -1,5 +1,7 @@
 package propensist.salamMitra.controller;
 
+import java.time.LocalDate;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import jakarta.validation.Valid;
 import propensist.salamMitra.dto.MitraMapper;
 import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
 import propensist.salamMitra.model.Pengguna;
+import propensist.salamMitra.service.DashboardService;
+import propensist.salamMitra.service.PengajuanService;
 import propensist.salamMitra.service.PenggunaService;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,6 +39,12 @@ public class UserController {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
+    @Autowired
+    private DashboardService dashboardService;
+
+    @Autowired
+    private PengajuanService pengajuanService;
+
     @GetMapping("/")
     public String home(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -47,9 +57,28 @@ public class UserController {
         if (role.equals("ROLE_ANONYMOUS") || role.equals("mitra")) {
             return "landing-page";
         } else {
+                // Mendapatkan tanggal saat ini
+            LocalDate currentDate = LocalDate.now();
+
+            // Mendapatkan data total pengajuan per bulan dari service dashboard
+            Map<String, Integer> totalPengajuanPerMonth = dashboardService.getTotalPengajuanForMonth(currentDate);
+
+            // Menyimpan data dalam model untuk ditampilkan pada halaman dashboard
+            model.addAttribute("totalPengajuanPerMonth", totalPengajuanPerMonth);
+
+            // Mendapatkan jumlah program kerja per kategori dari service dashboard
+            Map<String, Integer> jumlahProgramKerjaPerKategori = dashboardService.getJumlahProgramKerjaPerKategori();
+
+            // Menyimpan data dalam model untuk ditampilkan pada halaman dashboard
+            model.addAttribute("jumlahProgramKerjaPerKategori", jumlahProgramKerjaPerKategori);
+
+            Map<String, Long> countPengajuanByStatus = pengajuanService.jumlahPengajuanByStatus();
+            model.addAttribute("jumlahPengajuanByStatus", countPengajuanByStatus);
+
             return "dashboard";
         }
     }
+
 
     // @GetMapping("/register")
     // public String registerMitra(Model model) {
