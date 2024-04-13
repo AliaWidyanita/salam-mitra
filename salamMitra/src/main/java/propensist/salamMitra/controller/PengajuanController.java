@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 
 import jakarta.validation.Valid;
@@ -23,6 +22,9 @@ import propensist.salamMitra.dto.KebutuhanDanaMapper;
 import propensist.salamMitra.dto.PengajuanMapper;
 import propensist.salamMitra.dto.request.CreateKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.CreateListPengajuanKebutuhanDanaDTO;
+import propensist.salamMitra.dto.request.UpdateKebutuhanDanaDTO;
+import propensist.salamMitra.dto.request.UpdateListPengajuanKebutuhanDanaDTO;
+import propensist.salamMitra.model.KebutuhanDana;
 import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.model.Pengguna;
