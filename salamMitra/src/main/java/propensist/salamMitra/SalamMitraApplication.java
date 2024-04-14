@@ -89,27 +89,6 @@ public class SalamMitraApplication {
                 admin.setAdminRole(Admin.AdminRole.PROGRAM);
                 penggunaService.saveAdmin(admin);
             }
-
-            // if (programKerjaService.getAllProgramKerja().isEmpty()){
-            //     ProgramKerja programKerja = new ProgramKerja();
-            //     programKerja.setJudul("Judul1");
-            //     programKerja.setKategori("Pendidikan");
-            //     programKerja.setDeskripsi("Desc1");
-            //     programKerja.setEligibilitas("Eli1");
-            //     programKerja.setSyarat("Syarat1");
-            //     programKerja.setForm("Dummy1");
-
-            //     ProgramKerja programKerja2 = new ProgramKerja();
-            //     programKerja2.setJudul("Judul2");
-            //     programKerja2.setKategori("Kesehatan");
-            //     programKerja2.setDeskripsi("Des");
-            //     programKerja2.setEligibilitas("El21");
-            //     programKerja.setSyarat("Syarat2");
-            //     programKerja2.setForm("Dummy2");
-
-            //     programKerjaService.saveProgramKerja(programKerja);
-            //     programKerjaService.saveProgramKerja(programKerja2);
-            // }
 		};	
 	}
 }

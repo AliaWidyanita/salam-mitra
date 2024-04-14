@@ -8,11 +8,12 @@
             display: flex;
             align-items: flex-start;
             flex-wrap: wrap;
+            position: relative;
         }
 
         .program-detail-container .program-image {
             flex: 1;
-            max-width: 40%; /* Lebar maksimum gambar */
+            max-width: 40%;
             margin-right: 20px;
         }
 
@@ -34,11 +35,12 @@
         }
 
         .program-description {
-            margin-top: 20px;
+            margin-top: 30px;
             text-align: left;
+            max-width: 100%; 
+            overflow-wrap: break-word;
         }
 
-        /* Style untuk provinsi dan kabupaten/kota */
         .iterate-item {
             display: inline-block;
             margin-right: 10px;
@@ -58,6 +60,147 @@
             clear: both;
             display: table;
         }
+
+        /* Style untuk modal konfirmasi */
+        #deleteModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 50%;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            text-align: end;
+        }
+
+        .close {
+            color: rgb(144, 144, 144);
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content p {
+            padding: 10px 0;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .modal-content button {
+            margin: 5px;
+            padding: 10px 20px;
+            border-radius: 10px; 
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            background-color: #9c9c9c;
+            color: #fff;
+        }
+
+        .modal-content button:first-child {
+            background-color: #9c9c9c; /* Warna abu tua */
+            color: #fff;
+        }
+
+        .modal-content button:last-child {
+            background-color: #f23d3d;
+            color: #fff;
+        }
+
+        /* Style untuk pesan program dihapus */
+        .program-deleted-message {
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        /* Style untuk tombol delete */
+        .delete-button {
+            top: 10px;
+            left: 10px;
+            margin-left: 10px;
+            background-color: #f23d3d;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .delete-button:hover {
+            background-color: rgb(219, 54, 54);
+        }
+
+        .edit-button {
+            background-color: #23bbf2;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-left: auto;
+        }
+
+        .edit-button:hover {
+            background-color: #0da4db;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .button-row-modal {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .back-button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 28px;
+            color: #666;
+        }
+
+        .back-button:hover  {
+            color: black;
+        }
+
     </style>
 </head>
 <body>
@@ -66,8 +209,30 @@
         <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%;">
             <div class="container" data-aos="fade-up">
                 <div class="row d-flex justify-content-center">
-                    <div class="container">
+                    <div class="container" th:if="${program.isDeleted}">
+                        <div class="program-deleted-message">
+                            <h4 style="color: #f23d3d;">Halaman tidak tersedia karena program ini sudah dihapus!</h4>
+                        </div>
+                    </div>
+                    <div class="container" th:unless="${program.isDeleted}">
+                        
+                        <div class="button-container">
+                            <!-- Button kembali -->
+                            <a href="/program">
+                                <i class="bi bi-arrow-left back-button"></i>
+                            </a>
+
+                            <th:block th:if="${role == 'admin_PROGRAM'}">
+                                    <a th:href="@{'/edit-program-' + ${program.id}}" class="edit-button">Edit Program</a>
+                                <!-- Button to trigger delete modal -->
+                                <button onclick="showDeleteModal()" class="delete-button">
+                                    <i class="bi bi-trash"></i>
+                            </button>
+                            </th:block>
+                        </div>
+
                         <div class="row program-detail-container">
+
                             <div class="col-md-6 program-image">
                                 <!-- Foto program -->
                                 <img th:if="${program.fotoProgram == null}" src="/assets/img/placeholder-program.png" alt="Placeholder" class="img-fluid">
@@ -75,14 +240,26 @@
                             </div>                            
                               
                             <div class="col-md-6 program-info">
+
                                 <!-- Informasi program -->
-                                <h4 th:text="${program.judul}" class="mb-4"></h4>
-                                <p>Kategori Program: <span th:text="${program.kategoriProgram}"></span></p>
-                                <p>Kategori Asnaf</p>
-                                <div>
-                                    <span th:each="kategoriAsnaf : ${program.kategoriAsnaf}" class="iterate-item"  th:text="${kategoriAsnaf}"></span>
+                                <div class="program-title">
+                                    <h3 th:text="${program.judul}" class="mb-4"></h3>
+                                    
                                 </div>
-                                <p>Provinsi</p>
+                                <div style="margin-bottom: 10px;">
+                                    <p style="font-weight: bold;">Kategori Program</p>
+                                    <div style="margin-left: 10px;">
+                                        <span th:text="${program.kategoriProgram}" class="iterate-item"></span>
+                                    </div>
+                                </p>
+                                </div>
+                                <div style="margin-bottom: 10px;">
+                                    <p style="font-weight: bold;">Kategori Asnaf</p>
+                                    <div style="margin-left: 10px;">
+                                        <span th:each="kategoriAsnaf : ${program.kategoriAsnaf}" class="iterate-item"  th:text="${kategoriAsnaf}"></span>
+                                    </div>
+                                </div>
+                                <p style="font-weight: bold;">Provinsi</p>
                                 <div class="row">
                                     <div class="column">
                                         <ul>
@@ -95,17 +272,19 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <p>Kabupaten/Kota</p>
-                                <div class="row">
-                                    <div class="column">
-                                        <ul>
-                                            <li th:each="kabupatenKota,iterStat : ${program.kabupatenKota}" th:if="${iterStat.index % 2 == 0}" th:text="${kabupatenKota}"></li>
-                                        </ul>
-                                    </div>
-                                    <div class="column">
-                                        <ul>
-                                            <li th:each="kabupatenKota,iterStat : ${program.kabupatenKota}" th:if="${iterStat.index % 2 != 0}" th:text="${kabupatenKota}"></li>
-                                        </ul>
+                                <div th:if="${not #lists.isEmpty(program.kabupatenKota)}">
+                                    <p style="font-weight: bold;">Kabupaten/Kota</p>
+                                    <div class="row">
+                                        <div class="column">
+                                            <ul>
+                                                <li th:each="kabupatenKota,iterStat : ${program.kabupatenKota}" th:if="${iterStat.index % 2 == 0}" th:text="${kabupatenKota}"></li>
+                                            </ul>
+                                        </div>
+                                        <div class="column">
+                                            <ul>
+                                                <li th:each="kabupatenKota,iterStat : ${program.kabupatenKota}" th:if="${iterStat.index % 2 != 0}" th:text="${kabupatenKota}"></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -119,5 +298,40 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal konfirmasi penghapusan -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDeleteModal()">&times;</span>
+            <p>Apakah Anda yakin ingin menghapus program ini?</p>
+            <div class="button-row-modal">
+                <!-- Tombol untuk membatalkan penghapusan -->
+                <button onclick="closeDeleteModal()">Batal</button>
+                <!-- Tombol untuk mengonfirmasi penghapusan -->
+                <form id="deleteForm" th:action="@{/hapus-program-{id}(id=${program.id})}" method="post">
+                    <button type="submit">Hapus</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script untuk modal konfirmasi -->
+    <script>
+        var deleteModal = document.getElementById("deleteModal");
+
+        function showDeleteModal() {
+            deleteModal.style.display = "block";
+        }
+
+        function closeDeleteModal() {
+            deleteModal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == deleteModal) {
+                closeDeleteModal();
+            }
+        }
+    </script>
 </body>
 </html>

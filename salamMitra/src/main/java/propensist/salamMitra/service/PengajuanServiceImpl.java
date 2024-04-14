@@ -12,7 +12,6 @@ import java.util.Base64;
 import java.util.HashMap;
 
 
-
 @Service
 public class PengajuanServiceImpl implements PengajuanService{
 

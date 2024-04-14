@@ -20,6 +20,12 @@
         .form-group {
             margin-top: 5px;
         }
+        /* CSS untuk gambar program */
+        .program-image {
+            max-width: 200px;
+            max-height: 200px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -28,34 +34,33 @@
         <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
             <div class="container" data-aos="fade-up">
                 <div class="row d-flex justify-content-center">
-                    <h2 class="text-center m-4">Tambah Program</h2>
+                    <h2 class="text-center m-4">Edit Program</h2>
                     <div class="container">
-                        <form id="formTambahProgram" class="row g-3" th:action="@{/tambah-program}" th:object="${programKerjaDTO}" method="POST" enctype="multipart/form-data">
+                        <form id="formEditProgram" class="row g-3" th:action="@{'/edit-program-' + ${program.id}}" th:object="${program}" method="POST" enctype="multipart/form-data">
                             <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+                            <input type="hidden" name="id" th:value="${program.id}" />
+
                             <div class="col-md-6 form-group">
                                 <label for="judul" style="font-weight: bold;">Judul Program <sup>*</sup></label>
-                                <input type="text" name="judul" id="judul" placeholder="Judul program" class="form-control" th:field="*{judul}" oninput="return checkTitleLength()" required>
+                                <input type="text" name="judul" id="judul" placeholder="Judul program" class="form-control" th:value="${program.judul}" oninput="return checkTitleLength()" required>
                                 <small id="judulLengthMessage" style="color: red;"></small>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="kategoriProgram" style="font-weight: bold;">Kategori <sup>*</sup></label>
-                                <select name="kategoriProgram" id="kategoriProgram" class="form-control"  th:field="*{kategoriProgram}" required>
-                                    <option value="">--Pilih kategori program--</option>
-                                    <option th:each="kategori : ${daftarKategoriProgram}" th:value="${kategori}" th:text="${kategori}"></option>
-                                </select>
+                                <input name="kategoriProgram" id="kategoriProgram" th:value="${program.kategoriProgram}" class="form-control" readonly required>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="kategoriAsnaf" style="font-weight: bold;">Kategori Asnaf <sup>*</sup></label>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div th:each="kategori, iterStat : ${daftarKategoriAsnaf}" th:if="${iterStat.index % 2 == 0}">
-                                            <input type="checkbox" th:id="${kategori}" th:name="kategoriAsnaf" th:value="${kategori}" />
+                                            <input type="checkbox" th:id="${kategori}" th:name="kategoriAsnaf" th:value="${kategori}" th:checked="${program.kategoriAsnaf != null && program.kategoriAsnaf.contains(kategori)}"/>
                                             <label th:for="${kategori}" th:text="${kategori}"></label><br>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div th:each="kategori, iterStat : ${daftarKategoriAsnaf}" th:if="${iterStat.index % 2 != 0}">
-                                            <input type="checkbox" th:id="${kategori}" th:name="kategoriAsnaf" th:value="${kategori}" />
+                                            <input type="checkbox" th:id="${kategori}" th:name="kategoriAsnaf" th:value="${kategori}" th:checked="${program.kategoriAsnaf != null && program.kategoriAsnaf.contains(kategori)}"/>
                                             <label th:for="${kategori}" th:text="${kategori}"></label><br>
                                         </div>
                                     </div>
@@ -63,30 +68,50 @@
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="provinsi" style="font-weight: bold;">Provinsi <sup>*</sup></label>
-                                <div class="scrollable-checkbox">
-                                    <input type="checkbox" id="selectAllProvinsi" class="selectAllCheckbox" />
-                                    <label for="selectAllProvinsi">Seluruh Indonesia</label><br>
+                                <input type="hidden" th:each="provinsi : ${program.provinsi}" name="provinsi" th:value="${provinsi}" />
 
-                                    <div th:each="provinsi : ${daftarProvinsi}">
-                                        <input type="checkbox" class="provinsi" th:id="${provinsi}" th:name="provinsi" th:value="${provinsi}" />
-                                        <label th:for="${provinsi}" th:text="${provinsi}"></label><br>
+                                <div class="row">
+                                    <div class="column">
+                                        <ul>
+                                            <li th:each="provinsi,iterStat : ${program.provinsi}" th:if="${iterStat.index % 2 == 0}" th:text="${provinsi}"></li>
+                                        </ul>
+                                    </div>
+                                    <div class="column">
+                                        <ul>
+                                            <li th:each="provinsi,iterStat : ${program.provinsi}" th:if="${iterStat.index % 2 != 0}" th:text="${provinsi}"></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-6 form-group" th:if="${not #lists.isEmpty(program.kabupatenKota)}">
                                 <label for="kabupatenKota" style="font-weight: bold;">Kabupaten/Kota</label>
-                                <div id="kabupatenKotaContainer" class="scrollable-checkbox"></div>
-                                <small class="form-text text-muted">- Opsi Kabupaten/Kota akan muncul sesuai dengan pilihan provinsi</small>
-                                <small class="form-text text-muted">- Kosongkan apabila lokasi berada di seluruh Kabupaten/Kota provinsi pilihan</small>
-                            </div>                            
+                                <input type="hidden" th:each="kabupatenKota : ${program.kabupatenKota}" name="kabupatenKota" th:value="${kabupatenKota}" />
+                                <div class="row">                
+                                    <div class="column">
+                                        <ul>
+                                            <li th:each="kabupatenKota,iterStat : ${program.kabupatenKota}" th:if="${iterStat.index % 2 == 0}" th:text="${kabupatenKota}"></li>
+                                        </ul>
+                                    </div>
+                                    <div class="column">
+                                        <ul>
+                                            <li th:each="kabupatenKota,iterStat : ${program.kabupatenKota}" th:if="${iterStat.index % 2 != 0}" th:text="${kabupatenKota}"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>                                                     
                             <div class="col-md-6 form-group">
                                 <label for="deskripsi" style="font-weight: bold;">Deskripsi Program <sup>*</sup></label>
-                                <textarea type="text" name="deskripsi" id="deskripsi" placeholder="Deskripsi program" class="form-control" th:field="*{deskripsi}" required></textarea>
+                                <textarea type="text" name="deskripsi" id="deskripsi" placeholder="Deskripsi program" class="form-control" required th:text="${program.deskripsi}"></textarea>
                             </div>
                             <div class="col-md-6 form-group">
-                                <label for="fotoProgram" style="font-weight: bold;">Foto Program</label>
+                                <label for="fotoProgram" style="font-weight: bold;">Ganti Foto Program</label>
                                 <input type="file" name="foto" id="fotoProgram" class="form-control-file form-control" accept=".jpg, .png, .jpeg">
-                            </div>
+                                <br>
+                                <div th:if="${program.fotoProgram != null}" >
+                                    <img th:src="'data:image/jpeg;base64,' + ${program.imageBase64}" alt="Program Image" class="program-image" />
+                                    <small class="form-text text-muted">Foto program saat ini</small>
+                                </div>
+                            </div>                            
                             <div class="text-center m-4">
                                 <a class="btn btn-danger" style="background-color: #e74454" href="/program">Batal</a>
                                 <button class="btn btn-primary" style="background-color: #6793F6; color: #fff" type="submit">Simpan</button>                              
@@ -100,71 +125,6 @@
 
     <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Ketika checkbox provinsi diubah
-            $('.provinsi').change(function() {
-                var selectedProvinces = $('.provinsi:checked').map(function() {
-                    return this.value;
-                }).get(); // Ambil nilai provinsi yang dipilih
-
-                // Kosongkan kontainer kabupaten/kota
-                $('#kabupatenKotaContainer').empty();
-
-                // Jika tidak ada provinsi yang dipilih, hentikan eksekusi selanjutnya
-                if (!selectedProvinces || selectedProvinces.length === 0) return;
-
-                // Kirim permintaan AJAX untuk mendapatkan daftar kabupaten/kota berdasarkan provinsi yang dipilih
-                $.ajax({
-                    url: "/getKabupatenKotaByProvinsi",
-                    type: "GET",
-                    data: {
-                        provinsi: selectedProvinces.join(',') // Gabungkan nilai-nilai provinsi dengan koma sebagai parameter
-                    },
-                    dataType: "json",
-                    success: function(data) {
-                        // Isi kontainer kabupaten/kota dengan opsi yang diperoleh dari respons
-                        $.each(data, function(index, kabupatenKota) {
-                            var checkbox = $('<input>').attr({ type: 'checkbox', name: 'kabupatenKota', value: kabupatenKota, id: kabupatenKota }).css('margin-right', '5px');
-                            var label = $('<label>').attr('for', kabupatenKota).text(kabupatenKota);
-                            $('#kabupatenKotaContainer').append(checkbox).append(label).append('<br>');
-                        });
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.error("AJAX request failed: " + textStatus, errorThrown);
-                    }
-                });
-            });
-
-            // Ketika checkbox "Select All" diubah
-            $('#selectAllProvinsi').change(function() {
-                var isChecked = $(this).is(':checked');
-                $('.provinsi').prop('checked', isChecked).change(); // Pemicu perubahan pada checkbox provinsi
-
-                // Jika "Select All" dicentang, hilangkan centang dari semua provinsi kecuali "Seluruh Indonesia"
-                if (isChecked) {
-                    $('.provinsi').not('#selectAllProvinsi').prop('checked', false).prop('disabled', true);
-                } else {
-                    $('.provinsi').prop('disabled', false);
-                }
-            });
-
-            // Logic untuk simpan "Seluruh Indonesia" ke database jika opsi "Select All" dicentang
-            $('#formTambahProgram').submit(function() {
-                var allProvinsiChecked = $('#selectAllProvinsi').is(':checked');
-                if (allProvinsiChecked) {
-                    // Hapus semua nilai provinsi kecuali "Seluruh Indonesia"
-                    $('.provinsi').not('#selectAllProvinsi').prop('checked', false);
-                    // Jika opsi "Select All" dicentang, simpan "Seluruh Indonesia" ke database
-                    $('<input>').attr({
-                        type: 'hidden',
-                        name: 'provinsi',
-                        value: 'Seluruh Indonesia'
-                    }).appendTo($(this));
-                }
-            });
-        });
-    </script>  
     
     <script>
         function checkTitleLength() {
