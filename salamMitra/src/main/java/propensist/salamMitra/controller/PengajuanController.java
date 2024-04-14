@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 
 import jakarta.validation.Valid;
@@ -368,7 +369,7 @@ public class PengajuanController {
 
     @PostMapping("/submit-laporan-{id}")
     public String submitLaporanByMitra(@PathVariable("id") String id,
-                                        @RequestParam(value="laporan", required = false) String laporan,
+                                        @RequestParam(value="laporan", required = false) MultipartFile laporan,
                                         @RequestParam("submit") String submit,
                                         Model model) throws IOException {
         // Ambil informasi pengguna yang sedang login
@@ -391,6 +392,8 @@ public class PengajuanController {
 
             byte[] laporanBytes = laporan.getBytes();
             pengajuan.setLaporan(laporanBytes);
+            String laporanBase64 = Base64.getEncoder().encodeToString(laporanBytes);
+            pengajuan.setLaporanBase64(laporanBase64);
         
             // Sesuaikan status berdasarkan aksi yang dipilih
             switch (submit) {
@@ -404,6 +407,7 @@ public class PengajuanController {
                     return "error-page";
             }
 
+            
             // Simpan perubahan pada pengajuan
             pengajuanService.savePengajuan(pengajuan);
             

@@ -47,6 +47,10 @@ public class WebSecurityConfig {
                             .requestMatchers(new AntPathRequestMatcher("/getDaftarProvinsiByNamaProgram")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/getKabKotaByProvinsiAndNamaProgram")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/pencairan**")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
+                            .requestMatchers(new AntPathRequestMatcher("/tambah-pencairan")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
+
+
                     ) 
                     .formLogin((form) -> form
                                     .loginPage("/login")
