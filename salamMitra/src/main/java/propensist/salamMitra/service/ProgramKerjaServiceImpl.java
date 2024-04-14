@@ -32,6 +32,25 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
     }
 
     @Override
+    public List<ProgramKerja> getTigaProgramKerja() {
+        return getAllProgramAktif().subList(0, Math.min(programKerjaDb.findAll().size(), 3));
+    }
+
+    @Override
+    public List<ProgramKerja> getAllProgramAktif() {
+        List<ProgramKerja> listProgramKerja = getAllProgramKerja();
+        List<ProgramKerja> programKerjaAktif = new ArrayList<>();
+
+        for (ProgramKerja programKerja : listProgramKerja) {
+            if (!programKerja.isDeleted()) {
+                programKerjaAktif.add(programKerja);
+            }
+        }
+
+        return programKerjaAktif;
+    }
+
+    @Override
     public ProgramKerja findProgramKerjaById(Long id) {
         for (ProgramKerja programKerja : getAllProgramKerja()) {
             if (programKerja.getId().equals(id)) {
@@ -39,6 +58,61 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
             }
         }
         return null;
+    }
+
+    @Override
+    public List<String> getAllKategoriProgram() {
+        List<String> kategoriProgram = new ArrayList<>();
+        kategoriProgram.add("Bidang Kemanusiaan");
+        kategoriProgram.add("Bidang Kesehatan");
+        kategoriProgram.add("Bidang Pendidikan");
+        kategoriProgram.add("Bidang Ekonomi");
+        kategoriProgram.add("Bantuan Dakhwah-Advokasi");
+        return kategoriProgram;
+    }
+
+    @Override
+    public List<String> getAllKategoriAsnaf() {
+        List<String> kategoriAsnaf = new ArrayList<>();
+        kategoriAsnaf.add("Miskin");
+        kategoriAsnaf.add("Mualaf");
+        kategoriAsnaf.add("Riqab");
+        kategoriAsnaf.add("Gharimin");
+        kategoriAsnaf.add("Fi Sabilillah");
+        kategoriAsnaf.add("Ibnu Sabil");
+        return kategoriAsnaf;
+    }
+
+    @Override
+    public ProgramKerja updateProgramKerja(ProgramKerja programKerjaFromDto){
+        
+        ProgramKerja programKerja = findProgramKerjaById(programKerjaFromDto.getId());
+        if(programKerja != null){
+            programKerja.setId(programKerjaFromDto.getId());
+            programKerja.setJudul(programKerjaFromDto.getJudul());
+            programKerja.setKategoriProgram(programKerjaFromDto.getKategoriProgram());
+            programKerja.setKategoriAsnaf(programKerjaFromDto.getKategoriAsnaf());
+            programKerja.setProvinsi(programKerjaFromDto.getProvinsi());
+            programKerja.setKabupatenKota(programKerjaFromDto.getKabupatenKota());
+            programKerja.setDeskripsi(programKerjaFromDto.getDeskripsi());
+            programKerja.setFotoProgram(programKerjaFromDto.getFotoProgram());
+            programKerjaDb.save(programKerja);
+        }
+        return programKerja;
+    }
+
+    public void handleFotoProgram(ProgramKerja programKerja) {
+        byte[] fotoProgramByte = programKerja.getFotoProgram();
+
+        String fotoProgramBase64 = Base64.getEncoder().encodeToString(fotoProgramByte);
+
+        programKerja.setImageBase64(fotoProgramBase64);
+    }
+
+    @Override
+    public void deleteProgram(ProgramKerja programKerja) {
+        programKerja.setDeleted(true);
+        saveProgramKerja(programKerja);
     }
 
     @Override
