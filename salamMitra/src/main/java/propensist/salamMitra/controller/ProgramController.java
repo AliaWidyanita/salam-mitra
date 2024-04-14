@@ -178,20 +178,20 @@ public class ProgramController {
     public String editProgram(@Valid @ModelAttribute UpdateProgramKerjaRequestDTO programKerjaDTO, @RequestParam(name = "foto", required = false) MultipartFile foto, Model model, RedirectAttributes redirectAttributes) {
         var programFromDto = programKerjaMapper.updateProgramKerjaRequestDTOToProgramKerja(programKerjaDTO);
         
-        if (programFromDto.getJudul() != null && programFromDto.getJudul().length() > 50) {
+        if (programKerjaDTO.getJudul() != null && programKerjaDTO.getJudul().length() > 50) {
             redirectAttributes.addFlashAttribute("error", "Judul program tidak boleh lebih dari 50 karakter!");
-            return "redirect:/edit-program-" + programFromDto.getId();
+            return "redirect:/edit-program-" + programKerjaDTO.getId();
         }
 
-        if (programFromDto.getKategoriAsnaf() == null) {
+        if (programKerjaDTO.getKategoriAsnaf() == null) {
             redirectAttributes.addFlashAttribute("error", "Kategori Asnaf tidak boleh kosong!");
-            return "redirect:/edit-program-" + programFromDto.getId();
+            return "redirect:/edit-program-" + programKerjaDTO.getId();
 
         }
 
-        if (programFromDto.getProvinsi() == null) {
+        if (programKerjaDTO.getProvinsi() == null) {
             redirectAttributes.addFlashAttribute("error", "Provinsi tidak boleh kosong!");
-            return "redirect:/edit-program-" + programFromDto.getId();
+            return "redirect:/edit-program-" + programKerjaDTO.getId();
         }
 
         if (foto != null && !foto.isEmpty()) {
