@@ -102,8 +102,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Flag to indicate whether AJAX call is in progress
+            var ajaxCallInProgress = false;
+
             // Ketika checkbox provinsi diubah
             $('.provinsi').change(function() {
+                // Check if AJAX call is already in progress
+                if (ajaxCallInProgress) {
+                    return; // If in progress, do nothing
+                }
+
                 var selectedProvinces = $('.provinsi:checked').map(function() {
                     return this.value;
                 }).get(); // Ambil nilai provinsi yang dipilih
@@ -113,6 +121,9 @@
 
                 // Jika tidak ada provinsi yang dipilih, hentikan eksekusi selanjutnya
                 if (!selectedProvinces || selectedProvinces.length === 0) return;
+
+                // Set flag to indicate AJAX call is in progress
+                ajaxCallInProgress = true;
 
                 // Kirim permintaan AJAX untuk mendapatkan daftar kabupaten/kota berdasarkan provinsi yang dipilih
                 $.ajax({
@@ -132,6 +143,10 @@
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.error("AJAX request failed: " + textStatus, errorThrown);
+                    },
+                    complete: function() {
+                        // Reset the flag after AJAX call is complete
+                        ajaxCallInProgress = false;
                     }
                 });
             });
