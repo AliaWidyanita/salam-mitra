@@ -29,7 +29,6 @@ public class CreatePengajuanRequestDTO {
 
     private Long nomorRekening;
 
-
     private String alamatKantor;
 
     private List<KebutuhanDana> listKebutuhanDana = new ArrayList<>();
