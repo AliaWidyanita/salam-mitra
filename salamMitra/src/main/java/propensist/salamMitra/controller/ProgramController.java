@@ -121,7 +121,7 @@ public class ProgramController {
 
         ProgramKerja programKerja = programKerjaMapper.createProgramKerjaDTOToProgramKerja(programKerjaDTO);
 
-        programKerja.setKategoriAsnaf(kategoriAsnaf);
+        //programKerja.setKategoriAsnaf(kategoriAsnaf);
 
         programKerjaService.saveProgramKerja(programKerja);
 
