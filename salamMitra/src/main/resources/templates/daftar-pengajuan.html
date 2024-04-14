@@ -51,10 +51,13 @@
                         </thead>
                         <tbody class="text-center" th:if="${listPengajuan.isEmpty()}">
                             <tr>
-                                <td colspan="4">Belum ada daftar pengajuan yang dibuat.</td>
+                                <td colspan="7">Belum ada pengajuan yang dibuat.</td>
                             </tr>
                         </tbody>
                         <tbody class="text-center" th:unless="${listPengajuan.isEmpty()}">
+                            <tr id="noResultRow" style="display: none;">
+                                <td colspan="7">Pengajuan tidak ditemukan.</td>
+                            </tr>
                             <tr th:each="pengajuan, iterationStatus: ${listPengajuan}">
                                 <td class="text-center" th:text="${iterationStatus.count}"></td>
                                 <td th:text="${pengajuan.id}"></td>
@@ -107,13 +110,15 @@
 <script>
     function searchTable() {
         // Mendapatkan nilai input pencarian
-        var input, filter, table, tr, td, i, txtValue;
+        var input, filter, table, tr, td, i, txtValue, noResultRow;
         input = document.getElementById("searchInput");
         filter = input.value.toUpperCase();
         table = document.getElementById("dataTable");
         tr = table.getElementsByTagName("tr");
+        noResultRow = document.getElementById("noResultRow"); // Baris pesan "pengajuan tidak ditemukan"
 
         // Loop melalui semua baris tabel, sembunyikan yang tidak sesuai dengan query pencarian
+        var found = false; // Menandakan apakah ada hasil pencarian yang ditemukan
         for (i = 0; i < tr.length; i++) {
             td = tr[i].getElementsByTagName("td");
             for (var j = 0; j < td.length; j++) {
@@ -121,12 +126,20 @@
                     txtValue = td[j].textContent || td[j].innerText;
                     if (txtValue.toUpperCase().indexOf(filter) > -1) {
                         tr[i].style.display = "";
+                        found = true; // Ada hasil pencarian yang ditemukan
                         break;
                     } else {
                         tr[i].style.display = "none";
                     }
                 }
             }
+        }
+
+        // Tampilkan atau sembunyikan pesan "pengajuan tidak ditemukan" tergantung pada hasil pencarian
+        if (!found) {
+            noResultRow.style.display = ""; // Tampilkan pesan jika tidak ada hasil pencarian
+        } else {
+            noResultRow.style.display = "none"; // Sembunyikan pesan jika ada hasil pencarian
         }
     }
 </script>
