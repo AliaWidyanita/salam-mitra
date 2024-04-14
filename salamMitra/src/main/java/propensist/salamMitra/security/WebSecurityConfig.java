@@ -42,6 +42,10 @@ public class WebSecurityConfig {
                             .requestMatchers(new AntPathRequestMatcher("/hapus-program**")).hasAuthority("admin_PROGRAM")
                             .requestMatchers(new AntPathRequestMatcher("/program**")).hasAnyAuthority("mitra", "program_service", "manajemen", "admin_PROGRAM")
                             .requestMatchers(new AntPathRequestMatcher("/edit-program-**")).hasAuthority("admin_PROGRAM")
+                            .requestMatchers(new AntPathRequestMatcher("/getNamaProgramByKategori")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/getAsnafByNamaProgram")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/getDaftarProvinsiByNamaProgram")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/getKabKotaByProvinsiAndNamaProgram")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                     ) 
                     .formLogin((form) -> form

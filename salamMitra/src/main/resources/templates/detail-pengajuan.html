@@ -619,12 +619,12 @@
                         <div class="col-auto">
                             <a class="boxed-btn" style="background-color: #5995fd;" href="/pengajuan">Kembali</a>
                         </div>
-                        <div class="col-auto">
+                        <div th:if="${role eq 'mitra'}" class="col-auto">
                             <a class="boxed-btn" th:href="@{/submit-revisi-{id}(id=${pengajuan.id})}"
                                 th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}">Revisi
                                 Ajuan</a>
                         </div>
-                        <div class="col-auto">
+                        <div th:if="${role eq 'mitra'}" class="col-auto">
                             <a class="boxed-btn" style="background-color: #dc3545;"
                                 th:href="@{/submit-pembatalan-{id}(id=${pengajuan.id})}"
                                 th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}"
