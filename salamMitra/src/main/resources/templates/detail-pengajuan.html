@@ -536,28 +536,6 @@
                         </div>
                     </div>
 
-                    <div th:if="${role eq 'admin_PROGRAM' or role eq 'manajemen' or role eq 'mitra'}"
-                        style="margin-top: 30px;">
-                        <div th:if="${pengajuan.status == 'Selesai'}" style="margin-top: 30px; text-align: left;">
-                            <div>Laporan</div>
-                            <div id="laporanContainer" style="width: 100%; height: 1000px; overflow: auto;">
-                                <embed id="laporanPreview"
-                                    th:attr="src='data:application/pdf;base64,' + ${pengajuan.laporanBase64}"
-                                    type="application/pdf" style="width: 100%; height: 100%;" />
-                                <!-- Set width and height to 100% -->
-                            </div>
-                            <div>
-                                <button id="fullscreenButton"
-                                    onclick="toggleFullScreen('laporanPreview')">Fullscreen</button>
-                                <!-- Button to toggle full screen -->
-                                <a th:href="'data:application/pdf;base64,' + ${pengajuan.laporanBase64}"
-                                    th:download="'Laporan-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.pdf'">
-                                    <button id="downloadButton">Download</button> <!-- Button to download PDF -->
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="container justify-content-center">
                         <div th:if="${role eq 'admin_PROGRAM'}">
                             <h5 style="margin-top: 20px;">Komentar :</h5>
