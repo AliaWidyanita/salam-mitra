@@ -1,6 +1,7 @@
 package propensist.salamMitra.controller;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -21,9 +22,12 @@ import jakarta.validation.Valid;
 import propensist.salamMitra.dto.MitraMapper;
 import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
 import propensist.salamMitra.model.Pengguna;
+import propensist.salamMitra.model.ProgramKerja;
 import propensist.salamMitra.service.DashboardService;
 import propensist.salamMitra.service.PengajuanService;
 import propensist.salamMitra.service.PenggunaService;
+import propensist.salamMitra.service.ProgramKerjaService;
+
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
@@ -32,6 +36,9 @@ public class UserController {
 
     @Autowired
     private PenggunaService penggunaService;
+
+    @Autowired
+    private ProgramKerjaService programKerjaService;
 
     @Autowired
     private MitraMapper mitraMapper;
@@ -53,6 +60,17 @@ public class UserController {
         
         model.addAttribute("role", role);
         model.addAttribute("user", user);
+
+        List<ProgramKerja> listProgram = programKerjaService.getTigaProgramKerja();
+        
+        // Memeriksa setiap program apakah memiliki foto
+        for(ProgramKerja program : listProgram) {
+            if (program.getFotoProgram() != null) {
+                programKerjaService.handleFotoProgram(program);
+            }
+        }
+
+        model.addAttribute("listProgram", listProgram);
 
         if (role.equals("ROLE_ANONYMOUS") || role.equals("mitra")) {
             return "landing-page";

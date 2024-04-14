@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import propensist.salamMitra.model.KebutuhanDana;
 import propensist.salamMitra.repository.KebutuhanDanaDb;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class KebutuhanDanaServiceImpl implements KebutuhanDanaService{
@@ -16,5 +17,10 @@ public class KebutuhanDanaServiceImpl implements KebutuhanDanaService{
         
         kebutuhanDanaDb.save(kebutuhanDana);
     }
-    
+
+    @Override
+    @Transactional
+    public void clearKebutuhanDanaByPengajuan(Pengajuan pengajuan) {
+        kebutuhanDanaDb.deleteByPengajuan(pengajuan);
+    }
 }

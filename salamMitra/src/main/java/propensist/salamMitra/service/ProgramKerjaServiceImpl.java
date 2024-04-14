@@ -32,6 +32,25 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
     }
 
     @Override
+    public List<ProgramKerja> getTigaProgramKerja() {
+        return getAllProgramAktif().subList(0, Math.min(programKerjaDb.findAll().size(), 3));
+    }
+
+    @Override
+    public List<ProgramKerja> getAllProgramAktif() {
+        List<ProgramKerja> listProgramKerja = getAllProgramKerja();
+        List<ProgramKerja> programKerjaAktif = new ArrayList<>();
+
+        for (ProgramKerja programKerja : listProgramKerja) {
+            if (!programKerja.isDeleted()) {
+                programKerjaAktif.add(programKerja);
+            }
+        }
+
+        return programKerjaAktif;
+    }
+
+    @Override
     public ProgramKerja findProgramKerjaById(Long id) {
         for (ProgramKerja programKerja : getAllProgramKerja()) {
             if (programKerja.getId().equals(id)) {
@@ -81,6 +100,14 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
         }
         return programKerja;
     }
+
+
+    @Override
+    public void deleteProgram(ProgramKerja programKerja) {
+        programKerja.setDeleted(true);
+        saveProgramKerja(programKerja);
+    }
+
 
     public void handleFotoProgram(ProgramKerja programKerja) {
         byte[] fotoProgramByte = programKerja.getFotoProgram();

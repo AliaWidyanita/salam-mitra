@@ -2,6 +2,7 @@ package propensist.salamMitra.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,29 @@ public class ProgramController {
     @Autowired
     private ProgramKerjaMapper programKerjaMapper;
 
+    @GetMapping("/program")
+    public String viewDaftarProgram(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+        
+        List<ProgramKerja> listProgram = programKerjaService.getAllProgramAktif();
+        
+        // Memeriksa setiap program apakah memiliki foto
+        for(ProgramKerja program : listProgram) {
+            if (program.getFotoProgram() != null) {
+                programKerjaService.handleFotoProgram(program);
+            }
+        }
+
+        model.addAttribute("listProgram", listProgram);
+        
+        return "view-daftar-program";
+    }
+
     @GetMapping("/tambah-program")
     public String formTambahProgram(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -65,23 +89,24 @@ public class ProgramController {
 
     @PostMapping("/tambah-program")
     public String tambahProgram(@Valid @ModelAttribute CreateProgramKerjaRequestDTO programKerjaDTO, BindingResult bindingResult, Model model,
-                                RedirectAttributes redirectAttributes, @RequestParam("foto") MultipartFile foto, @RequestParam("kategoriAsnaf") List<String> kategoriAsnaf
+                                RedirectAttributes redirectAttributes, @RequestParam("foto") MultipartFile foto
                                 ) throws IOException {
 
-        if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors()
-                .stream()
-                .map(error -> {
-                    if (error instanceof FieldError) {
-                        FieldError fieldError = (FieldError) error;
-                        return fieldError.getField() + ": " + error.getDefaultMessage();
-                    }
-                    return error.getDefaultMessage();
-                })
-                .collect(Collectors.toList());
-
-                model.addAttribute("errors", errors);
+        if (programKerjaDTO.getJudul() != null && programKerjaDTO.getJudul().length() > 50) {
+            redirectAttributes.addFlashAttribute("error", "Judul program tidak boleh lebih dari 50 karakter!");
+            return "redirect:/tambah-program";
         }
+
+        if (programKerjaDTO.getKategoriAsnaf() == null) {
+            redirectAttributes.addFlashAttribute("error", "Kategori Asnaf tidak boleh kosong!");
+            return "redirect:/tambah-program";
+        }
+
+        if (programKerjaDTO.getProvinsi() == null) {
+            redirectAttributes.addFlashAttribute("error", "Provinsi tidak boleh kosong!");
+            return "redirect:/tambah-program";
+        }
+
 
         if (!foto.isEmpty()) {
             byte[] fotoProgram = foto.getBytes();
@@ -90,7 +115,7 @@ public class ProgramController {
 
         ProgramKerja programKerja = programKerjaMapper.createProgramKerjaDTOToProgramKerja(programKerjaDTO);
 
-        programKerja.setKategoriAsnaf(kategoriAsnaf);
+        //programKerja.setKategoriAsnaf(kategoriAsnaf);
 
         programKerjaService.saveProgramKerja(programKerja);
 
@@ -98,7 +123,7 @@ public class ProgramController {
 
         redirectAttributes.addFlashAttribute("successMessage", "Program kerja baru berhasil ditambahkan!");
 
-        return "redirect:/";
+        return "redirect:/program";
     }
 
     @GetMapping("/program-{id}")
@@ -121,7 +146,7 @@ public class ProgramController {
     } 
 
     @GetMapping("/edit-program-{id}")
-    public String formEditProgram(@PathVariable("id") String id, Model model) {
+    public String formEditProgram(@PathVariable("id") Long id, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();
         Pengguna user = penggunaService.authenticate(auth.getName());
@@ -129,9 +154,11 @@ public class ProgramController {
         model.addAttribute("role", role);
         model.addAttribute("user", user);
 
-        Long longId = Long.parseLong(id);
+        var program = programKerjaService.findProgramKerjaById(id);
 
-        var program = programKerjaService.findProgramKerjaById(longId);
+        if (program.getFotoProgram() != null) {
+            programKerjaService.handleFotoProgram(program);
+        }
 
         model.addAttribute("program", program);
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
@@ -142,14 +169,72 @@ public class ProgramController {
     }
 
     @PostMapping("/edit-program-{id}")
-    public String editProgram(@Valid @ModelAttribute UpdateProgramKerjaRequestDTO programKerjaDTO, Model model, RedirectAttributes redirectAttributes) {
-
+    public String editProgram(@Valid @ModelAttribute UpdateProgramKerjaRequestDTO programKerjaDTO, @RequestParam(name = "foto", required = false) MultipartFile foto, Model model, RedirectAttributes redirectAttributes) {
         var programFromDto = programKerjaMapper.updateProgramKerjaRequestDTOToProgramKerja(programKerjaDTO);
+        
+        if (programFromDto.getJudul() != null && programFromDto.getJudul().length() > 50) {
+            redirectAttributes.addFlashAttribute("error", "Judul program tidak boleh lebih dari 50 karakter!");
+            return "redirect:/edit-program-" + programFromDto.getId();
+        }
+
+        if (programFromDto.getKategoriAsnaf() == null) {
+            redirectAttributes.addFlashAttribute("error", "Kategori Asnaf tidak boleh kosong!");
+            return "redirect:/edit-program-" + programFromDto.getId();
+
+        }
+
+        if (programFromDto.getProvinsi() == null) {
+            redirectAttributes.addFlashAttribute("error", "Provinsi tidak boleh kosong!");
+            return "redirect:/edit-program-" + programFromDto.getId();
+        }
+
+        if (foto != null && !foto.isEmpty()) {
+            try {
+                byte[] fotoBytes = foto.getBytes();
+                programFromDto.setFotoProgram(fotoBytes);
+            } catch (IOException e) {
+                e.printStackTrace(); 
+            }
+        } else {
+            ProgramKerja existingProgram = programKerjaService.findProgramKerjaById(programFromDto.getId());
+            programFromDto.setFotoProgram(existingProgram.getFotoProgram());
+        }
         
         var programKerja = programKerjaService.updateProgramKerja(programFromDto);
         
         model.addAttribute("id", programKerja.getId());
 
-        return "redirect:/";
+        redirectAttributes.addFlashAttribute("successMessage", "Program kerja berhasil diperbarui!");
+
+        return "redirect:/program-" + programKerja.getId();
     }
+
+    @GetMapping("/hapus-program-{id}")
+    public String hapusPengguna(@PathVariable ("id") Long id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
+        ProgramKerja program = programKerjaService.findProgramKerjaById(id);
+        model.addAttribute("program", program);
+
+        return "konfirmasi-hapus-program";
+    }
+
+    // Handler untuk penghapusan program
+    @PostMapping("/hapus-program-{id}")
+    public String deleteProgram(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
+        ProgramKerja program = programKerjaService.findProgramKerjaById(id);
+        programKerjaService.deleteProgram(program);
+
+        model.addAttribute("program", program);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Program kerja dengan judul '" + program.getJudul() + "' berhasil dihapus!");
+
+        return "redirect:/program";
+    }
+
 }

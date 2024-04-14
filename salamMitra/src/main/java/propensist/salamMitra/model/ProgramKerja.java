@@ -54,4 +54,8 @@ public class ProgramKerja {
 
     @Transient
     private String imageBase64;
+
+    @NotNull
+    @Column(name="is_deleted", nullable = false)
+    private boolean isDeleted = false;
 }

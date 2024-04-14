@@ -57,18 +57,14 @@
 											<input type="text" name="nama_mitra" id="nama_mitra" placeholder="Nama Mitra" class="form-control" th:field="*{pengajuanDTO.namaMitra}" required>
 										</div>
 									</div>
-									<div class="form-row">
-										<div class="form-holder form-holder-2">
-											<label for="nama_program">Nama Program*</label>
-											<input type="text" name="nama_program" id="nama_program" placeholder="Nama Program" class="form-control"  th:field="*{pengajuanDTO.namaProgram}" disabled>
-										</div>
-									</div>
 									<div class="form-holder form-holder-2">
-										<label for="kategori">Kategori*</label>
-										<select name="kategori" id="kategori" class="form-control"  th:field="*{pengajuanDTO.kategori}" required>
-											<option value="">--Pilih Kategori--</option>
-											<option th:each="kategori : ${daftarKategori}" th:value="${kategori}" th:text="${kategori}"></option>
-										</select>
+										<label for="kategori">Kategori Program*</label>
+										<input type="text" name="kategori" id="kategori" placeholder="Kategori Program" class="form-control"  th:field="*{pengajuanDTO.kategori}" disabled>
+									</div>
+									<br>
+									<div class="form-holder form-holder-2">
+										<label for="nama_program">Nama Program*</label>
+										<input type="text" name="program" id="program" placeholder="Nama Program" class="form-control"  th:field="*{pengajuanDTO.namaProgram}" disabled>
 									</div>
 									<br>
 									<div class="form-row">
@@ -93,9 +89,13 @@
 										<!-- Display previous KtpPIC if available -->
 										<td colspan="2">
 											<div>KTP Person in Charge (PIC)*</div>
-											<img th:src="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" class="card-img-top" alt="KTP PIC" style="width: 100%; height: 100%; object-fit: cover;">
-											<a th:href="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" th:download="'KTP-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.jpg'">Download</a>
+											<img th:src="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" class="card-img-top" alt="KTP PIC" style="width: 50%; height: 50%; object-fit: cover;">
+											<div>
+												<a th:href="'data:image/jpeg;base64,' + ${pengajuan.imageBase64}" th:download="'KTP-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.jpg'">Download</a>
+											</div>
 										</td>
+										<br>
+										<label for="dokumen">Upload KTP PIC Baru</label>
 										<input type="file" name="ktpPIC" accept=".jpg, .png, .jpeg" class="form-control-file form-control">
 										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
 									</div>
@@ -131,14 +131,8 @@
 												<tr th:each="kDana, iterationStatus : *{listKebutuhanDanaDTO}">
 													<td><span th:text="${iterationStatus.index + 1}"></span></td>
 													<td>
-														<select th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].asnaf}" class="form-control" style="width: 130px; font-size: small;">
-															<option value="Fakir">Fakir</option>
-															<option value="Miskin">Miskin</option>
-															<option value="Mualaf">Mualaf</option>
-															<option value="Riqab">Riqab</option>
-															<option value="Gharimin">Gharimin</option>
-															<option value="Fi Sabilillah">Fi Sabilillah</option>
-															<option value="Ibnu Sabil">Ibnu Sabil</option>
+														<select id="asnafDropdown" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].asnaf}" class="form-control" style="width: 130px; font-size: small;">
+															<option value="">--Pilih Asnaf--</option>
 														</select>
 													</td>				
 													<td>
@@ -165,7 +159,7 @@
 															<input type="number" placeholder="Jumlah Dana" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jumlahDana}" class="form-control" style="width: 150px;" required>
 														</div>
 													</td>	
-													<td>
+													<td th:unless="${iterationStatus.index == 0}">
 														<button type="button" class="btn btn-danger removeRow" style="width: 50px;">
 															<i class="fas fa-trash-alt"></i>
 														</button>
@@ -352,7 +346,7 @@
 										<div class="form-holder form-holder-2">
 											<label for="kecamatan">Kecamatan*</label>
 											<select name="kecamatan" id="kecamatan" class="form-control" th:field="*{pengajuanDTO.kecamatan}" required>
-												<option value="">--Pilih Kabupaten/Kota--</option> <!-- Tambahkan atribut "value" kosong di sini -->
+												<option value="">--Pilih Kecamatan--</option> <!-- Tambahkan atribut "value" kosong di sini -->
 											</select>
 										</div>
 										<br>
@@ -457,48 +451,74 @@
     }
 </script>
 <script>
-    $(document).ready(function() {
-        $('#provinsi').change(function() {
-            var provinsi = $(this).val(); // Mendapatkan nilai provinsi yang dipilih
+    // Tangani perubahan pada dropdown "Provinsi", "Nama Program", dan "Kabupaten/Kota"
+    document.getElementById("provinsi").addEventListener("change", updateKabKotaOptions);
+    document.getElementById("program").addEventListener("change", updateKabKotaOptions);
+    document.getElementById("kabupatenKota").addEventListener("change", updateKecamatanOptions);
 
-            $.get("/getKabupatenKotaByProvinsi", {provinsi: provinsi}, function(data) {
-                // Mengosongkan dropdown kabupaten/kota
-                $('#kabupatenKota').empty();
+    function updateKabKotaOptions() {
+        var provinsi = document.getElementById("provinsi").value;
+        var namaProgram = document.getElementById("program").value;
 
-                // Menambahkan opsi default "--Pilih Kabupaten/Kota--"
-                $('#kabupatenKota').append($('<option>').text('--Pilih Kabupaten/Kota--').attr('value', ''));
+        // Buat permintaan ke endpoint untuk mendapatkan daftar kabupaten/kota berdasarkan provinsi dan nama program
+        fetch("/getKabKotaByProvinsiAndNamaProgram?provinsi=" + encodeURIComponent(provinsi) + "&namaProgram=" + encodeURIComponent(namaProgram))
+            .then(response => response.json())
+            .then(data => {
+                // Bersihkan dropdown "Kabupaten/Kota"
+                var kabupatenKotaDropdown = document.getElementById("kabupatenKota");
+                kabupatenKotaDropdown.innerHTML = '';
 
-                // Mengisi dropdown kabupaten/kota dengan daftar kabupaten/kota dari respons
-                $.each(data, function(index, kabupatenKota) {
-                    $('#kabupatenKota').append($('<option>').text(kabupatenKota).attr('value', kabupatenKota));
+                // Isi dropdown "Kabupaten/Kota" dengan opsi yang diterima dari server
+                data.forEach(function(kabKota) {
+                    var option = document.createElement("option");
+                    option.value = kabKota;
+                    option.text = kabKota;
+                    kabupatenKotaDropdown.appendChild(option);
                 });
-            });
-        });
-    });
-</script>
-<script>
-    $(document).ready(function() {
-        $('#provinsi, #kabupatenKota').change(function() {
-            var provinsi = $('#provinsi').val();
-            var kabupatenKota = $('#kabupatenKota').val(); // Ubah nama variabel kabupaten menjadi kabupatenKota
 
-            // Mengirimkan permintaan AJAX ke server untuk mendapatkan daftar kecamatan berdasarkan kabupaten/kota yang dipilih
-            $.get("/getKecamatanByProvinsiKabupatenKota", {provinsi: provinsi, kabupatenKota: kabupatenKota}, function(data) {
-                // Menghapus opsi yang sudah ada pada dropdown kecamatan
-                $('#kecamatan').empty();
-
-                // Menambahkan opsi "--Pilih Kecamatan--" di dropdown kecamatan jika belum ada kabupaten/kota yang dipilih
-                if (kabupatenKota === "") {
-                    $('#kecamatan').append($('<option>').text("--Pilih Kecamatan--").attr('value', ""));
+                // Memperbarui opsi yang dipilih untuk "Kabupaten/Kota" jika ada yang sebelumnya dipilih
+                var selectedKabKota = document.getElementById("kabupatenKota").getAttribute("data-selected");
+                if (selectedKabKota) {
+                    document.getElementById("kabupatenKota").value = selectedKabKota;
                 }
 
-                // Menambahkan opsi-opsi baru berdasarkan data yang diterima dari server
-                $.each(data, function(index, kecamatan) {
-                    $('#kecamatan').append($('<option>').text(kecamatan).attr('value', kecamatan));
+                // Panggil fungsi untuk mengisi dropdown "Kecamatan" saat Kabupaten/Kota berubah
+                updateKecamatanOptions();
+            })
+            .catch(error => console.error("Error:", error));
+    }
+
+    function updateKecamatanOptions() {
+        var provinsi = document.getElementById("provinsi").value;
+        var kabupatenKota = document.getElementById("kabupatenKota").value;
+
+        // Mengirimkan permintaan ke server untuk mendapatkan daftar kecamatan berdasarkan kabupaten/kota yang dipilih
+        fetch("/getKecamatanByProvinsiKabupatenKota?provinsi=" + encodeURIComponent(provinsi) + "&kabupatenKota=" + encodeURIComponent(kabupatenKota))
+            .then(response => response.json())
+            .then(data => {
+                // Bersihkan dropdown "Kecamatan"
+                var kecamatanDropdown = document.getElementById("kecamatan");
+                kecamatanDropdown.innerHTML = '';
+
+                // Isi dropdown "Kecamatan" dengan opsi yang diterima dari server
+                data.forEach(function(kecamatan) {
+                    var option = document.createElement("option");
+                    option.value = kecamatan;
+                    option.text = kecamatan;
+                    kecamatanDropdown.appendChild(option);
                 });
-            });
-        });
-    });
+
+                // Memperbarui opsi yang dipilih untuk "Kecamatan" jika ada yang sebelumnya dipilih
+                var selectedKecamatan = document.getElementById("kecamatan").getAttribute("data-selected");
+                if (selectedKecamatan) {
+                    document.getElementById("kecamatan").value = selectedKecamatan;
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    }
+
+    // Panggil fungsi untuk mengisi dropdown "Kabupaten/Kota" saat halaman dimuat
+    updateKabKotaOptions();
 </script>
 <script>
     // Mendapatkan elemen input tanggal mulai, tanggal selesai implementasi, dan tanggal selesai laporan
@@ -570,36 +590,51 @@
     });
 </script>
 <script>
-    $(document).ready(function () {
-        // Tambahkan baris permanen saat halaman dimuat
-        addRow();
+	$(document).ready(function () {
+		// Saat halaman dimuat, isi dropdown ASNaf berdasarkan nilai default dari input nama program
+		populateAsnafDropdown();
 
-        // Fungsi untuk menambahkan baris kebutuhan dana
-        function addRow() {
-            var rowCount = $("#dataTable tbody tr").length;
-            var newRow = '<tr>' +
-                '<td>' + (rowCount + 1) + '</td>' +
-                '<td>' +
-                '<select name="listKebutuhanDanaDTO[' + rowCount + '].asnaf" class="form-control" style="width: 130px; font-size: small;" required>' +
-                '<option value="" disabled selected>--Pilih Asnaf--</option>' +
-                '<option value="Fakir">Fakir</option>' +
-                '<option value="Miskin">Miskin</option>' +
-                '<option value="Mualaf">Mualaf</option>' +
-                '<option value="Riqab">Riqab</option>' +
-                '<option value="Gharimin">Gharimin</option>' +
-                '<option value="Fi Sabilillah">Fi Sabilillah</option>' +
-                '<option value="Ibnu Sabil">Ibnu Sabil</option>' +
-                '</select>' +
-                '</td>' +
-                '<td><input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahPenerima" class="form-control" style="width: 80px; required min="1"></td>' +
-                '<td><select name="listKebutuhanDanaDTO[' + rowCount + '].pilar" class="form-control" style="width: 160px; font-size: small;" required>' +
-                '<option value="" disabled selected>--Pilih Pilar--</option>' +
-                '<option value="Pendidikan">Pendidikan</option>' +
-                '<option value="Kesehatan">Kesehatan</option>' +
-                '<option value="Ekonomi-Pemberdayaan">Ekonomi-Pemberdayaan</option>' +
-                '<option value="Dakwah-Advokasi">Dakwah-Advokasi</option>' +
-                '<option value="Bantuan Sosial">Bantuan Sosial</option>' +
-                '</select></td>' +
+		// Fungsi untuk mengisi dropdown ASNaf berdasarkan nama program yang dipilih
+		function populateAsnafDropdown(rowIndex) {
+			var namaProgram = $("#program").val();
+			var asnafDropdown = $("#asnafDropdown" + rowIndex);
+
+			// Bersihkan dropdown "ASNaf"
+			asnafDropdown.empty();
+
+			// Jika nama program tidak kosong, kirim permintaan ke endpoint untuk mendapatkan ASNaf
+			if (namaProgram !== "") {
+				fetch("/getAsnafByNamaProgram?namaProgram=" + encodeURIComponent(namaProgram))
+					.then(response => response.json())
+					.then(data => {
+						// Isi dropdown "ASNaf" dengan ASNaf yang diterima dari server
+						data.forEach(function(asnaf) {
+							asnafDropdown.append($("<option></option>").attr("value", asnaf).text(asnaf));
+						});
+					})
+					.catch(error => console.error("Error:", error));
+			}
+		}
+
+		// Fungsi untuk menambahkan baris kebutuhan dana
+		function addRow() {
+			var rowCount = $("#dataTable tbody tr").length;
+			var newRow = '<tr>' +
+				'<td>' + (rowCount + 1) + '</td>' +
+				'<td>' +
+				'<select id="asnafDropdown' + rowCount + '" name="listKebutuhanDanaDTO[' + rowCount + '].asnaf" class="form-control asnafDropdown" style="width: 130px; font-size: small;" required>' +
+				'<option value="" disabled selected>--Pilih Asnaf--</option>' +
+				'</select>' +
+				'</td>' +
+				'<td><input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahPenerima" class="form-control" style="width: 80px; required min="1"></td>' +
+				'<td><select name="listKebutuhanDanaDTO[' + rowCount + '].pilar" class="form-control" style="width: 160px; font-size: small;" required>' +
+				'<option value="" disabled selected>--Pilih Pilar--</option>' +
+				'<option value="Pendidikan">Pendidikan</option>' +
+				'<option value="Kesehatan">Kesehatan</option>' +
+				'<option value="Ekonomi-Pemberdayaan">Ekonomi-Pemberdayaan</option>' +
+				'<option value="Dakwah-Advokasi">Dakwah-Advokasi</option>' +
+				'<option value="Bantuan Sosial">Bantuan Sosial</option>' +
+				'</select></td>' +
 				'<td><input type="text" name="listKebutuhanDanaDTO[' + rowCount + '].jenisBantuan"  class="form-control"  required></td>' +
 				'<td>' +
 				'<div class="input-group">' +
@@ -609,47 +644,106 @@
 				'<input type="number" name="listKebutuhanDanaDTO[' + rowCount + '].jumlahDana" class="form-control" style="width: 150px; required min="1">' +
 				'</div>' +
 				'</td>' +
-				'<td><button type="button" class="btn btn-danger removeRow" style="width: 50px;"><i class="fas fa-trash-alt"></i></button></td>' +
+				'<td th:unless="${iterationStatus.index == 0}">' +
+								'<button type="button" class="btn btn-danger removeRow" style="width: 50px;"><i class="fas fa-trash-alt"></i></button>' +
+							'</td>' +            
 				'</tr>';
-            $("#dataTable tbody").append(newRow);
-            // Disable tombol hapus jika hanya ada satu baris
-            if ($("#dataTable tbody tr").length === 1) {
-                $("#dataTable tbody tr .removeRow").prop("disabled", true);
-            }
-            // Update jumlah kebutuhan operasional label
-            updateJumlahKebutuhanOperasional();
+			$("#dataTable tbody").append(newRow);
+			if (rowCount === 0) {
+				$("#dataTable tbody tr:first-child .removeRow").hide();
+			}
+			// Memastikan dropdown ASNaf pada baris baru terisi
+			populateAsnafDropdown(rowCount);
+			// Disable tombol hapus jika hanya ada satu baris
+			if ($("#dataTable tbody tr").length === 1) {
+				$("#dataTable tbody tr .removeRow").prop("disabled", true);
+				}
+			// Update jumlah kebutuhan operasional label
+			updateJumlahKebutuhanOperasional();
+		}
+
+		// Tambah baris kebutuhan dana saat tombol "Tambah Kebutuhan Dana" ditekan
+		$("#addRow").click(function () {
+			addRow();
+		});
+
+		// Fungsi untuk memperbarui label jumlah kebutuhan operasional
+		function updateJumlahKebutuhanOperasional() {
+			var rowCount = $("#dataTable tbody tr").length;
+			$("#label_jumlah_kebutuhan").text("Jumlah Kebutuhan Operasional: " + rowCount);
+		}
+
+		// Fungsi untuk menghapus baris
+		$(document).on("click", ".removeRow", function () {
+			$(this).closest('tr').remove();
+
+			// Enable tombol hapus jika lebih dari satu baris tersisa
+			if ($("#dataTable tbody tr").length > 1) {
+				$("#dataTable tbody tr .removeRow").prop("disabled", false);
+			}
+
+			// Update jumlah kebutuhan operasional label setelah menghapus baris
+			updateJumlahKebutuhanOperasional();
+		});
+
+		// Submit form
+		$("#pengajuanForm").submit(function (event) {
+			event.preventDefault();
+			console.log("Form submitted");
+		});
+	});
+</script>
+<script type="text/javascript">
+    // Tangani perubahan pada dropdown "Nama Program"
+    document.getElementById("program").addEventListener("change", function() {
+        var namaProgram = this.value;
+        var asnafDropdown = document.getElementById("asnafDropdown");
+
+        // Bersihkan dropdown "ASNaf"
+        asnafDropdown.innerHTML = '<option value="">--Pilih Asnaf--</option>';
+
+        // Jika nama program tidak kosong, kirim permintaan ke endpoint untuk mendapatkan ASNaf
+        if (namaProgram !== "") {
+            fetch("/getAsnafByNamaProgram?namaProgram=" + encodeURIComponent(namaProgram))
+                .then(response => response.json())
+                .then(data => {
+                    // Isi dropdown "ASNaf" dengan ASNaf yang diterima dari server
+                    data.forEach(function(asnaf) {
+                        var option = document.createElement("option");
+                        option.value = asnaf;
+                        option.text = asnaf;
+                        asnafDropdown.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error:", error));
         }
-
-        // Tambah baris kebutuhan dana saat tombol "Tambah Kebutuhan Dana" ditekan
-        $("#addRow").click(function () {
-            // Tambahkan baris
-            addRow();
-        });
-
-        // Fungsi untuk memperbarui label jumlah kebutuhan operasional
-        function updateJumlahKebutuhanOperasional() {
-            var rowCount = $("#dataTable tbody tr").length;
-            $("#label_jumlah_kebutuhan").text("Jumlah Kebutuhan Operasional: " + rowCount);
-        }
-
-        // Remove row when delete button is clicked (starting from the second row)
-        $(document).on("click", ".removeRow", function () {
-            $(this).closest('tr').remove();
-            // Enable delete button if more than one row exists
-            if ($("#dataTable tbody tr").length > 1) {
-                $("#dataTable tbody tr .removeRow").prop("disabled", false);
-            }
-            // Update jumlah kebutuhan operasional label after removing row
-            updateJumlahKebutuhanOperasional();
-        });
-
-        // Submit form
-        $("#pengajuanForm").submit(function (event) {
-            event.preventDefault();
-            // Lakukan submit form ke server di sini
-            console.log("Form submitted");
-        });
     });
+</script>
+<script>
+	// Tangani perubahan pada dropdown "Nama Program"
+	document.getElementById("program").addEventListener("change", function() {
+		var namaProgram = this.value;
+		var provinsiDropdown = document.getElementById("provinsi");
+
+		// Bersihkan dropdown "Provinsi"
+		provinsiDropdown.innerHTML = '<option value="">--Pilih Provinsi--</option>';
+
+		// Jika nama program tidak kosong, kirim permintaan ke endpoint untuk mendapatkan daftar provinsi
+		if (namaProgram !== "") {
+			fetch("/getDaftarProvinsiByNamaProgram?namaProgram=" + encodeURIComponent(namaProgram))
+				.then(response => response.json())
+				.then(data => {
+					// Isi dropdown "Provinsi" dengan daftar provinsi yang diterima dari server
+					data.forEach(function(provinsi) {
+						var option = document.createElement("option");
+						option.value = provinsi;
+						option.text = provinsi;
+						provinsiDropdown.appendChild(option);
+					});
+				})
+				.catch(error => console.error("Error:", error));
+		}
+	});
 </script>
 <script>
     function toggleFullScreen(containerId) {

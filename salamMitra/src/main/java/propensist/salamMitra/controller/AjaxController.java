@@ -51,6 +51,7 @@ public class AjaxController {
         return ResponseEntity.ok(daftarKabupatenKota);
     }
 
+
     @GetMapping("/getKecamatanByProvinsiKabupatenKota")
     public ResponseEntity<List<String>> getKecamatanByProvinsiKabupatenKota(@RequestParam("provinsi") String provinsi,
             @RequestParam("kabupatenKota") String kabupatenKota, Model model) {

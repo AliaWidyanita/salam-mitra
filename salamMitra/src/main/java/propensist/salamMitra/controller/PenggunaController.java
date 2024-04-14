@@ -19,7 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.AdminMapper;
 import propensist.salamMitra.dto.request.CreateAdminRequestDTO;
-import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.model.Admin.AdminRole;
 import propensist.salamMitra.service.PenggunaService;
