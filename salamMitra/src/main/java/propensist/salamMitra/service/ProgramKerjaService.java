@@ -15,4 +15,8 @@ public interface ProgramKerjaService {
     ProgramKerja updateProgramKerja(ProgramKerja programKerjaFromDto);
     void handleFotoProgram(ProgramKerja programKerja);
     void deleteProgram(ProgramKerja programKerja);
+    List<ProgramKerja> findProgramKerjaByKategori(String kategori);
+    ProgramKerja findProgramKerjaByJudul(String judul);
+
+
 }
