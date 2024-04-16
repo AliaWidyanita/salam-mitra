@@ -42,6 +42,7 @@
 				<h2 class="text-center m-4">Formulir Pengajuan Kerja Sama</h2>
 				<div class="container">
                     <form th:action="@{/tambah-pengajuan}" th:object="${listPengajuanKebutuhanDanaDTO}" method="POST" enctype="multipart/form-data">
+						<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
 						<div id="form-total">
 							<!-- SECTION 1 -->
 							<section>
@@ -92,7 +93,7 @@
 									<div class="form-holder form-holder-2">
 										<label for="ktpPIC">KTP Person In Charge (PIC)*</label>
 										<input type="file" name="ktpPIC" accept=".jpg, .png, .jpeg" class="form-control-file form-control" required>
-										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
+										<small class="form-text text-muted">Ukuran file maksimal: 25MB</small>
 									</div>
 									<br>
 								</div>
@@ -131,7 +132,7 @@
 														</select>
 													</td>				
 													<td>
-														<input type="number" placeholder="Jumlah Penerima" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jumlahPenerima}" class="form-control" style="width:80px;" required>
+														<input type="number" placeholder="Jumlah Penerima" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jumlahPenerima}" class="form-control" style="width:80px;" required min="1">
 													</td>
 													<td>
 														<select th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].pilar}" class="form-control" style="width: 160px; font-size: small;">
@@ -151,7 +152,7 @@
 															<span class="input-group-prepend">
 																<span class="input-group-text">Rp</span>
 															</span>
-															<input type="number" placeholder="Jumlah Dana" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jumlahDana}" class="form-control" style="width: 150px;" required>
+															<input type="number" placeholder="Jumlah Dana" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].jumlahDana}" class="form-control" style="width: 150px;" required min="1">
 														</div>
 													</td>	
 													<td th:unless="${iterationStatus.index == 0}">
@@ -237,14 +238,14 @@
 									<div class="form-holder form-holder-2">
 										<label for="rab">Rancangan Anggaran Biaya (RAB)*</label>
 										<input type="file" name="rab" accept=".pdf" class="form-control-file form-control" required>
-										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
+										<small class="form-text text-muted">Ukuran file maksimal: 25MB</small>
 
 									</div>
 									<br>
 									<div class="form-holder form-holder-2">
 										<label for="dokumen">Dokumen Perizinan*</label>
 										<input type="file" name="dokumen" accept=".pdf" class="form-control-file form-control" required>
-										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
+										<small class="form-text text-muted">Ukuran file maksimal: 25MB</small>
 									</div>
 								</div>						   
 							</section>
@@ -731,7 +732,25 @@ document.getElementById("kategori").addEventListener("change", function() {
         }
     });
 </script>
-
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		var maxFileSizeMB = 25; // Ukuran maksimal file dalam MB
+	
+		var fileInputs = document.querySelectorAll('input[type="file"]');
+		fileInputs.forEach(function(input) {
+			input.addEventListener('change', function() {
+				var file = this.files[0];
+				var fileSizeMB = file.size / (1024 * 1024); // Konversi ukuran file ke MB
+	
+				if (fileSizeMB > maxFileSizeMB) {
+					alert("Ukuran file tidak boleh lebih besar dari " + maxFileSizeMB + "MB");
+					this.value = ''; // Kosongkan nilai input file
+				}
+			});
+		});
+	});
+	</script>
+	
 <!-- jquery -->
 <script src="assets/js/jquery-1.11.3.min.js"></script>
 <!-- bootstrap -->
