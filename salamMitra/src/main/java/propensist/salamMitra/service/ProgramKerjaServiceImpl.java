@@ -33,7 +33,17 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
 
     @Override
     public List<ProgramKerja> getTigaProgramKerja() {
-        return getAllProgramAktif().subList(0, Math.min(programKerjaDb.findAll().size(), 3));
+        List<ProgramKerja> allPrograms = getAllProgramAktif();
+        int numberOfPrograms = allPrograms.size();
+        
+        // Ambil maksimal 3 program kerja, atau kurang jika jumlahnya kurang dari 3
+        int endIndex = Math.min(numberOfPrograms, 3);
+        
+        // Pastikan endIndex tidak kurang dari 0
+        endIndex = Math.max(endIndex, 0);
+
+        // Kembalikan subList dari 0 hingga endIndex
+        return allPrograms.subList(0, endIndex);
     }
 
     @Override

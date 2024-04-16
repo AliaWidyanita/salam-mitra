@@ -208,21 +208,22 @@
                             </div>
                         </div>
 
-                        <form th:action="@{/pencairan-mitra}" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="idPengajuan" th:value="${pengajuanMenungguPencairan.id}"
-                                required>
-
+                        <form id="submitBukti" th:action="@{/pencairan-mitra}" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="idPengajuan" th:value="${pengajuanMenungguPencairan.id}" required>
+                        
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="heading">Informasi Pencairan ke Rekening Mitra</h3>
                                 </div>
-
+                        
                                 <div class="card-body">
                                     <div class="form-holder form-holder-2">
                                         <label for="ktpPIC">Bukti Pencairan*</label>
                                         <input type="file" name="buktiPencairanMitra" accept=".jpg, .png, .jpeg"
-                                            class="form-control-file form-control" required>
+                                            class="form-control-file form-control" maxFileSize="25MB" required>
                                         <small class="form-text text-muted">Ukuran file maksimum: 25MB</small>
+                                        <div class="text-danger" id="fileSizeError"
+                                            style="display: none; color: red;">Ukuran file pdf tidak boleh lebih dari 25MB.</div>
                                     </div>
                                 </div>
                             </div>
@@ -239,6 +240,42 @@
     </div>
     </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var fileInput = document.querySelector('input[name="buktiPencairanMitra"]');
+            var form = document.getElementById('submitBukti');
+            var fileSizeError = document.getElementById('fileSizeError');
+    
+            fileInput.addEventListener('change', function (event) {
+                var file = event.target.files[0];
+                var fileSizeInMB = file.size / (1024 * 1024);
+    
+                if (fileSizeInMB > 25) {
+                    fileSizeError.style.display = 'block';
+                    form.removeEventListener('submit', preventFormSubmit);
+                } else {
+                    fileSizeError.style.display = 'none';
+                }
+            });
+    
+            function preventFormSubmit(event) {
+                event.preventDefault();
+            }
+    
+            form.addEventListener('submit', function (event) {
+                var file = fileInput.files[0];
+                var fileSizeInMB = file.size / (1024 * 1024);
+    
+                if (fileSizeInMB > 25) {
+                    fileSizeError.style.display = 'block';
+                    event.preventDefault(); // Prevent form submission
+                } else {
+                    fileSizeError.style.display = 'none';
+                }
+            });
+        });
+    </script>    
 
     <!-- jquery -->
     <script src="assets/js/jquery-1.11.3.min.js"></script>
