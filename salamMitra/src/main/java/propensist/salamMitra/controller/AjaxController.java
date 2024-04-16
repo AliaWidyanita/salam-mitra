@@ -74,15 +74,19 @@ public class AjaxController {
             // Mengembalikan response kosong jika daftar programKerja kosong atau null
             return ResponseEntity.noContent().build();
         } else {
-            // Membuat daftar nama program dari daftar programKerja yang ditemukan
+            // Membuat daftar nama program dari daftar programKerja yang tidak dihapus
             List<String> daftarProgram = new ArrayList<>();
             for (ProgramKerja program : programKerja) {
-                daftarProgram.add(program.getJudul());
+                // Memeriksa apakah program tidak dihapus (isDeleted = false)
+                if (!program.isDeleted()) {
+                    daftarProgram.add(program.getJudul());
+                }
             }
             // Mengembalikan daftar nama program dalam response entity
             return ResponseEntity.ok(daftarProgram);
         }
     }
+    
     @GetMapping("/getAsnafByNamaProgram")
     public ResponseEntity<List<String>> getAsnafByProgram(@RequestParam("namaProgram") String namaProgram) {
         ProgramKerja programKerja = programKerjaService.findProgramKerjaByJudul(namaProgram);
