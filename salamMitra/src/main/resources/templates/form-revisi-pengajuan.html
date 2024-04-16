@@ -131,14 +131,11 @@
 												<tr th:each="kDana, iterationStatus : *{listKebutuhanDanaDTO}">
 													<td><span th:text="${iterationStatus.index + 1}"></span></td>
 													<td>
-														<select id="asnafDropdown" th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].asnaf}" class="form-control" style="width: 130px; font-size: small;">
-															<option value="">--Pilih Asnaf--</option>
-															<option value="Miskin">Miskin</option>
-															<option value="Mualaf">Mualaf</option>
-															<option value="Riqab">Riqab</option>
-															<option value="Gharimin">Gharimin</option>
-															<option value="Fi Sabilillah">Fi Sabilillah</option>
-															<option value="Ibnu Sabil">Ibnu Sabil</option>
+														<select th:field="*{listKebutuhanDanaDTO[__${iterationStatus.index}__].asnaf}" class="form-control" style="width: 130px; font-size: small;">
+															<option value="" disabled selected>--Pilih Asnaf--</option>
+															<th:block th:each="asnaf : ${listAsnafByNamaProgram}">
+																<option th:value="${asnaf}" th:text="${asnaf}"></option>
+															</th:block>
 														</select>
 													</td>				
 													<td>
@@ -412,6 +409,7 @@
 <script src="" th:src="@{js/jquery.steps.js}"></script>
 <script src="" th:src="@{js/main.js}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     function validatePhoneNumber(input) {
         // Hapus karakter selain angka
@@ -763,6 +761,7 @@
         }
     }
 </script>
+
 
 <!-- jquery -->
 <script src="assets/js/jquery-1.11.3.min.js"></script>
