@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import propensist.salamMitra.model.Pengguna;
@@ -12,5 +13,7 @@ import propensist.salamMitra.model.Pengguna;
 public interface PenggunaDb extends JpaRepository<Pengguna, UUID> {
     Pengguna findByUsername(String username);
     Pengguna findByEmail(String email);
-    List<Pengguna> findAllByIsDeletedFalse();
+    
+    @Query("SELECT p FROM Pengguna p WHERE p.isDeleted = false ORDER BY p.waktuDibuat DESC")
+    List<Pengguna> findAllByIsDeletedFalseOrderByWaktuDibuatDesc();
 }

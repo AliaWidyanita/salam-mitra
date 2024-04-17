@@ -20,9 +20,14 @@ public class Pengajuan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "waktuDibuat", nullable = false)
     @CreationTimestamp
     private Date waktuDibuat;
+
+    @Column(name = "status", nullable = false)
+    private String status;
+
 
     @Column(name = "namaProgram", nullable = false)
     private String namaProgram;
@@ -38,6 +43,15 @@ public class Pengajuan {
 
     @Column(name = "kontakPIC", nullable = false)
     private String kontakPIC;
+    
+    @Column(name = "bank", nullable = false)
+    private String bank;
+
+    @Column(name = "namaPemilikRekening", nullable = false)
+    private String namaPemilikRekening;
+
+    @Column(name = "nomorRekening", nullable = false)
+    private Long nomorRekening;
 
     @Column(name = "alamatKantor", nullable = false)
     private String alamatKantor;
@@ -74,8 +88,6 @@ public class Pengajuan {
     private byte[] dokumen;
     @Transient //For Document
     private String dokumenBase64; 
-
-
      
     @Column(name = "tanggalMulai", nullable = false)
     private Date tanggalMulai;
@@ -99,6 +111,20 @@ public class Pengajuan {
     private String alamatLengkap; 
 
     @Column(name = "username", nullable = false)
-    private String username; 
+    private String username;
+    
+    @Column(name = "komentar")
+    private String komentar; 
 
+    @Lob
+    @Column(name = "laporan")
+    private byte[] laporan;
+    @Transient //For KTP
+    private String laporanBase64; // Add this field to store Base64 encoded image
+
+    @Column(name = "reviewedBy")
+    private String reviewedBy; 
+
+    @OneToOne(mappedBy = "pengajuan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Pencairan pencairan;
 }
