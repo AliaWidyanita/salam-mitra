@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <title>Daftar Pengajuan Kerja Sama</title>
+    <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/datatables.css">
+
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: header}"></div>
+<div class="container">
+    <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
+        <div class="container" data-aos="fade-up">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-7">
+                    <th:block th:if="${role == 'mitra'}">
+                        <h3 class="text-center m-4">Daftar Ajuan Saya</h3>
+                    </th:block>
+                    <th:block th:if="${role == 'admin_PROGRAM' || role == 'program_service'}">
+                        <h3 class="text-center m-4">Daftar Pengajuan Kerja Sama</h3>
+                    </th:block> 
+                    <th:block th:if="${role == 'manajemen'}">
+                        <h3 class="text-center m-4">Daftar Pengajuan Kerja Sama yang Diteruskan</h3>
+                    </th:block>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            <th:block th:if="${role eq 'mitra'}">
+                                <a type="button" class="boxed-btn" href="/tambah-pengajuan">+ Buat Pengajuan</a>
+                            </th:block>
+                        </div>
+                    </div>
+                    <div style="text-align: left; margin-bottom: 10px;">
+                        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Cari pengajuan...">
+                    </div>
+                    <table class="table table-bordered" id="dataTable">
+                        <thead class="bg-dark text-white text-center">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nama Mitra</th>
+                            <th scope="col">Nama Program</th>
+                            <th scope="col">Kategori</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-center" th:if="${listPengajuan.isEmpty()}">
+                            <tr>
+                                <td colspan="7">Belum ada pengajuan yang dibuat.</td>
+                            </tr>
+                        </tbody>
+                        <tbody class="text-center" th:unless="${listPengajuan.isEmpty()}">
+                            <tr id="noResultRow" style="display: none;">
+                                <td colspan="7">Pengajuan tidak ditemukan.</td>
+                            </tr>
+                            <tr th:each="pengajuan, iterationStatus: ${listPengajuan}">
+                                <td class="text-center" th:text="${iterationStatus.count}"></td>
+                                <td th:text="${pengajuan.id}"></td>
+                                <td th:text="${pengajuan.namaMitra}"></td>
+                                <td th:text="${pengajuan.namaProgram}"></td>
+                                <td th:text="${pengajuan.kategori}"></td>
+                                <td th:if="${role eq 'mitra'}">
+                                    <span th:if="${pengajuan.status eq 'Diteruskan ke Manajemen'}" >Sedang Diperiksa</span>
+                                    <span th:if="${pengajuan.status eq 'Menunggu Pencairan Dana oleh Program Service'}" >Menunggu Pencairan Dana</span>
+                                    <span th:if="${pengajuan.status eq 'Menunggu Pencairan Dana oleh Admin Finance'}">Menunggu Pencairan Dana</span>
+                                    <span th:unless="${pengajuan.status eq 'Diteruskan ke Manajemen' or pengajuan.status eq 'Menunggu Pencairan Dana oleh Program Service' or pengajuan.status eq 'Menunggu Pencairan Dana oleh Admin Finance'}" th:text="${pengajuan.status}"></span>
+                                </td>
+                                <td th:unless="${role eq 'mitra'}" th:text="${pengajuan.status}" ></td>
+                                <td>
+                                    <a type="button" class="boxed-btn" style="width: 90px;" th:href="@{/pengajuan-detail-{id}(id=${pengajuan.id})}">Detail</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Sertakan referensi ke jQuery di sini -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- Sertakan referensi ke DataTables JavaScript di sini -->
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- Inisialisasi DataTables dengan konfigurasi tertentu -->
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "ordering": false, // Menonaktifkan sorting
+            "searching": true // Menonaktifkan fitur pencarian
+        });
+    });
+</script>
+
+<script>
+    // Menampilkan pesan sukses
+    document.getElementById("successMessage").style.display = "block";
+    // Mengatur waktu tampilan pesan sebelum menghilang
+    setTimeout(function() {
+        document.getElementById("successMessage").style.display = "none";
+    }, 2000); // 3000 milliseconds = 3 seconds
+</script>
+
+<script>
+    function searchTable() {
+        // Mendapatkan nilai input pencarian
+        var input, filter, table, tr, td, i, txtValue, noResultRow;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("dataTable");
+        tr = table.getElementsByTagName("tr");
+        noResultRow = document.getElementById("noResultRow"); // Baris pesan "pengajuan tidak ditemukan"
+
+        // Loop melalui semua baris tabel, sembunyikan yang tidak sesuai dengan query pencarian
+        var found = false; // Menandakan apakah ada hasil pencarian yang ditemukan
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            for (var j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        found = true; // Ada hasil pencarian yang ditemukan
+                        break;
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        // Tampilkan atau sembunyikan pesan "pengajuan tidak ditemukan" tergantung pada hasil pencarian
+        if (!found) {
+            noResultRow.style.display = ""; // Tampilkan pesan jika tidak ada hasil pencarian
+        } else {
+            noResultRow.style.display = "none"; // Sembunyikan pesan jika ada hasil pencarian
+        }
+    }
+</script>
+
+<!-- jquery -->
+<script src="assets/js/jquery-1.11.3.min.js"></script>
+<!-- bootstrap -->
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<!-- count down -->
+<script src="assets/js/jquery.countdown.js"></script>
+<!-- isotope -->
+<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+<!-- waypoints -->
+<script src="assets/js/waypoints.js"></script>
+<!-- owl carousel -->
+<script src="assets/js/owl.carousel.min.js"></script>
+<!-- magnific popup -->
+<script src="assets/js/jquery.magnific-popup.min.js"></script>
+<!-- mean menu -->
+<script src="assets/js/jquery.meanmenu.min.js"></script>
+<!-- sticker js -->
+<script src="assets/js/sticker.js"></script>
+<!-- main js -->
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>

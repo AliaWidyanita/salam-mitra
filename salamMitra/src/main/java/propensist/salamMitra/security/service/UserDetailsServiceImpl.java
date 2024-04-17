@@ -1,5 +1,6 @@
 package propensist.salamMitra.security.service;
 
+import propensist.salamMitra.model.Admin;
 import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.repository.PenggunaDb;
 
@@ -27,8 +28,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
         Set<GrantedAuthority> grantedAuthoritySet = new HashSet<>();
-        grantedAuthoritySet.add(new SimpleGrantedAuthority(user.getRole()));
-        System.out.println("Role " + user.getRole());
+
+        if (user instanceof Admin) {
+            Admin admin = (Admin) user;
+            grantedAuthoritySet.add(new SimpleGrantedAuthority("admin_" + admin.getAdminRole().name()));
+            System.out.println("Role " + "admin_" + admin.getAdminRole().name());
+        } else {
+            grantedAuthoritySet.add(new SimpleGrantedAuthority(user.getRole()));
+            System.out.println("Role " + user.getRole());
+        }
+        
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthoritySet);
     }
 }
