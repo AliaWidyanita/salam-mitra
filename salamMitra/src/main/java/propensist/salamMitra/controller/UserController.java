@@ -1,5 +1,8 @@
 package propensist.salamMitra.controller;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +22,12 @@ import jakarta.validation.Valid;
 import propensist.salamMitra.dto.MitraMapper;
 import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
 import propensist.salamMitra.model.Pengguna;
+import propensist.salamMitra.model.ProgramKerja;
+import propensist.salamMitra.service.DashboardService;
+import propensist.salamMitra.service.PengajuanService;
 import propensist.salamMitra.service.PenggunaService;
+import propensist.salamMitra.service.ProgramKerjaService;
+
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
@@ -30,10 +38,19 @@ public class UserController {
     private PenggunaService penggunaService;
 
     @Autowired
+    private ProgramKerjaService programKerjaService;
+
+    @Autowired
     private MitraMapper mitraMapper;
 
     @Autowired
     private BCryptPasswordEncoder encoder;
+
+    @Autowired
+    private DashboardService dashboardService;
+
+    @Autowired
+    private PengajuanService pengajuanService;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -44,12 +61,42 @@ public class UserController {
         model.addAttribute("role", role);
         model.addAttribute("user", user);
 
+        List<ProgramKerja> listProgram = programKerjaService.getTigaProgramKerja();
+        
+        // Memeriksa setiap program apakah memiliki foto
+        for(ProgramKerja program : listProgram) {
+            if (program.getFotoProgram() != null) {
+                programKerjaService.handleFotoProgram(program);
+            }
+        }
+
+        model.addAttribute("listProgram", listProgram);
+
         if (role.equals("ROLE_ANONYMOUS") || role.equals("mitra")) {
             return "landing-page";
         } else {
+                // Mendapatkan tanggal saat ini
+            LocalDate currentDate = LocalDate.now();
+
+            // Mendapatkan data total pengajuan per bulan dari service dashboard
+            Map<String, Integer> totalPengajuanPerMonth = dashboardService.getTotalPengajuanForMonth(currentDate);
+
+            // Menyimpan data dalam model untuk ditampilkan pada halaman dashboard
+            model.addAttribute("totalPengajuanPerMonth", totalPengajuanPerMonth);
+
+            // Mendapatkan jumlah program kerja per kategori dari service dashboard
+            Map<String, Integer> jumlahProgramKerjaPerKategori = dashboardService.getJumlahProgramKerjaPerKategori();
+
+            // Menyimpan data dalam model untuk ditampilkan pada halaman dashboard
+            model.addAttribute("jumlahProgramKerjaPerKategori", jumlahProgramKerjaPerKategori);
+
+            Map<String, Long> countPengajuanByStatus = pengajuanService.jumlahPengajuanByStatus();
+            model.addAttribute("jumlahPengajuanByStatus", countPengajuanByStatus);
+
             return "dashboard";
         }
     }
+
 
     // @GetMapping("/register")
     // public String registerMitra(Model model) {
@@ -111,7 +158,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/ubah-sandi/{id}")
+    @GetMapping("/ubah-sandi-{id}")
     public String ubahSandi(@PathVariable ("id") UUID id, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().iterator().next().getAuthority();

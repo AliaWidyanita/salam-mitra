@@ -1667,6 +1667,7 @@ p.excerpt {
 
 .single-latest-news {
   margin-bottom: 30px;
+  min-width: 250px;
 }
 
 .single-artcile-bg {

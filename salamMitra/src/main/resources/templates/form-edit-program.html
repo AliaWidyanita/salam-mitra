@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <style>
+        /* CSS untuk menambahkan ketinggian pada input file */
+        input[type="file"] {
+            height: 38px;
+        }
+        /* CSS untuk scroll pada checkbox provinsi dan kabupaten/kota */
+        .scrollable-checkbox {
+            max-height: 200px;
+            overflow-y: auto; 
+            border-radius: 5px;
+            padding: 10px;
+            border: 1.2px solid rgba(218,223,227,255);
+        }
+        /* CSS untuk menambahkan jarak di atas label field */
+        .form-group {
+            margin-top: 5px;
+        }
+        /* CSS untuk gambar program */
+        .program-image {
+            max-width: 200px;
+            max-height: 200px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: header}"></div>
+    <div class="container">
+        <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
+            <div class="container" data-aos="fade-up">
+                <div class="row d-flex justify-content-center">
+                    <h2 class="text-center m-4">Edit Program</h2>
+                    <div class="container">
+                        <form id="formEditProgram" class="row g-3" th:action="@{'/edit-program-' + ${program.id}}" th:object="${program}" method="POST" enctype="multipart/form-data">
+                            <div id="alertForm" class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+                            <input type="hidden" name="id" th:value="${program.id}" />
+ 
+                            <div class="col-md-6 form-group">
+                                <label for="judul" style="font-weight: bold;">Judul Program <sup>*</sup></label>
+                                <input type="text" name="judul" id="judul" placeholder="Judul program" class="form-control" th:value="${program.judul}" oninput="return checkTitleLength()" required>
+                                <small id="judulLengthMessage" style="color: red;"></small>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="kategoriProgram" style="font-weight: bold;">Kategori <sup>*</sup></label>
+                                <input name="kategoriProgram" id="kategoriProgram" th:value="${program.kategoriProgram}" class="form-control" readonly required>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="kategoriAsnaf" style="font-weight: bold;">Kategori Asnaf <sup>*</sup></label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div th:each="kategori, iterStat : ${daftarKategoriAsnaf}" th:if="${iterStat.index % 2 == 0}">
+                                            <input type="checkbox" th:id="${kategori}" th:name="kategoriAsnaf" th:value="${kategori}" th:checked="${program.kategoriAsnaf != null && program.kategoriAsnaf.contains(kategori)}"/>
+                                            <label th:for="${kategori}" th:text="${kategori}"></label><br>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div th:each="kategori, iterStat : ${daftarKategoriAsnaf}" th:if="${iterStat.index % 2 != 0}">
+                                            <input type="checkbox" th:id="${kategori}" th:name="kategoriAsnaf" th:value="${kategori}" th:checked="${program.kategoriAsnaf != null && program.kategoriAsnaf.contains(kategori)}"/>
+                                            <label th:for="${kategori}" th:text="${kategori}"></label><br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="provinsi" style="font-weight: bold;">Provinsi <sup>*</sup></label>
+                                <input type="hidden" th:each="provinsi : ${program.provinsi}" name="provinsi" th:value="${provinsi}" />
+ 
+                                <div class="row">
+                                    <div class="column">
+                                        <ul>
+                                            <li th:each="provinsi,iterStat : ${program.provinsi}" th:if="${iterStat.index % 2 == 0}" th:text="${provinsi}"></li>
+                                        </ul>
+                                    </div>
+                                    <div class="column">
+                                        <ul>
+                                            <li th:each="provinsi,iterStat : ${program.provinsi}" th:if="${iterStat.index % 2 != 0}" th:text="${provinsi}"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group" th:if="${not #lists.isEmpty(program.kabupatenKota)}">
+                                <label for="kabupatenKota" style="font-weight: bold;">Kabupaten/Kota</label>
+                                <input type="hidden" th:each="kabupatenKota : ${program.kabupatenKota}" name="kabupatenKota" th:value="${kabupatenKota}" />
+                                <div class="row">                
+                                    <div class="column">
+                                        <ul>
+                                            <li th:each="kabupatenKota,iterStat : ${program.kabupatenKota}" th:if="${iterStat.index % 2 == 0}" th:text="${kabupatenKota}"></li>
+                                        </ul>
+                                    </div>
+                                    <div class="column">
+                                        <ul>
+                                            <li th:each="kabupatenKota,iterStat : ${program.kabupatenKota}" th:if="${iterStat.index % 2 != 0}" th:text="${kabupatenKota}"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>                                                     
+                            <div class="col-md-6 form-group">
+                                <label for="deskripsi" style="font-weight: bold;">Deskripsi Program <sup>*</sup></label>
+                                <textarea type="text" name="deskripsi" id="deskripsi" placeholder="Deskripsi program" class="form-control" required th:text="${program.deskripsi}"></textarea>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="fotoProgram" style="font-weight: bold;">Ganti Foto Program</label>
+                                <input type="file" name="foto" id="fotoProgram" class="form-control-file form-control" accept=".jpg, .png, .jpeg">
+                                <small id="fotoError" style="color: red;"></small>
+                                <br>
+                                <div th:if="${program.fotoProgram != null}" >
+                                    <img th:src="'data:image/jpeg;base64,' + ${program.imageBase64}" alt="Program Image" class="program-image" />
+                                    <small class="form-text text-muted">Foto program saat ini</small>
+                                </div>
+                            </div>                            
+                            <div class="text-center m-4">
+                                <a class="btn btn-danger" style="background-color: #e74454" href="/program">Batal</a>
+                                <button class="btn btn-primary" style="background-color: #6793F6; color: #fff" type="submit">Simpan</button>                              
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Menangkap semua checkbox dengan nama "kategoriAsnaf"
+            var checkboxes = document.querySelectorAll('input[name="kategoriAsnaf"]');
+    
+            // Membuat event listener untuk setiap checkbox
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    validateKategoriAsnaf();
+                });
+            });
+    
+            // Membuat event listener untuk input judul
+            var titleInput = document.getElementById("judul");
+            titleInput.addEventListener('input', function() {
+                checkTitleLength();
+            });
+        });
+    
+        function validateKategoriAsnaf() {
+            var checkboxes = document.querySelectorAll('input[name="kategoriAsnaf"]:checked');
+            var errorDiv = document.getElementById('kategoriAsnafError');
+    
+            if (checkboxes.length === 0) {
+                // Tampilkan pesan kesalahan jika tidak ada checkbox terpilih
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.id = 'kategoriAsnafError';
+                    errorDiv.className = 'alert alert-danger mt-3';
+                    errorDiv.textContent = 'Pilih setidaknya satu kategori asnaf.';
+                    var formElement = document.getElementById('formEditProgram');
+                    formElement.insertBefore(errorDiv, formElement.firstChild);
+                    removeAlerts();
+                }
+            } else {
+                if (errorDiv) {
+                    errorDiv.remove();
+                }
+            }
+        }
+    
+        // Validasi panjang judul program
+        function checkTitleLength() {
+            var maxLength = 50;
+            var titleInput = document.getElementById("judul");
+            var titleLength = titleInput.value.length;
+            var messageElement = document.getElementById("judulLengthMessage");
+    
+            if (titleLength > maxLength) {
+                messageElement.textContent = "Judul program tidak boleh lebih dari 50 karakter.";
+            } else {
+                messageElement.textContent = "";
+                // Hapus pesan kesalahan jika judul program tidak melebihi 50 karakter
+                var alertDiv = document.getElementById('judulLengthError');
+                if (alertDiv) {
+                    alertDiv.remove();
+                }
+            }
+        }
+
+        // Menambahkan event listener untuk form submission
+        document.getElementById('formEditProgram').addEventListener('submit', function(event) {
+            // Validasi ukuran file gambar
+            var fileInput = document.getElementById('fotoProgram');
+            if (fileInput.files.length > 0) {
+                var fileSize = fileInput.files[0].size;
+                if (fileSize > 5 * 1024 * 1024) {
+                    document.getElementById('fotoError').textContent = 'Ukuran file gambar tidak boleh lebih dari 5MB';
+                    document.getElementById('fotoError').style.display = 'block'; 
+                    event.preventDefault();
+                    return;
+                } else {
+                    document.getElementById('fotoError').style.display = 'none';
+                }
+            }
+
+            // Validasi panjang judul program
+            var titleInput = document.getElementById("judul");
+            var titleLength = titleInput.value.length;
+
+            if (titleLength > 50) {
+                // Tampilkan pesan kesalahan jika judul melebihi 50 karakter
+                var errorDiv = document.createElement('div');
+                errorDiv.id = 'judulLengthError';
+                errorDiv.className = 'alert alert-danger mt-3';
+                errorDiv.textContent = 'Judul program tidak boleh lebih dari 50 karakter';
+                var formElement = document.getElementById('formEditProgram');
+                formElement.insertBefore(errorDiv, formElement.firstChild);
+                removeAlerts();
+
+                event.preventDefault(); // Menghentikan pengiriman formulir
+                window.scrollTo(0, 0);
+            }
+        });
+
+    
+        // Fungsi untuk menghapus pesan kesalahan setelah 3000 ms
+        function removeAlerts() {
+            setTimeout(function () {
+                var alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function(alert) {
+                    alert.remove();
+                });
+            }, 3000);
+        }
+    </script>
+    
+ 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+ 
+    <!-- jquery -->
+    <script src="assets/js/jquery-1.11.3.min.js"></script>
+    <!-- bootstrap -->
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <!-- count down -->
+    <script src="assets/js/jquery.countdown.js"></script>
+    <!-- isotope -->
+    <script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+    <!-- waypoints -->
+    <script src="assets/js/waypoints.js"></script>
+    <!-- owl carousel -->
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- magnific popup -->
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- mean menu -->
+    <script src="assets/js/jquery.meanmenu.min.js"></script>
+    <!-- sticker js -->
+    <script src="assets/js/sticker.js"></script>
+    <!-- main js -->
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
