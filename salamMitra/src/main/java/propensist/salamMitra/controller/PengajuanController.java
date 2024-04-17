@@ -548,6 +548,30 @@ public class PengajuanController {
 
             Long nominalDana = 0L;
             for (UpdateKebutuhanDanaDTO kebutuhanDanaDTO : updateListPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO()) {
+                // if (kebutuhanDanaDTO.getJumlahPenerima() == null) {
+                //     // If jumlahPenerima is empty, add an error message to flash attributes and redirect
+                //     redirectAttributes.addFlashAttribute("error", "Jumlah Penerima tidak boleh kosong!");
+                //     return "redirect:/submit-revisi-" + id;
+                // }
+                // // Checking if nominalKebutuhanDana is empty
+                // if (kebutuhanDanaDTO.getJumlahDana() == null) {
+                //     // If nominalKebutuhanDana is empty, add an error message to flash attributes and redirect
+                //     redirectAttributes.addFlashAttribute("error", "Nominal Kebutuhan Dana tidak boleh kosong!");
+                //     return "redirect:/submit-revisi-" + id;
+                // }
+    
+                // if (kebutuhanDanaDTO.getJumlahPenerima() <= 0) {
+                //     // If jumlahPenerima is empty, add an error message to flash attributes and redirect
+                //     redirectAttributes.addFlashAttribute("error", "Jumlah Penerima tidak boleh kurang dari 1!");
+                //     return "redirect:/submit-revisi-" + id;
+                // }
+                // // Checking if nominalKebutuhanDana is empty
+                // if (kebutuhanDanaDTO.getJumlahDana() <= 0) {
+                //     // If nominalKebutuhanDana is empty, add an error message to flash attributes and redirect
+                //     redirectAttributes.addFlashAttribute("error", "Nominal Kebutuhan Dana tidak boleh kurang dari 1!");
+                //     return "redirect:/submit-revisi-" + id;
+                // }
+
                 kebutuhanDanaDTO.setPengajuan(pengajuan);
                 var kebutuhanDana = kebutuhanDanaMapper.updateKebutuhanDanaDTOToKebutuhanDana(kebutuhanDanaDTO);
                 nominalDana += kebutuhanDana.getJumlahDana();
