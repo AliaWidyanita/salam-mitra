@@ -12,13 +12,16 @@
             height: 100%;
             padding: 20px;
             margin-bottom: 20px;
+            align-items: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
 
         .shape-text {
             border-radius: 10px;
-            padding: 10px;
             background-color: rgba(253, 126, 20, 0.5);
             width: fit-content;
+            height: fit-content;
+            padding: 2%;
             margin: 0 auto;
         }
     </style>
@@ -31,11 +34,11 @@
     <div class="container">
         <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%;">
             <div class="container" data-aos="fade-up">
-                <div class="row d-flex justify-content-center">
+                <div class="row justify-content-center">
                     <div class="col-md-12">
-                        <div class="d-flex justify-content-center mb-2 mt-3">
-                            <h3 class="text-center" style="text-transform: uppercase;">Dashboard <span
-                                    th:text="${user.username}"></span></h3>
+                        <div class="justify-content-center mb-2 mt-3">
+                            <h2 class="text-center">Dashboard <span
+                                    th:text="${user.username}"></span></h2>
                         </div>
                         <br>
 
@@ -47,18 +50,18 @@
                                 <h1 class="text-center" th:each="entry : ${totalPengajuanPerMonth}"
                                     th:text="${entry.value}"></h1>
                             </div>
-                            <div th:if="${#lists.isEmpty(totalPengajuanPerMonth)}">
+                            <div th:unless="${#lists.isEmpty(totalPengajuanPerMonth)}">
                                 <p class="text-center">Tidak ada data pengajuan untuk bulan ini.</p>
                             </div>
 
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-md-12 mb-3 mx-auto">
+                            <div class="col-md-15 mb-5">
                                 <div class="card">
                                     <div class="card-body">
                                         <h5 class="card-title">Jumlah Pengajuan tiap Status</h5>
-                                        <canvas id="pengajuanChart" width="925" height="400"></canvas>
+                                        <canvas id="pengajuanChart" width="850" height="400"></canvas>
                                         <div th:if="${#lists.isEmpty(jumlahPengajuanByStatus)}">
                                             <!-- jika belum ada data -->
                                             <p>Belum ada pengajuan.</p>
@@ -78,7 +81,7 @@
                                             <!-- Jika belum ada data -->
                                             <p>Belum ada data untuk ditampilkan.</p>
                                         </div>
-                                        <a href="/">See Details</a>
+                                        <a href="/program">See Details</a>
                                     </div>
                                 </div>
                             </div>
