@@ -42,6 +42,7 @@
 				<h2 class="text-center m-4">Revisi Pengajuan Kerja Sama</h2>
 				<div class="container">
                     <form th:action="@{/submit-revisi-{id}(id=${pengajuan.id})}" th:object="${updateListPengajuanKebutuhanDanaDTO}" method="POST" enctype="multipart/form-data">
+						<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
 						<div id="form-total">
 
 							<!-- SECTION 1 -->
@@ -97,7 +98,7 @@
 										<br>
 										<label for="dokumen">Upload KTP PIC Baru</label>
 										<input type="file" name="ktpPIC" accept=".jpg, .png, .jpeg" class="form-control-file form-control">
-										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
+										<small class="form-text text-muted">Ukuran file maksimal: 25MB</small>
 									</div>
 									<br>
 								</div>
@@ -260,7 +261,7 @@
 										<br>
 										<label for="dokumen">Upload Rancangan Anggaran Baru</label>
 										<input type="file" name="rab" accept=".pdf" class="form-control-file form-control">
-										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
+										<small class="form-text text-muted">Ukuran file maksimal: 25MB</small>
 									</div>
 									<br>
 									<div class="form-holder form-holder-2">
@@ -281,7 +282,7 @@
 										<br>
 										<label for="dokumen">Upload Dokumen Perizinan Baru</label>
 										<input type="file" name="dokumen" accept=".pdf" class="form-control-file form-control">
-										<small class="form-text text-muted">Ukuran file minimum: 5MB</small>
+										<small class="form-text text-muted">Ukuran file maksimal: 25MB</small>
 									</div>
 								</div>                           
 							</section>
@@ -396,7 +397,7 @@
 						</div>
 						<div class="text-center mb-3">
 							<button onclick="window.location.href='/pengajuan'" class="btn" style="background-color: #dc3545; width: 110px;">Batal</button>
-                            <button class="btn" type="submit" style="width: 110px;">Simpan</button>
+                            <button id="submitButton" type="submit" style="width: 110px;">Simpan</button>
 						</div>
 					</form>
                 </div>
@@ -750,6 +751,97 @@
 	});
 </script>
 <script>
+	document.addEventListener("DOMContentLoaded", function() {
+		var maxFileSizeMB = 25; // Ukuran maksimal file dalam MB
+	
+		var fileInputs = document.querySelectorAll('input[type="file"]');
+		fileInputs.forEach(function(input) {
+			input.addEventListener('change', function() {
+				var file = this.files[0];
+				var fileSizeMB = file.size / (1024 * 1024); // Konversi ukuran file ke MB
+	
+				if (fileSizeMB > maxFileSizeMB) {
+					alert("Ukuran file tidak boleh lebih besar dari " + maxFileSizeMB + "MB");
+					this.value = ''; // Kosongkan nilai input file
+				}
+			});
+		});
+	});
+</script>
+<script>
+	$(document).ready(function () {
+		// Function to validate input fields
+		function validateInputs() {
+			var isValid = true;
+
+			// Validate Jumlah Penerima
+			$("input[name^='listKebutuhanDanaDTO'][name$='jumlahPenerima']").each(function () {
+				var jumlahPenerima = parseInt($(this).val());
+				if (isNaN(jumlahPenerima) || jumlahPenerima < 1) {
+					$(this).addClass("is-invalid");
+					isValid = false;
+				} else {
+					$(this).removeClass("is-invalid");
+				}
+			});
+
+			// Validate Jumlah Dana
+			$("input[name^='listKebutuhanDanaDTO'][name$='jumlahDana']").each(function () {
+				var jumlahDana = parseFloat($(this).val());
+				if (isNaN(jumlahDana) || jumlahDana < 1) {
+					$(this).addClass("is-invalid");
+					isValid = false;
+				} else {
+					$(this).removeClass("is-invalid");
+				}
+			});
+
+			// Show alert message if there are errors
+			if (!isValid) {
+				showAlert("Jumlah Penerima dan Jumlah Dana harus lebih dari 0.");
+				$("#submitButton").prop("disabled", true); // Disable submit button
+			} else {
+				hideAlert();
+				$("#submitButton").prop("disabled", false); // Enable submit button
+			}
+
+			return isValid;
+		}
+
+		// Function to show alert message under the table
+		function showAlert(message) {
+			// Create a new row for the alert message
+			var newRow = '<tr class="alert-row"><td colspan="7"><div class="alert alert-danger" role="alert">' + message + '</div></td></tr>';
+
+			// Remove any existing alert rows
+			$(".alert-row").remove();
+
+			// Append the new row after the table's last row
+			$("#dataTable tbody").append(newRow);
+		}
+
+		// Function to hide alert message
+		function hideAlert() {
+			$(".alert-row").remove();
+		}
+
+		// Validate inputs when Jumlah Penerima or Jumlah Dana fields change
+		$(document).on("input", "input[name^='listKebutuhanDanaDTO'][name$='jumlahPenerima'], input[name^='listKebutuhanDanaDTO'][name$='jumlahDana']", function () {
+			validateInputs();
+		});
+
+		// Validate inputs when the form is submitted
+		$("#pengajuanForm").submit(function (event) {
+			if (!validateInputs()) {
+				event.preventDefault(); // Prevent form submission if inputs are not valid
+			}
+		});
+
+		// Initially disable submit button
+		$("#submitButton").prop("disabled", true);
+	});
+</script>
+<script>
     function toggleFullScreen(containerId) {
         var container = document.getElementById(containerId);
         if (!document.fullscreenElement) {
@@ -761,7 +853,6 @@
         }
     }
 </script>
-
 
 <!-- jquery -->
 <script src="assets/js/jquery-1.11.3.min.js"></script>
