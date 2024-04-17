@@ -18,7 +18,7 @@
                             <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
                         </div>
                         <div class="col-sm-6 text-right">
-                            <a type="button" class="btn btn-primary" href="/pengguna/tambah-admin">+ Tambah Admin</a>
+                            <a type="button" class="btn btn-primary" href="/pengguna-tambah-admin">+ Tambah Admin</a>
                         </div>
                     </div>
                     <table class="table table-bordered" id="dataTable">
@@ -44,7 +44,7 @@
                                 <span th:if="${pengguna.getRole() == 'manajemen'}">Manajemen</span>
                             </td>
                             <td>
-                                <a type="button" class="btn btn-danger" th:href="@{/pengguna/hapus/{id}(id=${pengguna.id})}">Hapus</a>
+                                <a type="button" class="btn btn-danger" th:href="@{/pengguna-hapus-{id}(id=${pengguna.id})}">Hapus</a>
                             </td>
                         </tr>
                         </tbody>

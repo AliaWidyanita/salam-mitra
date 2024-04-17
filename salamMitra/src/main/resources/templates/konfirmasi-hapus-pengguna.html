@@ -58,7 +58,7 @@
         <div class="card-body">
             <h2>Konfirmasi penghapusan pengguna</h2>
             <p>Apakah Anda yakin ingin menghapus pengguna: <span th:text="${pengguna.username}"></span>?</p>
-            <form th:action="@{/pengguna/hapus/{id}(id=${pengguna.id})}" method="post">
+            <form th:action="@{/pengguna-hapus-{id}(id=${pengguna.id})}" method="post">
                 <a href="/pengguna" class="btn btn-secondary">Batal</a>
                 <button type="submit" class="btn btn-danger">Hapus</button>
             </form>

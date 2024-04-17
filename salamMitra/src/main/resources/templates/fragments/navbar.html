@@ -21,16 +21,17 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>   
+    
 </head>
 <body>
 <div th:fragment="header">
 <!-- PreLoader-->
-<!-- <div class="loader">
+<div class="loader">
     <div class="loader-inner">
         <div class="circle"></div>
     </div>
-</div> -->
+</div>
 <!--PreLoader Ends -->
 
 <!-- header -->
@@ -57,7 +58,7 @@
                                 </a>
                             </li>
                             <li th:if="${role == 'ROLE_ANONYMOUS' || role == 'mitra'}">
-                                <a th:href="@{/}">
+                                <a th:href="@{/program}">
                                     Program
                                 </a>
                             </li>
@@ -67,19 +68,19 @@
                                 </a>
                             </li>
                     
-                            <li th:if="${role == 'admin' || role == 'manajemen' || role == 'program_service'}" 
+                            <li th:if="${role == 'admin_PROGRAM' || role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}" 
                                 class="current-list-item">
                                 <a th:href="@{/}">
                                     Dashboard
                                 </a>
                             </li>
-                            <li th:if="${role == 'admin' || role == 'manajemen' || role == 'program_service'}">
-                                <a th:href="@{/}">
+                            <li th:if="${role == 'admin_PROGRAM' || role == 'manajemen' || role == 'program_service'}">
+                                <a th:href="@{/program}">
                                     Program
                                 </a>
                             </li>
-                            <li th:if="${role == 'admin' || role == 'manajemen' || role == 'program_service'}">
-                                <a th:href="@{/}">
+                            <li th:if="${role == 'admin_PROGRAM' || role == 'manajemen' || role == 'program_service'}">
+                                <a th:href="@{/pengajuan}">
                                     Ajuan Kerja Sama
                                 </a>
                             </li>
@@ -88,8 +89,8 @@
                                     Daftar Pengguna
                                 </a>
                             </li>
-                            <li th:if="${role == 'admin' || role == 'manajemen' || role == 'program_service'}">
-                                <a th:href="@{/}">
+                            <li th:if="${role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}">
+                                <a th:href="@{/pencairan}">
                                     Pencairan
                                 </a>
                             </li>
@@ -109,7 +110,7 @@
                                                         <a>Halo, <span th:text="${user.username}"></span></a>
                                                     </li>
                                                     <li style="margin-bottom: 10px;">
-                                                        <a th:href="@{/ubah-sandi/{id}(id=${user.id})}">Ubah Sandi</a>
+                                                        <a th:href="@{/ubah-sandi-{id}(id=${user.id})}">Ubah Sandi</a>
                                                     </li>
                                                     <li style="margin-bottom: 10px;">
                                                         <a th:href="@{/logout}" class="boxed-btn">Logout</a>
