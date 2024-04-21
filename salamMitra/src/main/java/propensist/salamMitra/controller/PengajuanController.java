@@ -99,6 +99,7 @@ public class PengajuanController {
                                @RequestParam("ktpPIC") MultipartFile ktpPIC,
                                @RequestParam("rab") MultipartFile rab,
                                @RequestParam("dokumen") MultipartFile dokumen,
+                               @RequestParam("bukuTabungan") MultipartFile bukuTabungan,
                                RedirectAttributes redirectAttributes,
                                Model model) throws IOException {
 
@@ -114,11 +115,14 @@ public class PengajuanController {
         byte[] ktpPICBytes = ktpPIC.getBytes();
         byte[] rabBytes = rab.getBytes();
         byte[] dokumenBytes = dokumen.getBytes();
+        byte[] bukuTabunganBytes = bukuTabungan.getBytes();
+
 
         var pengajuan =  pengajuanMapper.createPengajuanRequestDTOToPengajuan(pengajuanDTO);                  
         pengajuan.setKtpPIC(ktpPICBytes);
         pengajuan.setRab(rabBytes);
         pengajuan.setDokumen(dokumenBytes);
+        pengajuan.setBukuTabungan(bukuTabunganBytes);
         pengajuan.setStatus("Diajukan");
 
         Long id = pengajuan.getId();
@@ -241,6 +245,16 @@ public class PengajuanController {
                 pengajuanService.handleKTP(pengajuan);
                 pengajuanService.handleRAB(pengajuan);
                 pengajuanService.handleDOC(pengajuan); 
+                pengajuanService.handleBukuTabungan(pengajuan);
+
+                String nominalKebutuhanDana = pengajuanService.formatRupiah(pengajuan.getNominalKebutuhanDana());
+                List<KebutuhanDana> listKebutuhanDana = pengajuan.getListKebutuhanDana();
+                List<String> listJumlahDana = new ArrayList<>();
+                for (KebutuhanDana kebutuhanDana : listKebutuhanDana) {
+                    Long jumlahDana = kebutuhanDana.getJumlahDana();
+                    String danaString = pengajuanService.formatRupiah(jumlahDana);
+                    listJumlahDana.add(danaString);
+                }
                 
                 if (pengajuan.getStatus().equalsIgnoreCase("Menunggu Laporan")){
                     byte[] buktiPencairanMitraBytes = pengajuan.getPencairan().getBuktiPencairanMitra();
@@ -262,6 +276,10 @@ public class PengajuanController {
                 
                 model.addAttribute("pengajuan", pengajuan);
                 model.addAttribute("status", pengajuan.getStatus());
+                model.addAttribute("nominalString", nominalKebutuhanDana);
+                model.addAttribute("listJumlahDana", listJumlahDana);
+
+
                 return "detail-pengajuan";
             } 
             else {
