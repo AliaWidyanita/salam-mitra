@@ -2,6 +2,10 @@ package propensist.salamMitra.controller;
 
 import java.io.IOException;
 import java.util.List;
+
+import java.util.Collections;
+
+import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,7 +55,8 @@ public class ProgramController {
         model.addAttribute("user", user);
         
         List<ProgramKerja> listProgram = programKerjaService.getAllProgramAktif();
-        
+        Collections.reverse(listProgram);
+
         // Memeriksa setiap program apakah memiliki foto
         for(ProgramKerja program : listProgram) {
             if (program.getFotoProgram() != null) {
@@ -171,12 +176,6 @@ public class ProgramController {
         if (programKerjaDTO.getJudul() != null && programKerjaDTO.getJudul().length() > 50) {
             redirectAttributes.addFlashAttribute("error", "Judul program tidak boleh lebih dari 50 karakter!");
             return "redirect:/edit-program-" + programKerjaDTO.getId();
-        }
-
-        if (programKerjaDTO.getKategoriAsnaf() == null) {
-            redirectAttributes.addFlashAttribute("error", "Kategori Asnaf tidak boleh kosong!");
-            return "redirect:/edit-program-" + programKerjaDTO.getId();
-
         }
 
         if (programKerjaDTO.getProvinsi() == null) {

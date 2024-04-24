@@ -127,4 +127,11 @@ public class Pengajuan {
 
     @OneToOne(mappedBy = "pengajuan", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Pencairan pencairan;
+
+    
+    @Lob
+    @Column(name = "bukuTabungan", nullable = false)
+    private byte[] bukuTabungan;
+    @Transient 
+    private String bukuTabunganBase64; 
 }

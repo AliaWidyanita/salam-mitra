@@ -99,6 +99,7 @@ public class PengajuanController {
                                @RequestParam("ktpPIC") MultipartFile ktpPIC,
                                @RequestParam("rab") MultipartFile rab,
                                @RequestParam("dokumen") MultipartFile dokumen,
+                               @RequestParam("bukuTabungan") MultipartFile bukuTabungan,
                                RedirectAttributes redirectAttributes,
                                Model model) throws IOException {
 
@@ -114,11 +115,14 @@ public class PengajuanController {
         byte[] ktpPICBytes = ktpPIC.getBytes();
         byte[] rabBytes = rab.getBytes();
         byte[] dokumenBytes = dokumen.getBytes();
+        byte[] bukuTabunganBytes = bukuTabungan.getBytes();
+
 
         var pengajuan =  pengajuanMapper.createPengajuanRequestDTOToPengajuan(pengajuanDTO);                  
         pengajuan.setKtpPIC(ktpPICBytes);
         pengajuan.setRab(rabBytes);
         pengajuan.setDokumen(dokumenBytes);
+        pengajuan.setBukuTabungan(bukuTabunganBytes);
         pengajuan.setStatus("Diajukan");
 
         Long id = pengajuan.getId();
@@ -131,6 +135,33 @@ public class PengajuanController {
         id = pengajuan.getId();
 
         for(CreateKebutuhanDanaDTO kebutuhanDanaDTO : listPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO()){
+            if (kebutuhanDanaDTO.getJumlahPenerima() == null) {
+                // If jumlahPenerima is empty, add an error message to flash attributes and redirect
+                redirectAttributes.addFlashAttribute("error", "Jumlah Penerima tidak boleh kosong!");
+                return "redirect:/tambah-pengajuan";
+            }
+            
+            // Checking if nominalKebutuhanDana is empty
+            if (kebutuhanDanaDTO.getJumlahDana() == null) {
+                // If nominalKebutuhanDana is empty, add an error message to flash attributes and redirect
+                redirectAttributes.addFlashAttribute("error", "Nominal Kebutuhan Dana tidak boleh kosong!");
+                return "redirect:/tambah-pengajuan";
+            }
+
+            if (kebutuhanDanaDTO.getJumlahPenerima() <= 0) {
+                // If jumlahPenerima is empty, add an error message to flash attributes and redirect
+                redirectAttributes.addFlashAttribute("error", "Jumlah Penerima tidak boleh kurang dari 1!");
+                return "redirect:/tambah-pengajuan";
+            }
+
+            // Checking if nominalKebutuhanDana is empty
+            if (kebutuhanDanaDTO.getJumlahDana() <= 0) {
+                // If nominalKebutuhanDana is empty, add an error message to flash attributes and redirect
+                redirectAttributes.addFlashAttribute("error", "Nominal Kebutuhan Dana tidak boleh kurang dari 1!");
+                return "redirect:/tambah-pengajuan";
+            }
+            
+            
             kebutuhanDanaDTO.setPengajuan(pengajuan);
             var kebutuhanDana = kebutuhanDanaMapper.createKebutuhanDanaDTOToKebutuhanDana(kebutuhanDanaDTO);
             nominalDana += kebutuhanDana.getJumlahDana();
@@ -214,6 +245,16 @@ public class PengajuanController {
                 pengajuanService.handleKTP(pengajuan);
                 pengajuanService.handleRAB(pengajuan);
                 pengajuanService.handleDOC(pengajuan); 
+                pengajuanService.handleBukuTabungan(pengajuan);
+
+                String nominalKebutuhanDana = pengajuanService.formatRupiah(pengajuan.getNominalKebutuhanDana());
+                List<KebutuhanDana> listKebutuhanDana = pengajuan.getListKebutuhanDana();
+                List<String> listJumlahDana = new ArrayList<>();
+                for (KebutuhanDana kebutuhanDana : listKebutuhanDana) {
+                    Long jumlahDana = kebutuhanDana.getJumlahDana();
+                    String danaString = pengajuanService.formatRupiah(jumlahDana);
+                    listJumlahDana.add(danaString);
+                }
                 
                 if (pengajuan.getStatus().equalsIgnoreCase("Menunggu Laporan")){
                     byte[] buktiPencairanMitraBytes = pengajuan.getPencairan().getBuktiPencairanMitra();
@@ -235,6 +276,10 @@ public class PengajuanController {
                 
                 model.addAttribute("pengajuan", pengajuan);
                 model.addAttribute("status", pengajuan.getStatus());
+                model.addAttribute("nominalString", nominalKebutuhanDana);
+                model.addAttribute("listJumlahDana", listJumlahDana);
+
+
                 return "detail-pengajuan";
             } 
             else {
@@ -436,6 +481,10 @@ public class PengajuanController {
             var updateListPengajuanKebutuhanDanaDTO = new UpdateListPengajuanKebutuhanDanaDTO();
             var pengajuanDTO = pengajuanMapper.pengajuanToUpdatePengajuanRequestDTO(pengajuan);
             pengajuanDTO.setId(pengajuan.getId());
+
+            String namaProgram = pengajuan.getNamaProgram();
+            ProgramKerja program = programKerjaService.findProgramKerjaByJudul(namaProgram);
+            List<String> listAsnafByNamaProgram = program.getKategoriAsnaf();
             
             // Set previously uploaded files for download
             pengajuanService.handleKTP(pengajuan);
@@ -444,6 +493,8 @@ public class PengajuanController {
 
             // Add pengajuan object to the model
             model.addAttribute("pengajuan", pengajuan);
+            model.addAttribute("listAsnafByNamaProgram", listAsnafByNamaProgram);
+
 
             var kebutuhanDanaDTOList = new ArrayList<UpdateKebutuhanDanaDTO>();
             for (KebutuhanDana kebutuhanDana : pengajuan.getListKebutuhanDana()) {
@@ -515,6 +566,30 @@ public class PengajuanController {
 
             Long nominalDana = 0L;
             for (UpdateKebutuhanDanaDTO kebutuhanDanaDTO : updateListPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO()) {
+                // if (kebutuhanDanaDTO.getJumlahPenerima() == null) {
+                //     // If jumlahPenerima is empty, add an error message to flash attributes and redirect
+                //     redirectAttributes.addFlashAttribute("error", "Jumlah Penerima tidak boleh kosong!");
+                //     return "redirect:/submit-revisi-" + id;
+                // }
+                // // Checking if nominalKebutuhanDana is empty
+                // if (kebutuhanDanaDTO.getJumlahDana() == null) {
+                //     // If nominalKebutuhanDana is empty, add an error message to flash attributes and redirect
+                //     redirectAttributes.addFlashAttribute("error", "Nominal Kebutuhan Dana tidak boleh kosong!");
+                //     return "redirect:/submit-revisi-" + id;
+                // }
+    
+                // if (kebutuhanDanaDTO.getJumlahPenerima() <= 0) {
+                //     // If jumlahPenerima is empty, add an error message to flash attributes and redirect
+                //     redirectAttributes.addFlashAttribute("error", "Jumlah Penerima tidak boleh kurang dari 1!");
+                //     return "redirect:/submit-revisi-" + id;
+                // }
+                // // Checking if nominalKebutuhanDana is empty
+                // if (kebutuhanDanaDTO.getJumlahDana() <= 0) {
+                //     // If nominalKebutuhanDana is empty, add an error message to flash attributes and redirect
+                //     redirectAttributes.addFlashAttribute("error", "Nominal Kebutuhan Dana tidak boleh kurang dari 1!");
+                //     return "redirect:/submit-revisi-" + id;
+                // }
+
                 kebutuhanDanaDTO.setPengajuan(pengajuan);
                 var kebutuhanDana = kebutuhanDanaMapper.updateKebutuhanDanaDTOToKebutuhanDana(kebutuhanDanaDTO);
                 nominalDana += kebutuhanDana.getJumlahDana();

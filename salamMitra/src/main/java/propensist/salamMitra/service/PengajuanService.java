@@ -15,4 +15,7 @@ public interface PengajuanService {
     void handleDOC(Pengajuan pengajuan);
     void handleLaporan(Pengajuan pengajuan);
     Map<String, Long> jumlahPengajuanByStatus();
+    void handleBukuTabungan(Pengajuan pengajuan);
+    String formatRupiah(Long rupiah);
+
 }
