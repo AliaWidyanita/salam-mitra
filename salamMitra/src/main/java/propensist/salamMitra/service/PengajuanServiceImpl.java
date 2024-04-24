@@ -93,7 +93,7 @@ public class PengajuanServiceImpl implements PengajuanService{
         DecimalFormat formatter = (DecimalFormat) DecimalFormat.getCurrencyInstance();
 
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-        symbols.setCurrencySymbol("Rp.");
+        symbols.setCurrencySymbol("Rp");
         formatter.setDecimalFormatSymbols(symbols);
 
         String formattedRupiah = formatter.format(rupiah);

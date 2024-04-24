@@ -34,7 +34,7 @@
 	</style>
 </head>
 <body>
-<div th:replace="~{fragments/navbar :: header}"></div>
+	<div th:replace="~{fragments/navbar :: header(page='pengajuan')}"></div>
 <div class="container">
 	<div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
 		<div class="container" data-aos="fade-up">
@@ -229,6 +229,20 @@
 											<label for="nomor_rekening">No. Rekening*</label>
 											<input type="number" name="nomor_rekening" id="nomor_rekening" placeholder="Nomor Rekening" class="form-control" th:field="*{pengajuanDTO.nomorRekening}">
 										</div>
+									</div>
+									<div class="form-holder form-holder-2">
+										<!-- Display previous Buku Tabungan if available -->
+										<td colspan="2">
+											<div>Buku Tabungan/M-Banking*</div>
+											<img th:src="'data:image/jpeg;base64,' + ${pengajuan.bukuTabunganBase64}" class="card-img-top" alt="Foto Buku Tabungan" style="width: 50%; height: 50%; object-fit: cover;">
+											<div>
+												<a th:href="'data:image/jpeg;base64,' + ${pengajuan.bukuTabunganBase64}" th:download="'BukuTabungan-' + ${pengajuan.id} + '-' + ${pengajuan.namaMitra} +'.jpg'">Download</a>
+											</div>
+										</td>
+										<br>
+										<label for="dokumen">Upload Buku Tabungan/M-Banking Baru</label>
+										<input type="file" name="bukuTabungan" accept=".jpg, .png, .jpeg" class="form-control-file form-control">
+										<small class="form-text text-muted">Ukuran file maksimal: 25MB</small>
 									</div>
 								</div>
 							</section>
@@ -836,9 +850,6 @@
 				event.preventDefault(); // Prevent form submission if inputs are not valid
 			}
 		});
-
-		// Initially disable submit button
-		$("#submitButton").prop("disabled", true);
 	});
 </script>
 <script>
@@ -853,7 +864,6 @@
         }
     }
 </script>
-
 
 <!-- jquery -->
 <script src="assets/js/jquery-1.11.3.min.js"></script>
