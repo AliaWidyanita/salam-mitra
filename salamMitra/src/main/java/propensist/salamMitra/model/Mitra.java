@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.annotations.SQLDelete;
 
 import jakarta.persistence.*;
@@ -29,4 +32,7 @@ public class Mitra extends Pengguna {
     @NotNull
     @Column(name = "contact", nullable = false)
     private Long contact;
+
+    @OneToMany(mappedBy = "mitra", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Pengajuan> listPengajuan = new ArrayList<>();
 }

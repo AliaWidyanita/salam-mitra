@@ -32,7 +32,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 @Controller
-public class UserController {
+public class HomeController {
 
     @Autowired
     private PenggunaService penggunaService;
