@@ -26,6 +26,7 @@ import propensist.salamMitra.dto.request.CreateListPengajuanKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.UpdateKebutuhanDanaDTO;
 import propensist.salamMitra.dto.request.UpdateListPengajuanKebutuhanDanaDTO;
 import propensist.salamMitra.model.KebutuhanDana;
+import propensist.salamMitra.model.Manajemen;
 import propensist.salamMitra.model.Mitra;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.model.Pengguna;
@@ -210,9 +211,9 @@ public class PengajuanController {
             // Custom comparator to sort based on specified status order
             Collections.sort(listPengajuanUsername, (p1, p2) -> {
                 List<String> statusOrder = Arrays.asList(
-                    "Diajukan", "Perlu Revisi", "Sedang Diperiksa", 
+                    "Diajukan", "Perlu Revisi", "Menunggu Laporan", "Sedang Diperiksa", 
                     "Diteruskan ke Manajemen", "Menunggu Pencairan Dana oleh Program Service", 
-                    "Menunggu Pencairan Dana oleh Admin Finance", "Menunggu Laporan", 
+                    "Menunggu Pencairan Dana oleh Admin Finance", 
                     "Selesai", "Ditolak", "Dibatalkan"
                 );
                 int index1 = statusOrder.indexOf(p1.getStatus());
@@ -220,9 +221,42 @@ public class PengajuanController {
                 return Integer.compare(index1, index2);
             });
             model.addAttribute("listPengajuan", listPengajuanUsername);
-        } 
-        else {    
-            model.addAttribute("listPengajuan", listPengajuan);       
+        } else if (user instanceof Manajemen) {
+            List<Pengajuan> listPengajuanManajemen = new ArrayList<>();
+            for (Pengajuan pengajuan : listPengajuan) {
+                listPengajuanManajemen.add(pengajuan);
+            }
+            // Custom comparator to sort based on specified status order
+            Collections.sort(listPengajuanManajemen, (p1, p2) -> {
+                List<String> statusOrder = Arrays.asList(
+                    "Diteruskan ke Manajemen", "Sedang Diperiksa", "Diajukan", 
+                    "Perlu Revisi", "Menunggu Pencairan Dana oleh Program Service", 
+                    "Menunggu Pencairan Dana oleh Admin Finance", "Menunggu Laporan", 
+                    "Selesai", "Ditolak", "Dibatalkan"
+                );
+                int index1 = statusOrder.indexOf(p1.getStatus());
+                int index2 = statusOrder.indexOf(p2.getStatus());
+                return Integer.compare(index1, index2);
+            });
+            model.addAttribute("listPengajuan", listPengajuanManajemen);
+        } else {    
+            List<Pengajuan> listPengajuanAdmin = new ArrayList<>();
+            for (Pengajuan pengajuan : listPengajuan) {
+                listPengajuanAdmin.add(pengajuan);
+            }
+            // Custom comparator to sort based on specified status order
+            Collections.sort(listPengajuanAdmin, (p1, p2) -> {
+                List<String> statusOrder = Arrays.asList(
+                    "Sedang Diperiksa", "Diajukan", "Diteruskan ke Manajemen", 
+                    "Perlu Revisi", "Menunggu Pencairan Dana oleh Program Service", 
+                    "Menunggu Pencairan Dana oleh Admin Finance", "Menunggu Laporan", 
+                    "Selesai", "Ditolak", "Dibatalkan"
+                );
+                int index1 = statusOrder.indexOf(p1.getStatus());
+                int index2 = statusOrder.indexOf(p2.getStatus());
+                return Integer.compare(index1, index2);
+            });
+            model.addAttribute("listPengajuan", listPengajuanAdmin);       
         }
         return "daftar-pengajuan";
     }
@@ -503,6 +537,7 @@ public class PengajuanController {
             pengajuanService.handleKTP(pengajuan);
             pengajuanService.handleRAB(pengajuan);
             pengajuanService.handleDOC(pengajuan);
+            pengajuanService.handleBukuTabungan(pengajuan);
 
             // Add pengajuan object to the model
             model.addAttribute("pengajuan", pengajuan);
@@ -536,6 +571,7 @@ public class PengajuanController {
                                 @RequestParam("ktpPIC") MultipartFile ktpPIC,
                                 @RequestParam("rab") MultipartFile rab,
                                 @RequestParam("dokumen") MultipartFile dokumen,
+                                @RequestParam("bukuTabungan") MultipartFile bukuTabungan,
                                 RedirectAttributes redirectAttributes,
                                 Model model) throws IOException {
 
@@ -574,35 +610,16 @@ public class PengajuanController {
             } else {
                 pengajuan.setDokumen(getPengajuan.getDokumen());
             }
+            if (bukuTabungan != null && !bukuTabungan.isEmpty()) {
+                pengajuan.setBukuTabungan(bukuTabungan.getBytes());
+            } else {
+                pengajuan.setBukuTabungan(getPengajuan.getBukuTabungan());
+            }
 
             kebutuhanDanaService.clearKebutuhanDanaByPengajuan(getPengajuan);
 
             Long nominalDana = 0L;
             for (UpdateKebutuhanDanaDTO kebutuhanDanaDTO : updateListPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO()) {
-                // if (kebutuhanDanaDTO.getJumlahPenerima() == null) {
-                //     // If jumlahPenerima is empty, add an error message to flash attributes and redirect
-                //     redirectAttributes.addFlashAttribute("error", "Jumlah Penerima tidak boleh kosong!");
-                //     return "redirect:/submit-revisi-" + id;
-                // }
-                // // Checking if nominalKebutuhanDana is empty
-                // if (kebutuhanDanaDTO.getJumlahDana() == null) {
-                //     // If nominalKebutuhanDana is empty, add an error message to flash attributes and redirect
-                //     redirectAttributes.addFlashAttribute("error", "Nominal Kebutuhan Dana tidak boleh kosong!");
-                //     return "redirect:/submit-revisi-" + id;
-                // }
-    
-                // if (kebutuhanDanaDTO.getJumlahPenerima() <= 0) {
-                //     // If jumlahPenerima is empty, add an error message to flash attributes and redirect
-                //     redirectAttributes.addFlashAttribute("error", "Jumlah Penerima tidak boleh kurang dari 1!");
-                //     return "redirect:/submit-revisi-" + id;
-                // }
-                // // Checking if nominalKebutuhanDana is empty
-                // if (kebutuhanDanaDTO.getJumlahDana() <= 0) {
-                //     // If nominalKebutuhanDana is empty, add an error message to flash attributes and redirect
-                //     redirectAttributes.addFlashAttribute("error", "Nominal Kebutuhan Dana tidak boleh kurang dari 1!");
-                //     return "redirect:/submit-revisi-" + id;
-                // }
-
                 kebutuhanDanaDTO.setPengajuan(pengajuan);
                 var kebutuhanDana = kebutuhanDanaMapper.updateKebutuhanDanaDTOToKebutuhanDana(kebutuhanDanaDTO);
                 nominalDana += kebutuhanDana.getJumlahDana();

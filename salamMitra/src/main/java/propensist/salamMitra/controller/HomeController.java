@@ -97,13 +97,6 @@ public class HomeController {
         }
     }
 
-
-    // @GetMapping("/register")
-    // public String registerMitra(Model model) {
-    //     model.addAttribute("mitraDTO", new CreateMitraRequestDTO());
-    //     return "login";
-    // }
-
     @PostMapping("/register")
     public String registerMitra(@Valid @ModelAttribute CreateMitraRequestDTO mitraDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 

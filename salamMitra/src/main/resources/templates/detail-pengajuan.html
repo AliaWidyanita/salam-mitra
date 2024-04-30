@@ -112,7 +112,6 @@
             border-radius: 5px;
         }
 
-
         /* Style untuk tombol warna biru */
         .boxed-btn.blue {
             background-color: #5995fd;
@@ -123,11 +122,73 @@
             background-color: #dc3545;
         }
 
+        /* Style untuk modal konfirmasi */
+        #pembatalanModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 50%;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            text-align: end;
+        }
+
+        .close {
+            color: rgb(144, 144, 144);
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content p {
+            padding: 10px 0;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .modal-content button {
+            margin: 5px;
+            padding: 10px 20px;
+            border-radius: 10px; 
+            border: none;
+            cursor: pointer;
+            background-color: #9c9c9c;
+            color: #fff;
+        }
+
+        .modal-content button:hover {
+            background-color: #f23d3d;
+            color: #fff;
+        }
+
+        .button-row-modal {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 
 <body>
-    <div th:replace="~{fragments/navbar :: header}"></div>
+    <div th:replace="~{fragments/navbar :: header(page='pengajuan')}"></div>
     <div class="container">
         <div class="container-fluid"
             style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
@@ -693,18 +754,15 @@
                     
                     <div class="container2" style="align-content: center;">
                         <div th:if="${role eq 'mitra'}" class="col-auto">
-                            <a class="boxed-btn" style="width: 200px;text-align: center; font-weight: bold; color: black;"
+                            <a class="boxed-btn" style="width: 200px;text-align: center; font-weight: bold;"
                                 th:href="@{/submit-revisi-{id}(id=${pengajuan.id})}"
-                                th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}">REVISI
-                                AJUAN</a>
+                                th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}">REVISI AJUAN
+                            </a>
                         </div>
                         <div th:if="${role eq 'mitra'}" class="col-auto">
-                            <a class="boxed-btn" style="width: 200px;text-align: center; font-weight: bold; color: black;"
-                                th:href="@{/submit-pembatalan-{id}(id=${pengajuan.id})}"
-                                th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}"
-                                onmouseover="this.style.color='black'"
-                                onmouseout="this.style.color='white'">BATALKAN
-                                AJUAN</a>
+                            <a class="boxed-btn" style="width: 200px;text-align: center; font-weight: bold;"
+                                onclick="showPembatalanModal()"
+                                th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}">BATALKAN AJUAN</a>
                         </div>
                     </div>
                 </div>
@@ -715,26 +773,39 @@
     </div>
     </div>
 
-    <!-- jquery -->
-    <script src="assets/js/jquery-1.11.3.min.js"></script>
-    <!-- bootstrap -->
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <!-- count down -->
-    <script src="assets/js/jquery.countdown.js"></script>
-    <!-- isotope -->
-    <script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
-    <!-- waypoints -->
-    <script src="assets/js/waypoints.js"></script>
-    <!-- owl carousel -->
-    <script src="assets/js/owl.carousel.min.js"></script>
-    <!-- magnific popup -->
-    <script src="assets/js/jquery.magnific-popup.min.js"></script>
-    <!-- mean menu -->
-    <script src="assets/js/jquery.meanmenu.min.js"></script>
-    <!-- sticker js -->
-    <script src="assets/js/sticker.js"></script>
-    <!-- main js -->
-    <script src="assets/js/main.js"></script>
+    <!-- Modal konfirmasi penghapusan -->
+    <div id="pembatalanModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePembatalanModal()">&times;</span>
+            <p>Apakah Anda yakin ingin membatalkan pengajuan ini?</p>
+            <div class="button-row-modal">
+                <!-- Tombol untuk mengonfirmasi penghapusan -->
+                <form id="pembatalanForm" th:action="@{/submit-pembatalan-{id}(id=${pengajuan.id})}" method="post">
+                    <button type="submit" name="submit" value="submit">Batalkan Pengajuan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script untuk modal konfirmasi -->
+    <script>
+        var pembatalanModal = document.getElementById("pembatalanModal");
+
+        function showPembatalanModal() {
+            pembatalanModal.style.display = "block";
+        }
+
+        function closePembatalanModal() {
+            pembatalanModal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == pembatalanModal) {
+                closePembatalanModal();
+            }
+        }
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var pengajuanStatus = "${pengajuan.status}";
@@ -748,6 +819,7 @@
             }
         });
     </script>
+
     <script>
         // Memanggil fungsi updateProgressBar saat halaman dimuat
         document.addEventListener('DOMContentLoaded', function () {
@@ -824,6 +896,28 @@
             }
         });
     </script>
+
+
+    <!-- jquery -->
+    <script src="assets/js/jquery-1.11.3.min.js"></script>
+    <!-- bootstrap -->
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <!-- count down -->
+    <script src="assets/js/jquery.countdown.js"></script>
+    <!-- isotope -->
+    <script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+    <!-- waypoints -->
+    <script src="assets/js/waypoints.js"></script>
+    <!-- owl carousel -->
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- magnific popup -->
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- mean menu -->
+    <script src="assets/js/jquery.meanmenu.min.js"></script>
+    <!-- sticker js -->
+    <script src="assets/js/sticker.js"></script>
+    <!-- main js -->
+    <script src="assets/js/main.js"></script>
 
 </body>
 

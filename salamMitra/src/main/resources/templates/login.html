@@ -2,9 +2,10 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 	<head>
 		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
 	</head>
 <body>
-<div th:replace="~{fragments/navbar :: header}"></div>
+	<div th:replace="~{fragments/navbar :: header(page='login')}"></div>
 	<div class="new-container">
 		<div class="forms-container">
 			<div class="signin-signup">
@@ -67,9 +68,11 @@
 					</div>
 					<div class="input-field">
 						<i class="fas fa-lock"></i>
-						<input required type="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
-                        title="Harus mengandung minimal satu angka dan satu huruf besar dan kecil, serta minimal 8 karakter atau lebih" 
-                        th:field="*{password}" />
+						<input required type="password" placeholder="Password" id="password" name="password" th:field="*{password}" />
+						<!-- <span class="input-group-text" id="togglePassword"><i class="bi bi-eye-slash"></i></span> -->
+						<div id="passwordError" class="invalid-feedback">
+							Password harus terdiri dari 8-20 karakter, mengandung huruf besar dan kecil, mengandung angka, dan tidak boleh mengandung spasi, karakter khusus, atau emoji.
+						</div>
 					</div>
 					<input type="submit" class="btn" value="Simpan" />
 					<!-- <p class="social-text">Or Register with social platforms</p> -->
@@ -165,19 +168,30 @@
 	<script>
 		const passwordInput = document.getElementById("password");
 		const passwordError = document.getElementById("passwordError");
+		const togglePassword = document.querySelector("#togglePassword");
+
+		togglePassword.addEventListener("click", togglePasswordVisibility);
 	  
+		function togglePasswordVisibility() {
+            const inputField = this.closest(".input-group").querySelector("input");
+            const type = inputField.getAttribute("type") === "password" ? "text" : "password";
+            inputField.setAttribute("type", type);
+            this.querySelector("i").classList.toggle("bi-eye");
+            this.querySelector("i").classList.toggle("bi-eye-slash");
+        }
+
 		passwordInput.addEventListener("input", function () {
-		  const password = passwordInput.value;
-		  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/;
-	  
-		  if (passwordRegex.test(password)) {
-			passwordError.style.display = "none";
-		  } else {
-			passwordError.style.display = "block";
-		  }
-		});
-	  </script>
-	  <script>
+            const password = passwordInput.value;
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/;
+
+            if (passwordRegex.test(password)) {
+                passwordError.style.display = "none";
+            } else {
+                passwordError.style.display = "block";
+            }
+        });
+	</script>
+	<script>
 		function removeAlerts() {
 			setTimeout(function () {
 				jQuery('.alert').fadeOut('fast', function () {
@@ -188,85 +202,85 @@
 	
 		removeAlerts();
 	</script>
-<script>
-    function validatePhoneNumber(input) {
-        // Hapus karakter selain angka
-        var phoneNumber = input.value.replace(/\D/g, '');
+	<script>
+		function validatePhoneNumber(input) {
+			// Hapus karakter selain angka
+			var phoneNumber = input.value.replace(/\D/g, '');
 
-        // Pastikan awalan nomor telepon adalah "08"
-        if (!phoneNumber.startsWith('08')) {
-            input.setCustomValidity('Nomor telepon tidak valid harus diawali 08');
-        } else {
-            // Pastikan panjang nomor telepon antara 11 dan 13 digit
-            if (phoneNumber.length < 11 || phoneNumber.length > 13) {
-                input.setCustomValidity('Nomor telepon tidak valid harus terdiri dari 10-13 digit');
-            } else {
-                input.setCustomValidity('');
-            }
-        }
-    }
-	input.value = '0' + phoneNumber;
+			// Pastikan awalan nomor telepon adalah "08"
+			if (!phoneNumber.startsWith('08')) {
+				input.setCustomValidity('Nomor telepon tidak valid harus diawali 08');
+			} else {
+				// Pastikan panjang nomor telepon antara 11 dan 13 digit
+				if (phoneNumber.length < 11 || phoneNumber.length > 13) {
+					input.setCustomValidity('Nomor telepon tidak valid harus terdiri dari 10-13 digit');
+				} else {
+					input.setCustomValidity('');
+				}
+			}
+		}
+		input.value = '0' + phoneNumber;
 
-</script>
+	</script>
 
-<script>
-    var myInput = document.getElementById("psw");
-    var letter = document.getElementById("letter");
-    var capital = document.getElementById("capital");
-    var number = document.getElementById("number");
-    var length = document.getElementById("length");
-    
-    // When the user clicks on the password field, show the message box
-    myInput.onfocus = function() {
-      document.getElementById("message").style.display = "block";
-    }
-    
-    // When the user clicks outside of the password field, hide the message box
-    myInput.onblur = function() {
-      document.getElementById("message").style.display = "none";
-    }
-    
-    // When the user starts to type something inside the password field
-    myInput.onkeyup = function() {
-      // Validate lowercase letters
-      var lowerCaseLetters = /[a-z]/g;
-      if(myInput.value.match(lowerCaseLetters)) {
-        letter.classList.remove("invalid");
-        letter.classList.add("valid");
-      } else {
-        letter.classList.remove("valid");
-        letter.classList.add("invalid");
-    }
-    
-      // Validate capital letters
-      var upperCaseLetters = /[A-Z]/g;
-      if(myInput.value.match(upperCaseLetters)) {
-        capital.classList.remove("invalid");
-        capital.classList.add("valid");
-      } else {
-        capital.classList.remove("valid");
-        capital.classList.add("invalid");
-      }
-    
-      // Validate numbers
-      var numbers = /[0-9]/g;
-      if(myInput.value.match(numbers)) {
-        number.classList.remove("invalid");
-        number.classList.add("valid");
-      } else {
-        number.classList.remove("valid");
-        number.classList.add("invalid");
-      }
-    
-      // Validate length
-      if(myInput.value.length >= 8) {
-        length.classList.remove("invalid");
-        length.classList.add("valid");
-      } else {
-        length.classList.remove("valid");
-        length.classList.add("invalid");
-      }
-    }
+	<script>
+		var myInput = document.getElementById("psw");
+		var letter = document.getElementById("letter");
+		var capital = document.getElementById("capital");
+		var number = document.getElementById("number");
+		var length = document.getElementById("length");
+		
+		// When the user clicks on the password field, show the message box
+		myInput.onfocus = function() {
+			document.getElementById("message").style.display = "block";
+		}
+		
+		// When the user clicks outside of the password field, hide the message box
+		myInput.onblur = function() {
+			document.getElementById("message").style.display = "none";
+		}
+		
+		// When the user starts to type something inside the password field
+		myInput.onkeyup = function() {
+			// Validate lowercase letters
+			var lowerCaseLetters = /[a-z]/g;
+			if (myInput.value.match(lowerCaseLetters)) {
+				letter.classList.remove("invalid");
+				letter.classList.add("valid");
+			} else {
+				letter.classList.remove("valid");
+				letter.classList.add("invalid");
+			}
+			
+			// Validate capital letters
+			var upperCaseLetters = /[A-Z]/g;
+			if (myInput.value.match(upperCaseLetters)) {
+				capital.classList.remove("invalid");
+				capital.classList.add("valid");
+			} else {
+				capital.classList.remove("valid");
+				capital.classList.add("invalid");
+			}
+			
+			// Validate numbers
+			var numbers = /[0-9]/g;
+			if (myInput.value.match(numbers)) {
+				number.classList.remove("invalid");
+				number.classList.add("valid");
+			} else {
+				number.classList.remove("valid");
+				number.classList.add("invalid");
+			}
+			
+			// Validate length
+			if (myInput.value.length >= 8) {
+				length.classList.remove("invalid");
+				length.classList.add("valid");
+			} else {
+				length.classList.remove("valid");
+				length.classList.add("invalid");
+			}
+		}
     </script>
 
 	<!-- jquery -->
