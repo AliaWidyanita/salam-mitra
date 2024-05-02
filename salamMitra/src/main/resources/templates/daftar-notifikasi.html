@@ -1,107 +1,115 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
-<head>
+<html
+  lang="en"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://thymeleaf.org"
+>
+  <head>
     <meta charset="UTF-8" />
-    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <object
+      th:insert="~{fragments/common :: fragment}"
+      th:remove="tag"
+    ></object>
     <title>Notifikasi</title>
-    <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/css/datatables.css">
+    <link
+      href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="/css/datatables.css" />
     <style>
-        .card {
-            transition: background-color 0.3s ease;
-            cursor: pointer;
-            height: max-content;
-            box-shadow: none;
-        }
+      .card {
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+        height: max-content;
+        box-shadow: none;
+      }
 
-        .card:hover {
-            background-color: #f8f9fa;
-        }
-        .card-unread {
-            background-color: #ffe8cc; 
-            cursor: pointer;
-            height: max-content;
-            box-shadow: none;
-        }
+      .card:hover {
+        background-color: #f8f9fa;
+      }
+      .card-unread {
+        background-color: #ffe8cc;
+        cursor: pointer;
+        height: max-content;
+        box-shadow: none;
+      }
     </style>
-
-</head>
-<body>
-<div th:replace="~{fragments/navbar :: header}"></div>
-<div class="container">
-    <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
+  </head>
+  <body>
+    <div th:replace="~{fragments/navbar :: header(page='notifikasi')}"></div>
+    <div class="container">
+      <div
+        class="container-fluid"
+        style="
+          padding-bottom: 5%;
+          padding-top: 15%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
         <div class="container" data-aos="fade-up">
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-7">
-                    <h3 class="text-center m-4">Notifikasi</h3>
-                        
-                    <div th:if="${listNotifikasi.isEmpty()}" class="col">
-                        <div class="card">
-                            <div class="card-body">
-                                <p class="card-text">Tidak ada notifikasi.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div th:unless="${listNotifikasi.isEmpty()}" th:each="notifikasi, iterationStatus: ${listNotifikasi}">
-                        <div class="card" th:data-read="${notifikasi.read}">
-                            <div class="card-body">
-                                <p th:text="${notifikasi.message}"></p>
-                                <p style="font-size: smaller;">
-                                    <span th:text="${#dates.format(notifikasi.notifiedDate, 'HH:mm:ss dd/MM/yyyy')}"></span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+          <div class="row d-flex justify-content-center">
+            <div class="col-md-7">
+              <h3 class="text-center m-4">Notifikasi</h3>
+
+              <div th:if="${listNotifikasi.isEmpty()}" class="col">
+                <div class="card">
+                  <div class="card-body">
+                    <p class="card-text">Tidak ada notifikasi.</p>
+                  </div>
                 </div>
+              </div>
+
+              <table class="table table-hover">
+                <tr
+                  th:unless="${listNotifikasi.isEmpty()}"
+                  th:each="notifikasi, iterationStatus: ${listNotifikasi}"
+                  th:classappend="${notifikasi.read} ? '' : 'table-warning'"
+                >
+                  <td th:data-read="${notifikasi.read}">
+                    <a th:href="@{/notifikasi/markAsRead/{id}(id=${notifikasi.id})}">
+                      <p th:text="${notifikasi.message}"></p>
+                      <p style="font-size: smaller">
+                        <span
+                          th:text="${#dates.format(notifikasi.notifiedDate, 'HH:mm:ss dd/MM/yyyy')}"
+                        ></span>
+                      </p>
+                    </a>
+                  </td>
+                </tr>
+              </table>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-<!-- Sertakan referensi ke jQuery di sini -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<!-- Sertakan referensi ke DataTables JavaScript di sini -->
-<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
 
-<script>
-    $(document).ready(function() {
-        // Mengatur warna card untuk notifikasi yang belum dibaca
-        $('.card').each(function() {
-            var isRead = $(this).data('read'); // Mengambil nilai properti 'read' dari data attribute
-            if (!isRead) {
-                $(this).addClass('card-unread'); // Menambahkan kelas 'card-unread' jika notifikasi belum dibaca
-            }
-        });
+    <!-- Sertakan referensi ke jQuery di sini -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Sertakan referensi ke DataTables JavaScript di sini -->
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
 
-        // Mengubah warna card saat diklik
-        $('.card').click(function() {
-            $(this).removeClass('card-unread'); // Menghapus kelas 'card-unread' saat card diklik
-        });
-    });
-</script>
-
-
-<!-- jquery -->
-<script src="assets/js/jquery-1.11.3.min.js"></script>
-<!-- bootstrap -->
-<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-<!-- count down -->
-<script src="assets/js/jquery.countdown.js"></script>
-<!-- isotope -->
-<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
-<!-- waypoints -->
-<script src="assets/js/waypoints.js"></script>
-<!-- owl carousel -->
-<script src="assets/js/owl.carousel.min.js"></script>
-<!-- magnific popup -->
-<script src="assets/js/jquery.magnific-popup.min.js"></script>
-<!-- mean menu -->
-<script src="assets/js/jquery.meanmenu.min.js"></script>
-<!-- sticker js -->
-<script src="assets/js/sticker.js"></script>
-<!-- main js -->
-<script src="assets/js/main.js"></script>
-
-</body>
+    <!-- jquery -->
+    <script src="assets/js/jquery-1.11.3.min.js"></script>
+    <!-- bootstrap -->
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <!-- count down -->
+    <script src="assets/js/jquery.countdown.js"></script>
+    <!-- isotope -->
+    <script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
+    <!-- waypoints -->
+    <script src="assets/js/waypoints.js"></script>
+    <!-- owl carousel -->
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- magnific popup -->
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <!-- mean menu -->
+    <script src="assets/js/jquery.meanmenu.min.js"></script>
+    <!-- sticker js -->
+    <script src="assets/js/sticker.js"></script>
+    <!-- main js -->
+    <script src="assets/js/main.js"></script>
+  </body>
 </html>

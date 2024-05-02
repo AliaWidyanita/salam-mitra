@@ -1,9 +1,6 @@
 package propensist.salamMitra.model;
 
 import java.util.Date;
-import java.util.UUID;
-
-import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -21,7 +18,8 @@ import lombok.Setter;
 public class Notifikasi {
 
     @Id
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotNull
     @Column(name = "message", nullable = false)
@@ -38,5 +36,9 @@ public class Notifikasi {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_pengguna", referencedColumnName = "id")
     private Pengguna pengguna;
+
+    @NotNull
+    @Column(name = "id_pengajuan", nullable = false)
+    private Long idPengajuan;
     
 }
