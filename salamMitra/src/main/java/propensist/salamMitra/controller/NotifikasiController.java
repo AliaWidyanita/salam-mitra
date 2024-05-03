@@ -57,10 +57,11 @@ public class NotifikasiController {
         Long longId = Long.parseLong(id);
         var optNotifikasi = notifikasiService.getNotifikasiById(longId);
         Notifikasi notifikasi = optNotifikasi.get();
-
-        notifikasi.setRead(true);
-        notifikasi.getIdPengajuan();
-        notifikasiService.updateNotifikasi(notifikasi);
+        
+        if (!notifikasi.getRead()){
+            notifikasi.setRead(true);
+            notifikasiService.updateNotifikasi(notifikasi);
+        }
 
         if (role.equals("program_service") || role.equals("admin_FINANCE")){
             return "redirect:/pencairan-detail-" + notifikasi.getIdPengajuan();

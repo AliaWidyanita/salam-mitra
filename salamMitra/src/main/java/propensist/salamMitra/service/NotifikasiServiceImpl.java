@@ -82,11 +82,15 @@ public class NotifikasiServiceImpl implements NotifikasiService {
                     notifikasiDb.save(notifikasi);
                 }
 
-                notifikasi.setMessage(
+                Notifikasi notifikasiMitra = new Notifikasi();
+                notifikasiMitra.setNotifiedDate(currentDate);
+                notifikasiMitra.setIdPengajuan(idPengajuan);
+
+                notifikasiMitra.setMessage(
                         "Ajuan Anda dengan ID " + idPengajuan + " telah disetujui. Silakan tunggu dana dicairkan!");
-                notifikasi.setPengguna(pengajuan.getMitra());
-                notifikasiDb.save(notifikasi);
-                sendMail(notifikasi);
+                notifikasiMitra.setPengguna(pengajuan.getMitra());
+                notifikasiDb.save(notifikasiMitra);
+                sendMail(notifikasiMitra);
                 break;
 
             case ("Menunggu Pencairan Dana oleh Admin Finance"):
