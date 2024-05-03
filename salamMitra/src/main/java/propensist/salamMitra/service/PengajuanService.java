@@ -19,5 +19,4 @@ public interface PengajuanService {
     void handleBukuTabungan(Pengajuan pengajuan);
     String formatRupiah(Long rupiah);
     List<Pengajuan> findByTenggatWaktuBetween(Date hMinus1, Date now);
-
 }
