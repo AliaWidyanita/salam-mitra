@@ -1,5 +1,6 @@
 package propensist.salamMitra.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -133,4 +134,14 @@ public class PenggunaServiceImpl implements PenggunaService{
         return false;
     }
 
+    public List<Admin> findAdmin() {
+        List<Pengguna> allUsers = penggunaDb.findAllByIsDeletedFalseOrderByWaktuDibuatDesc();
+        List<Admin> listAdmin = new ArrayList<>();
+        for (Pengguna pengguna : allUsers) {
+            if (pengguna instanceof Admin) {
+                listAdmin.add((Admin) pengguna);
+            }
+        }
+        return listAdmin;
+    }
 }

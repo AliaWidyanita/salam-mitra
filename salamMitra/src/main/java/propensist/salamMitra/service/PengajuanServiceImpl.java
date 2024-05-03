@@ -9,7 +9,10 @@ import propensist.salamMitra.repository.PengajuanDb;
 import java.util.List;
 import java.util.Map;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 
 @Service
@@ -79,5 +82,29 @@ public class PengajuanServiceImpl implements PengajuanService{
         return countMap;
     }
 
-}
+    @Override
+    public void handleBukuTabungan(Pengajuan pengajuan) {
+        byte[] bukuTabunganByte = pengajuan.getBukuTabungan();
+        String bukuTabunganImage = Base64.getEncoder().encodeToString(bukuTabunganByte);
+        pengajuan.setBukuTabunganBase64(bukuTabunganImage); // Set the imageBase64 field
+    }
 
+    @Override
+    public String formatRupiah(Long rupiah) {
+        DecimalFormat formatter = (DecimalFormat) DecimalFormat.getCurrencyInstance();
+
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setCurrencySymbol("Rp");
+        formatter.setDecimalFormatSymbols(symbols);
+
+        String formattedRupiah = formatter.format(rupiah);
+
+        return formattedRupiah;
+    }
+
+    @Override
+    public List<Pengajuan> findByTenggatWaktuBetween(Date startDate, Date endDate) {
+        return pengajuanDb.findByTanggalLaporanBetween(startDate, endDate);
+    }
+
+}

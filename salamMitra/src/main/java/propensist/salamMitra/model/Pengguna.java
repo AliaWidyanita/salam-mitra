@@ -9,7 +9,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -48,6 +50,9 @@ public class Pengguna implements Serializable {
     @Column(name="is_deleted", nullable = false)
     private boolean isDeleted;
 
+    @OneToMany(mappedBy = "pengguna", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Notifikasi> listNotifikasi = new ArrayList<>();
+    
     public String getRole() {
         return this.getClass().getAnnotation(DiscriminatorValue.class).value();
     }

@@ -12,8 +12,9 @@ import propensist.salamMitra.model.Pengguna;
 @Repository
 public interface PenggunaDb extends JpaRepository<Pengguna, UUID> {
     Pengguna findByUsername(String username);
-    Pengguna findByEmail(String email);
     
+    Pengguna findByEmail(String email);
+
     @Query("SELECT p FROM Pengguna p WHERE p.isDeleted = false ORDER BY p.waktuDibuat DESC")
     List<Pengguna> findAllByIsDeletedFalseOrderByWaktuDibuatDesc();
 }
