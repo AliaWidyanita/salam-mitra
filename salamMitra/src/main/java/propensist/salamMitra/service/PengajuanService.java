@@ -1,5 +1,6 @@
 package propensist.salamMitra.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,4 +16,8 @@ public interface PengajuanService {
     void handleDOC(Pengajuan pengajuan);
     void handleLaporan(Pengajuan pengajuan);
     Map<String, Long> jumlahPengajuanByStatus();
+    void handleBukuTabungan(Pengajuan pengajuan);
+    String formatRupiah(Long rupiah);
+    List<Pengajuan> findByTenggatWaktuBetween(Date hMinus1, Date now);
+
 }

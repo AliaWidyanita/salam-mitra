@@ -32,7 +32,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 @Controller
-public class UserController {
+public class HomeController {
 
     @Autowired
     private PenggunaService penggunaService;
@@ -96,13 +96,6 @@ public class UserController {
             return "dashboard";
         }
     }
-
-
-    // @GetMapping("/register")
-    // public String registerMitra(Model model) {
-    //     model.addAttribute("mitraDTO", new CreateMitraRequestDTO());
-    //     return "login";
-    // }
 
     @PostMapping("/register")
     public String registerMitra(@Valid @ModelAttribute CreateMitraRequestDTO mitraDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {

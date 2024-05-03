@@ -52,46 +52,51 @@
                     <nav class="main-menu">
                         <ul>
                             <li th:if="${role == 'ROLE_ANONYMOUS' || role == 'mitra'}" 
-                                class="current-list-item">
+                                th:class="${page == 'home' ? 'current-list-item' : ''}">
                                 <a th:href="@{/}">
                                     Home
                                 </a>
                             </li>
-                            <li th:if="${role == 'ROLE_ANONYMOUS' || role == 'mitra'}">
-                                <a th:href="@{/program}">
-                                    Program
-                                </a>
-                            </li>
-                            <li th:if="${role == 'mitra'}">
-                                <a th:href="@{/pengajuan}">
-                                    Ajuan Saya
-                                </a>
-                            </li>
-                    
                             <li th:if="${role == 'admin_PROGRAM' || role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}" 
-                                class="current-list-item">
+                                th:class="${page == 'dashboard' ? 'current-list-item' : ''}">
                                 <a th:href="@{/}">
                                     Dashboard
                                 </a>
                             </li>
-                            <li th:if="${role == 'admin_PROGRAM' || role == 'manajemen' || role == 'program_service'}">
+                            <li th:if="${role == 'ROLE_ANONYMOUS' || role == 'mitra' || role == 'admin_PROGRAM' || role == 'manajemen' || role == 'program_service'}"
+                                th:class="${page == 'program' ? 'current-list-item' : ''}">
                                 <a th:href="@{/program}">
                                     Program
                                 </a>
                             </li>
-                            <li th:if="${role == 'admin_PROGRAM' || role == 'manajemen' || role == 'program_service'}">
+                            <li th:if="${role == 'mitra'}"
+                                th:class="${page == 'pengajuan' ? 'current-list-item' : ''}">
+                                <a th:href="@{/pengajuan}">
+                                    Ajuan Saya
+                                </a>
+                            </li>
+                            <li th:if="${role == 'admin_PROGRAM' || role == 'manajemen' || role == 'program_service'}"
+                                th:class="${page == 'pengajuan' ? 'current-list-item' : ''}">
                                 <a th:href="@{/pengajuan}">
                                     Ajuan Kerja Sama
                                 </a>
                             </li>
-                            <li th:if="${role == 'manajemen' || role == 'program_service'}">
+                            <li th:if="${role == 'manajemen' || role == 'program_service'}"
+                                th:class="${page == 'pengguna' ? 'current-list-item' : ''}">
                                 <a th:href="@{/pengguna}">
                                     Daftar Pengguna
                                 </a>
                             </li>
-                            <li th:if="${role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}">
+                            <li th:if="${role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}"
+                                th:class="${page == 'pencairan' ? 'current-list-item' : ''}">
                                 <a th:href="@{/pencairan}">
                                     Pencairan
+                                </a>
+                            </li>
+                            <li th:if="${role == 'mitra' || role == 'admin_PROGRAM' || role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}"
+                                th:class="${page == 'notifikasi' ? 'current-list-item' : ''}">
+                                <a th:href="@{/notifikasi}">
+                                    Notifikasi
                                 </a>
                             </li>
                             <li>
@@ -103,7 +108,7 @@
                                             </div>
                                             <li th:if="${role != 'ROLE_ANONYMOUS'}">
                                                 <div style="border-radius: 50%; overflow: hidden; width: 40px; height: 40px; background-color: #fff;">
-                                                    <img src="assets/img/favicon.png" alt="Profile Picture">
+                                                    <img src="assets/img/icon_profile.png" alt="Profile Picture">
                                                 </div>
                                                 <ul class="sub-menu" style="display: flex; flex-direction: column; align-items: center; padding: 10px; border: 1px solid #F28123;">
                                                     <li>
@@ -113,7 +118,9 @@
                                                         <a th:href="@{/ubah-sandi-{id}(id=${user.id})}">Ubah Sandi</a>
                                                     </li>
                                                     <li style="margin-bottom: 10px;">
-                                                        <a th:href="@{/logout}" class="boxed-btn">Logout</a>
+                                                        <a th:href="@{/logout}" class="boxed-btn" style="color: #fff;"
+                                                        onmouseover="this.style.color='#F28123'"
+                                                        onmouseout="this.style.color='white'">Logout</a>
                                                     </li>
                                                 </ul>
                                             </li>
@@ -123,8 +130,6 @@
                             </li>
                         </ul>
                     </nav>
-                    <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-                    <div class="mobile-menu"></div>
                     <!-- menu end -->
                 </div>
             </div>
@@ -132,25 +137,6 @@
     </div>
 </div>
 <!-- end header -->
-
-<!-- search area -->
-<!-- <div class="search-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <span class="close-btn"><i class="fas fa-window-close"></i></span>
-                <div class="search-bar">
-                    <div class="search-bar-tablecell">
-                        <h3>Search For:</h3>
-                        <input type="text" placeholder="Keywords">
-                        <button type="submit">Search <i class="fas fa-search"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-<!-- end search area -->
 </div>
 
 </body>

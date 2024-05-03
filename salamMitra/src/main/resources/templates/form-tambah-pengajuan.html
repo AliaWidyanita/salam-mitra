@@ -31,10 +31,20 @@
 			margin-bottom: 0;
 			margin-right: 5px; /* Jarak antara teks dan kotak centang */
 		}
+		.img-fluid {
+			max-width: 200px; /* Ubah ukuran lebar gambar sesuai kebutuhan Anda */
+			height: auto; /* Menjaga rasio aspek gambar */
+		}
+		.img-fluid2 {
+			max-width: auto; /* Ubah ukuran lebar gambar sesuai kebutuhan Anda */
+			height: 200px; /* Menjaga rasio aspek gambar */
+		}
+
+
 	</style>
 </head>
 <body>
-<div th:replace="~{fragments/navbar :: header}"></div>
+	<div th:replace="~{fragments/navbar :: header(page='pengajuan')}"></div>
 <div class="container">
 	<div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
 		<div class="container" data-aos="fade-up">
@@ -92,6 +102,8 @@
 									</div>
 									<div class="form-holder form-holder-2">
 										<label for="ktpPIC">KTP Person In Charge (PIC)*</label>
+										<br>
+										<img  src="/assets/img/ktp.png" alt="Placeholder" class="img-fluid">
 										<input type="file" name="ktpPIC" accept=".jpg, .png, .jpeg" class="form-control-file form-control" required>
 										<small class="form-text text-muted">Ukuran file maksimal: 25MB</small>
 									</div>
@@ -222,7 +234,16 @@
 											<input type="number" name="nomor_rekening" id="nomor_rekening" placeholder="Nomor Rekening" class="form-control" th:field="*{pengajuanDTO.nomorRekening}">
 										</div>
 									</div>
+									<div class="form-holder form-holder-2">
+										<label for="bukuTabungan">Foto Buku Tabungan/M-Banking*</label>
+										<br>
+										<img  src="/assets/img/buku-rekening.png" alt="Placeholder" class="img-fluid">
+										<img  src="/assets/img/m-banking.png" alt="Placeholder" class="img-fluid2">
+										<input type="file" name="bukuTabungan" accept=".jpg, .png, .jpeg" class="form-control-file form-control" required>
+										<small class="form-text text-muted">Ukuran file maksimal: 25MB</small>
+									</div>
 								</div>
+								<br>
 							</section>
 
 							<!-- SECTION 3 -->
