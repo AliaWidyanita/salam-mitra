@@ -1,5 +1,6 @@
 package propensist.salamMitra.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,5 +18,7 @@ public interface PengajuanDb extends JpaRepository<Pengajuan, Long> {
 
     @Query("SELECT p.status, COUNT(p) FROM Pengajuan p GROUP BY p.status")
     List<Object[]> jumlahPengajuanByStatus();
+
+    List<Pengajuan> findByTanggalLaporanBetween(Date startDate, Date endDate);
 
 }

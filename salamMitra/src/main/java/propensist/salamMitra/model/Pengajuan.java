@@ -134,4 +134,8 @@ public class Pengajuan {
     private byte[] bukuTabungan;
     @Transient 
     private String bukuTabunganBase64; 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_mitra", referencedColumnName = "id")
+    private Mitra mitra;
 }

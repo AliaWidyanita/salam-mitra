@@ -93,6 +93,12 @@
                                     Pencairan
                                 </a>
                             </li>
+                            <li th:if="${role == 'mitra' || role == 'admin_PROGRAM' || role == 'admin_FINANCE' || role == 'manajemen' || role == 'program_service'}"
+                                th:class="${page == 'notifikasi' ? 'current-list-item' : ''}">
+                                <a th:href="@{/notifikasi}">
+                                    Notifikasi
+                                </a>
+                            </li>
                             <li>
                                 <div class="header-icons">
                                     <div class="header-icons pull-right">
