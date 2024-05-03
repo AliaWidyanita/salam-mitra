@@ -28,6 +28,7 @@ import propensist.salamMitra.model.Pencairan;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.model.ProgramService;
+import propensist.salamMitra.service.NotifikasiService;
 import propensist.salamMitra.service.PencairanService;
 import propensist.salamMitra.service.PengajuanService;
 import propensist.salamMitra.service.PenggunaService;
@@ -48,6 +49,9 @@ public class PencairanController {
 
     @Autowired
     private PencairanMapper pencairanMapper;
+
+    @Autowired
+    private NotifikasiService notifikasiService;
     
     @GetMapping("/pencairan")
     public String listPengajuan(Model model) {
@@ -141,6 +145,7 @@ public class PencairanController {
             Pengajuan pengajuan = optPengajuan.get();
             pengajuan.setStatus("Menunggu Pencairan Dana oleh Admin Finance");
             pengajuanService.savePengajuan(pengajuan);
+            notifikasiService.addNotifikasi(pengajuan);
         }
 
         pencairanService.savePencairan(pencairan);
@@ -177,6 +182,8 @@ public class PencairanController {
 
             pengajuan.setStatus("Menunggu Laporan");
             pengajuanService.savePengajuan(pengajuan);
+            notifikasiService.addNotifikasi(pengajuan);
+
         }
         
         redirectAttributes.addFlashAttribute("successMessage", "Informasi pencairan dana berhasil ditambahkan!");

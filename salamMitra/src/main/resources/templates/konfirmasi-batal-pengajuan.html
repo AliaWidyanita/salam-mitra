@@ -59,8 +59,8 @@
             <h2>Konfirmasi Pembatalan Pengajuan</h2>
             <p>Apakah Anda yakin ingin membatalkan pengajuan dengan ID <span th:text="${pengajuan.isPresent() ? pengajuan.get().getId() : ''}"></span>?</p>
             <form th:action="@{/submit-pembatalan-{id}(id=${pengajuan.isPresent() ? pengajuan.get().getId() : ''})}" method="post">
-                <a href="/pengajuan" class="btn btn-secondary">Balik</a>
-                <button type="submit" name="submit" value="submit" class="btn btn-danger">Batal</button>
+                <a href="/pengajuan" class="btn btn-secondary">Kembali</a>
+                <button type="submit" name="submit" value="submit" class="btn btn-danger">Batalkan Pengajuan</button>
             </form>
         </div>
     </div>
