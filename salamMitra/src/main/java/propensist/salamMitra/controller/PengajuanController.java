@@ -33,6 +33,7 @@ import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.model.ProgramKerja;
 import propensist.salamMitra.service.KebutuhanDanaService;
 import propensist.salamMitra.service.LokasiService;
+import propensist.salamMitra.service.NotifikasiService;
 import propensist.salamMitra.service.PencairanService;
 import propensist.salamMitra.service.PengajuanService;
 import propensist.salamMitra.service.PenggunaService;
@@ -42,6 +43,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.ui.Model;
+
 
 @Controller
 public class PengajuanController {
@@ -69,6 +71,9 @@ public class PengajuanController {
 
     @Autowired
     private PencairanService pencairanService;
+
+    @Autowired
+    private NotifikasiService notifikasiService;
 
     @GetMapping("/tambah-pengajuan")
     public String formTambahPengajuan(Model model) {
@@ -131,6 +136,7 @@ public class PengajuanController {
         pengajuan.setNominalKebutuhanDana(nominalDana);
         pengajuan.setJumlahKebutuhanOperasional((long) 0);
         pengajuan.setUsername(user.getUsername());
+        pengajuan.setMitra((Mitra) user);
                                 
         pengajuanService.savePengajuan(pengajuan);
         id = pengajuan.getId();
@@ -171,11 +177,13 @@ public class PengajuanController {
         pengajuan.setJumlahKebutuhanOperasional(Long.valueOf(listPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO().size()));
         pengajuan.setNominalKebutuhanDana(nominalDana);
         pengajuanService.savePengajuan(pengajuan);
+
+        notifikasiService.addNotifikasi(pengajuan);
+
         model.addAttribute("pengajuan", pengajuanDTO);
         model.addAttribute("id", id);
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
         redirectAttributes.addFlashAttribute("successMessage", "Kerja Sama baru berhasil diajukan!");
-    
         return "redirect:/pengajuan";
     }
 
@@ -271,9 +279,9 @@ public class PengajuanController {
                 if(role.equals("admin_PROGRAM")){
                     if (pengajuan.getStatus().equalsIgnoreCase("Diajukan")){
                         pengajuan.setStatus("Sedang Diperiksa");
+                        pengajuanService.savePengajuan(pengajuan);
+                        notifikasiService.addNotifikasi(pengajuan);
                     }
-                   
-                    pengajuanService.savePengajuan(pengajuan);
                 }
 
                 pengajuanService.handleKTP(pengajuan);
@@ -378,6 +386,7 @@ public class PengajuanController {
             
             // Simpan perubahan pada pengajuan
             pengajuanService.savePengajuan(pengajuan);
+            notifikasiService.addNotifikasi(pengajuan);
             
             // Redirect kembali ke halaman review dengan mengirimkan ID pengajuan
             return "redirect:/pengajuan-detail-" + id;
@@ -437,6 +446,7 @@ public class PengajuanController {
             
             // Simpan perubahan pada pengajuan
             pengajuanService.savePengajuan(pengajuan);
+            notifikasiService.addNotifikasi(pengajuan);
             
             // Redirect kembali ke halaman review dengan mengirimkan ID pengajuan
             return "redirect:/pengajuan-detail-" + id;
@@ -489,6 +499,7 @@ public class PengajuanController {
             
             // Simpan perubahan pada pengajuan
             pengajuanService.savePengajuan(pengajuan);
+            notifikasiService.addNotifikasi(pengajuan);
             
             // Redirect kembali ke halaman review dengan mengirimkan ID pengajuan
             return "redirect:/pengajuan-detail-" + id;
@@ -615,6 +626,7 @@ public class PengajuanController {
             pengajuan.setJumlahKebutuhanOperasional(Long.valueOf(updateListPengajuanKebutuhanDanaDTO.getListKebutuhanDanaDTO().size()));
             pengajuan.setNominalKebutuhanDana(nominalDana);
             pengajuanService.savePengajuan(pengajuan);
+            notifikasiService.addNotifikasi(pengajuan);
 
             // Redirect ke halaman daftar pengajuan
             model.addAttribute("pengajuan", pengajuan);
@@ -669,6 +681,7 @@ public class PengajuanController {
             }
 
             pengajuanService.savePengajuan(pengajuan);
+            notifikasiService.addNotifikasi(pengajuan);
 
             model.addAttribute("pengajuan", pengajuan);
 

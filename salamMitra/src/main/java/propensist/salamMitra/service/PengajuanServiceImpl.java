@@ -9,6 +9,7 @@ import propensist.salamMitra.repository.PengajuanDb;
 import java.util.List;
 import java.util.Map;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -99,6 +100,11 @@ public class PengajuanServiceImpl implements PengajuanService{
         String formattedRupiah = formatter.format(rupiah);
 
         return formattedRupiah;
+    }
+
+    @Override
+    public List<Pengajuan> findByTenggatWaktuBetween(Date startDate, Date endDate) {
+        return pengajuanDb.findByTanggalLaporanBetween(startDate, endDate);
     }
 
 }
