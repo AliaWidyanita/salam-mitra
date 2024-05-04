@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                             .requestMatchers(new AntPathRequestMatcher("/getKabKotaByProvinsiAndNamaProgram")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/getKabupatenKotaByProvinsi")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/getKecamatanByProvinsiKabupatenKota")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/filter-program**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                     ) 
                     .formLogin((form) -> form

@@ -68,14 +68,19 @@
                                     <label for="selectAllProvinsi">Seluruh Indonesia</label><br>
 
                                     <div th:each="provinsi : ${daftarProvinsi}">
-                                        <input type="checkbox" class="provinsi" th:id="${provinsi}" th:name="provinsi" th:value="${provinsi}" />
+                                        <input type="checkbox" class="provinsi" th:id="${provinsi}" th:name="provinsi" th:value="${provinsi}" th:checked="${program.provinsi != null and program.provinsi.contains(provinsi)}" />
                                         <label th:for="${provinsi}" th:text="${provinsi}"></label><br>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 form-group">
                                 <label for="kabupatenKota" style="font-weight: bold;">Kabupaten/Kota</label>
-                                <div id="kabupatenKotaContainer" class="scrollable-checkbox"></div>
+                                <div id="kabupatenKotaContainer" class="scrollable-checkbox">
+                                    <div th:each="kabupatenKota : ${daftarKabupatenKota}">
+                                        <input type="checkbox" class="kabupatenKota" th:id="${kabupatenKota}" th:name="kabupatenKota" th:value="${kabupatenKota}" th:checked="${program.kabupatenKota != null and program.kabupatenKota.contains(kabupatenKota)}" />
+                                        <label th:for="${kabupatenKota}" th:text="${kabupatenKota}"></label><br>
+                                    </div>
+                                </div>
                                 <small class="form-text text-muted">- Opsi Kabupaten/Kota akan muncul sesuai dengan pilihan provinsi</small>
                                 <small class="form-text text-muted">- Kosongkan apabila lokasi berada di seluruh Kabupaten/Kota provinsi pilihan</small>
                             </div>                            

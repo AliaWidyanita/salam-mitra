@@ -4,11 +4,11 @@
     <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
     <style>
-        /* CSS untuk menambahkan ketinggian pada input file */
+        /* CSS for adjusting file input height */
         input[type="file"] {
             height: 38px;
         }
-        /* CSS untuk scroll pada checkbox provinsi dan kabupaten/kota */
+        /* CSS for scrolling in province and district/city checkboxes */
         .scrollable-checkbox {
             max-height: 200px;
             overflow-y: auto; 
@@ -16,11 +16,11 @@
             padding: 10px;
             border: 1.2px solid rgba(218,223,227,255);
         }
-        /* CSS untuk menambahkan jarak di atas label field */
+        /* CSS for adding margin above label field */
         .form-group {
             margin-top: 5px;
         }
-        /* CSS untuk gambar program */
+        /* CSS for program image */
         .program-image {
             max-width: 200px;
             max-height: 200px;
@@ -54,13 +54,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div th:each="kategori, iterStat : ${daftarKategoriAsnaf}" th:if="${iterStat.index % 2 == 0}">
-                                            <input type="checkbox" th:id="${kategori}" th:name="kategoriAsnaf" th:value="${kategori}" th:checked="${program.kategoriAsnaf != null && program.kategoriAsnaf.contains(kategori)}"/>
+                                            <input type="checkbox" th:id="${kategori}" th:name="kategoriAsnaf" th:value="${kategori}" th:checked="${program.kategoriAsnaf != null and program.kategoriAsnaf.contains(kategori)}"/>
                                             <label th:for="${kategori}" th:text="${kategori}"></label><br>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div th:each="kategori, iterStat : ${daftarKategoriAsnaf}" th:if="${iterStat.index % 2 != 0}">
-                                            <input type="checkbox" th:id="${kategori}" th:name="kategoriAsnaf" th:value="${kategori}" th:checked="${program.kategoriAsnaf != null && program.kategoriAsnaf.contains(kategori)}"/>
+                                            <input type="checkbox" th:id="${kategori}" th:name="kategoriAsnaf" th:value="${kategori}" th:checked="${program.kategoriAsnaf != null and program.kategoriAsnaf.contains(kategori)}"/>
                                             <label th:for="${kategori}" th:text="${kategori}"></label><br>
                                         </div>
                                     </div>
@@ -69,33 +69,25 @@
                             <div class="col-md-6 form-group">
                                 <label for="provinsi" style="font-weight: bold;">Provinsi <sup>*</sup></label>
                                 <input type="hidden" th:each="provinsi : ${program.provinsi}" name="provinsi" th:value="${provinsi}" />
- 
-                                <div class="row">
-                                    <div class="column">
-                                        <ul>
-                                            <li th:each="provinsi,iterStat : ${program.provinsi}" th:if="${iterStat.index % 2 == 0}" th:text="${provinsi}"></li>
-                                        </ul>
-                                    </div>
-                                    <div class="column">
-                                        <ul>
-                                            <li th:each="provinsi,iterStat : ${program.provinsi}" th:if="${iterStat.index % 2 != 0}" th:text="${provinsi}"></li>
-                                        </ul>
+
+                                <div class="scrollable-checkbox">
+                                    <input type="checkbox" id="selectAllProvinsi" class="selectAllCheckbox" />
+                                    <label for="selectAllProvinsi">Seluruh Indonesia</label><br>
+
+                                    <div th:each="provinsi : ${daftarProvinsi}">
+                                        <input type="checkbox" class="provinsi" th:id="${provinsi}" th:name="provinsi" th:value="${provinsi}" th:checked="${program.provinsi != null and program.provinsi.contains(provinsi)}"/>
+                                        <label th:for="${provinsi}" th:text="${provinsi}"></label><br>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 form-group" th:if="${not #lists.isEmpty(program.kabupatenKota)}">
+                            <div class="col-md-6 form-group">
                                 <label for="kabupatenKota" style="font-weight: bold;">Kabupaten/Kota</label>
                                 <input type="hidden" th:each="kabupatenKota : ${program.kabupatenKota}" name="kabupatenKota" th:value="${kabupatenKota}" />
-                                <div class="row">                
-                                    <div class="column">
-                                        <ul>
-                                            <li th:each="kabupatenKota,iterStat : ${program.kabupatenKota}" th:if="${iterStat.index % 2 == 0}" th:text="${kabupatenKota}"></li>
-                                        </ul>
-                                    </div>
-                                    <div class="column">
-                                        <ul>
-                                            <li th:each="kabupatenKota,iterStat : ${program.kabupatenKota}" th:if="${iterStat.index % 2 != 0}" th:text="${kabupatenKota}"></li>
-                                        </ul>
+                                <div class="scrollable-checkbox">
+                                    
+                                    <div th:each="kabupatenKota : ${daftarKabupatenKota}">
+                                        <input type="checkbox" class="kabupatenKota" th:id="${kabupatenKota}" th:name="kabupatenKota" th:value="${kabupatenKota}" th:checked="${program.kabupatenKota != null and program.kabupatenKota.contains(kabupatenKota)}"/>
+                                        <label th:for="${kabupatenKota}" th:text="${kabupatenKota}"></label><br>
                                     </div>
                                 </div>
                             </div>                                                     
@@ -128,18 +120,99 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
     <script>
+        $(document).ready(function() {
+            // Flag to indicate whether AJAX call is in progress
+            var ajaxCallInProgress = false;
+
+            // Ketika checkbox provinsi diubah
+            $('.provinsi').change(function() {
+                // Check if AJAX call is already in progress
+                if (ajaxCallInProgress) {
+                    return; // If in progress, do nothing
+                }
+
+                var selectedProvinces = $('.provinsi:checked').map(function() {
+                    return this.value;
+                }).get(); // Ambil nilai provinsi yang dipilih
+
+                // Kosongkan kontainer kabupaten/kota
+                $('#kabupatenKotaContainer').empty();
+
+                // Jika tidak ada provinsi yang dipilih, hentikan eksekusi selanjutnya
+                if (!selectedProvinces || selectedProvinces.length === 0) return;
+
+                // Set flag to indicate AJAX call is in progress
+                ajaxCallInProgress = true;
+
+                $.ajax({
+                    url: "/getKabupatenKotaByProvinsi",
+                    type: "GET",
+                    data: {
+                        provinsi: selectedProvinces.join(',') // Gabungkan nilai-nilai provinsi dengan koma sebagai parameter
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        // Isi kontainer kabupaten/kota dengan opsi yang diperoleh dari respons
+                        $.each(data, function(index, kabupatenKota) {
+                            var checkbox = $('<input>').attr({ type: 'checkbox', name: 'kabupatenKota', value: kabupatenKota, id: kabupatenKota }).css('margin-right', '5px');
+                            var label = $('<label>').attr('for', kabupatenKota).text(kabupatenKota);
+                            $('#kabupatenKotaContainer').append(checkbox).append(label).append('<br>');
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("AJAX request failed: " + textStatus, errorThrown);
+                    },
+                    complete: function() {
+                        // Reset the flag after AJAX call is complete
+                        ajaxCallInProgress = false;
+                    }
+                });
+            });
+
+            // Ketika checkbox "Select All" diubah
+            $('#selectAllProvinsi').change(function() {
+                var isChecked = $(this).is(':checked');
+                $('.provinsi').prop('checked', isChecked).change(); // Pemicu perubahan pada checkbox provinsi
+
+                // Jika "Select All" dicentang, hilangkan centang dari semua provinsi kecuali "Seluruh Indonesia"
+                if (isChecked) {
+                    $('.provinsi').not('#selectAllProvinsi').prop('checked', false).prop('disabled', true);
+                } else {
+                    $('.provinsi').prop('disabled', false);
+                }
+            });
+
+            // Logic untuk simpan "Seluruh Indonesia" ke database jika opsi "Select All" dicentang
+            $('#formTambahProgram').submit(function() {
+                var allProvinsiChecked = $('#selectAllProvinsi').is(':checked');
+                if (allProvinsiChecked) {
+                    // Hapus semua nilai provinsi kecuali "Seluruh Indonesia"
+                    $('.provinsi').not('#selectAllProvinsi').prop('checked', false);
+                    // Jika opsi "Select All" dicentang, simpan "Seluruh Indonesia" ke database
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'provinsi',
+                        value: 'Seluruh Indonesia'
+                    }).appendTo($(this));
+                }
+            });
+        });
+    </script>
+    
+    
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Menangkap semua checkbox dengan nama "kategoriAsnaf"
+            // Capture all checkboxes with name "kategoriAsnaf"
             var checkboxes = document.querySelectorAll('input[name="kategoriAsnaf"]');
     
-            // Membuat event listener untuk setiap checkbox
+            // Create event listener for each checkbox
             checkboxes.forEach(function(checkbox) {
                 checkbox.addEventListener('change', function() {
                     validateKategoriAsnaf();
                 });
             });
     
-            // Membuat event listener untuk input judul
+            // Create event listener for title input
             var titleInput = document.getElementById("judul");
             titleInput.addEventListener('input', function() {
                 checkTitleLength();
@@ -151,7 +224,7 @@
             var errorDiv = document.getElementById('kategoriAsnafError');
     
             if (checkboxes.length === 0) {
-                // Tampilkan pesan kesalahan jika tidak ada checkbox terpilih
+                // Display error message if no checkbox is selected
                 if (!errorDiv) {
                     errorDiv = document.createElement('div');
                     errorDiv.id = 'kategoriAsnafError';
@@ -168,7 +241,7 @@
             }
         }
     
-        // Validasi panjang judul program
+        // Validate program title length
         function checkTitleLength() {
             var maxLength = 50;
             var titleInput = document.getElementById("judul");
@@ -179,7 +252,7 @@
                 messageElement.textContent = "Judul program tidak boleh lebih dari 50 karakter.";
             } else {
                 messageElement.textContent = "";
-                // Hapus pesan kesalahan jika judul program tidak melebihi 50 karakter
+                // Remove error message if title doesn't exceed 50 characters
                 var alertDiv = document.getElementById('judulLengthError');
                 if (alertDiv) {
                     alertDiv.remove();
@@ -187,9 +260,9 @@
             }
         }
 
-        // Menambahkan event listener untuk form submission
+        // Add event listener for form submission
         document.getElementById('formEditProgram').addEventListener('submit', function(event) {
-            // Validasi ukuran file gambar
+            // Validate image file size
             var fileInput = document.getElementById('fotoProgram');
             if (fileInput.files.length > 0) {
                 var fileSize = fileInput.files[0].size;
@@ -203,12 +276,12 @@
                 }
             }
 
-            // Validasi panjang judul program
+            // Validate program title length
             var titleInput = document.getElementById("judul");
             var titleLength = titleInput.value.length;
 
             if (titleLength > 50) {
-                // Tampilkan pesan kesalahan jika judul melebihi 50 karakter
+                // Display error message if title exceeds 50 characters
                 var errorDiv = document.createElement('div');
                 errorDiv.id = 'judulLengthError';
                 errorDiv.className = 'alert alert-danger mt-3';
@@ -217,13 +290,13 @@
                 formElement.insertBefore(errorDiv, formElement.firstChild);
                 removeAlerts();
 
-                event.preventDefault(); // Menghentikan pengiriman formulir
+                event.preventDefault(); // Stop form submission
                 window.scrollTo(0, 0);
             }
         });
 
     
-        // Fungsi untuk menghapus pesan kesalahan setelah 3000 ms
+        // Function to remove error messages after 3000 ms
         function removeAlerts() {
             setTimeout(function () {
                 var alerts = document.querySelectorAll('.alert');
