@@ -22,6 +22,7 @@
 					<div class="input-field">
 						<i class="fas fa-lock"></i>
 						<input required type="password" for="password" id="password" name="password" placeholder="Password" />
+						<i id="togglePassword" class="fas fa-eye-slash" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
 					</div>
 						<input type="submit" value="Masuk" class="btn solid" />
 						<!-- <p class="social-text">Or Login with social platforms</p>
@@ -64,16 +65,20 @@
 					</div>
                     <div class="input-field">
 						<i class="fas fa-phone"></i>
-						<input required type="number" placeholder="Kontak" th:field="*{contact}" oninput="validatePhoneNumber(this)" />
+						<input required type="number" placeholder="Kontak" th:field="*{contact}" oninput="validatePhoneNumber(this)" style="width: 200px;" />
+						<small style="font-size: 12px; color: #cb5f08;; position: absolute; top: 100%; left: 0;">*Nomor harus diawali 08 dan terdiri dari 10-13 digit</small>
 					</div>
-					<div class="input-field">
+					<br>
+					<div class="input-field" style="position: relative;">
 						<i class="fas fa-lock"></i>
-						<input required type="password" placeholder="Password" id="password" name="password" th:field="*{password}" />
-						<!-- <span class="input-group-text" id="togglePassword"><i class="bi bi-eye-slash"></i></span> -->
-						<div id="passwordError" class="invalid-feedback">
-							Password harus terdiri dari 8-20 karakter, mengandung huruf besar dan kecil, mengandung angka, dan tidak boleh mengandung spasi, karakter khusus, atau emoji.
-						</div>
+						<input required type="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+							   title="Harus mengandung minimal satu angka dan satu huruf besar dan kecil, serta minimal 8 karakter atau lebih" 
+							   th:field="*{password}" id="passwordField" />
+						<small style="font-size: 12px;color: #cb5f08;; position: absolute; top: 100%; left: 0;">*Password harus terdiri dari 8-20 karakter, mengandung huruf besar dan kecil, angka, dan tidak boleh mengandung spasi</small>
+						<i id="togglePasswordRegist" class="fas fa-eye-slash" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
 					</div>
+					<br>
+					<br>
 					<input type="submit" class="btn" value="Simpan" />
 					<!-- <p class="social-text">Or Register with social platforms</p> -->
 					<!-- <div class="social-media">
@@ -164,6 +169,36 @@
 			</div>
 		</div>
 	</div> -->
+
+	<script>
+		document.getElementById('togglePassword').addEventListener('click', function() {
+			var passwordInput = document.getElementById('password');
+			if (passwordInput.type === 'password') {
+				passwordInput.type = 'text';
+				this.classList.remove('fa-eye-slash');
+				this.classList.add('fa-eye');
+			} else {
+				passwordInput.type = 'password';
+				this.classList.remove('fa-eye');
+				this.classList.add('fa-eye-slash');
+			}
+		});
+	</script>
+
+	<script>
+		document.getElementById('togglePasswordRegist').addEventListener('click', function() {
+			var passwordInput = document.getElementById('passwordField'); // Perubahan disini
+			if (passwordInput.type === 'password') {
+				passwordInput.type = 'text';
+				this.classList.remove('fa-eye-slash');
+				this.classList.add('fa-eye');
+			} else {
+				passwordInput.type = 'password';
+				this.classList.remove('fa-eye');
+				this.classList.add('fa-eye-slash');
+			}
+		});
+	</script>
 
 	<script>
 		const passwordInput = document.getElementById("password");
