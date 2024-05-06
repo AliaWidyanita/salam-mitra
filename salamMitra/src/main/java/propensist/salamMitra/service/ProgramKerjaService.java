@@ -17,6 +17,6 @@ public interface ProgramKerjaService {
     void deleteProgram(ProgramKerja programKerja);
     List<ProgramKerja> findProgramKerjaByKategori(String kategori);
     ProgramKerja findProgramKerjaByJudul(String judul);
-
+    List<ProgramKerja> filterPrograms(String kategoriProgram, String kategoriAsnaf, String provinsi);
 
 }
