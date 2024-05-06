@@ -257,7 +257,7 @@
             <div style="flex-wrap: wrap; margin: 0 auto; max-width: 1300px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-right: 20px; margin-left: 20px; margin-top: 80px;">
                     <div>
-                        <button class="action-button" onclick="openFilterPopup()">Filter Program</button>
+                        <!-- <button class="action-button" onclick="openFilterPopup()">Filter Program</button> -->
                         <button class="action-button" id="sortButton" onclick="toggleSort()" style="margin-left: 5px;"><i id="sortIcon" class="bi-sort-alpha-down"></i> Judul</button>
                         
                     </div>
@@ -277,16 +277,16 @@
                 <p style="display: flex; flex-direction: column; justify-content: center; height: 50vh;">Mohon maaf, tidak ada program yang tersedia.</p>
             </th:block>
             
-            <div id="filterPopup" class="popup">
+            <!-- <div id="filterPopup" class="popup">
                 <div class="popup-content">
-                    <!-- Close button -->
+                    Close button
                     <span class="close" onclick="closeFilterPopup()">&times;</span>
-                    <!-- Form for filtering programs -->
+                    Form for filtering programs
                     <form action="/filter-program" method="GET">
                         <h5 style="margin-bottom: 20px; margin-top: 20px;">Filter Program</h5>
-                        <!-- Container for form content -->
+                        Container for form content
                         <div class="form-content">
-                            <!-- Labels and dropdowns -->
+                            Labels and dropdowns
                             <div class="form-group">
                                 <label for="kategoriProgram">Pilih Kategori Program</label>
                                 <select class="form-control" id="kategoriProgram" name="kategoriProgram">
@@ -315,14 +315,14 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- Submit button -->
+                        Submit button
                         <div>
                             <input  class="filter-button" type="submit" value="Filter" >
                         </div>
                     </form>
                 </div>
             </div>
-        </div>    
+        </div>     -->
 
         <div class="card-container">
             <!-- Iterate over programs -->

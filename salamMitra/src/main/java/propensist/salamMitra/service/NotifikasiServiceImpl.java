@@ -106,13 +106,9 @@ public class NotifikasiServiceImpl implements NotifikasiService {
 
             case ("Menunggu Laporan"):
                 Date tanggalLaporan = pengajuan.getTanggalLaporan();
+                Date now = new Date();
 
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(tanggalLaporan);
-                cal.add(Calendar.DATE, -1);
-                Date tanggalHMin1 = cal.getTime();
-
-                if (currentDate.equals(tanggalHMin1)) {
+                if (now.equals(tanggalLaporan)) {
                     String message = "Besok adalah batas waktu unggah laporan kerja sama dengan ID "
                             + pengajuan.getId() + "!";
 
