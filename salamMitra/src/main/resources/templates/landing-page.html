@@ -229,6 +229,9 @@
 			</div>
 
 			<div>
+				<th:block th:if="${listProgram.isEmpty()}">
+                	<p class="text-center" style="display: flex; flex-direction: column; justify-content: center;">Mohon maaf, saat ini tidak ada program yang tersedia.</p>
+            	</th:block>
 				<div class="card-container">
 					<!-- Iterasi Program -->
 					<div th:each="program : ${listProgram}" th:limit="3" class="card">
@@ -258,11 +261,13 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<a href="/program" class="boxed-btn">Lihat Semua Program</a>
+			<th:block th:if="${not listProgram.isEmpty()}">
+				<div class="row">
+					<div class="col-lg-12 text-center">
+						<a href="/program" class="boxed-btn">Lihat Semua Program</a>
+					</div>
 				</div>
-			</div>
+			</th:block>
 		</div>
 	</div>
 	<!-- end daftar program -->

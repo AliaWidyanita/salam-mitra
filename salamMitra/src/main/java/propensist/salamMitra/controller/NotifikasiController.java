@@ -20,7 +20,7 @@ import propensist.salamMitra.service.PenggunaService;
 
 @Controller
 public class NotifikasiController {
-    
+
     @Autowired
     NotifikasiService notifikasiService;
 
@@ -57,13 +57,13 @@ public class NotifikasiController {
         Long longId = Long.parseLong(id);
         var optNotifikasi = notifikasiService.getNotifikasiById(longId);
         Notifikasi notifikasi = optNotifikasi.get();
-        
-        if (!notifikasi.getRead()){
+
+        if (!notifikasi.getRead()) {
             notifikasi.setRead(true);
             notifikasiService.updateNotifikasi(notifikasi);
         }
 
-        if (role.equals("program_service") || role.equals("admin_FINANCE")){
+        if (role.equals("program_service") || role.equals("admin_FINANCE")) {
             return "redirect:/pencairan-detail-" + notifikasi.getIdPengajuan();
         }
 
@@ -71,17 +71,21 @@ public class NotifikasiController {
     }
 
     @Scheduled(cron = "0 0 * * * *")
-    public void addNotifikasiHMinus1() {
+    public void addNotifikasiOneDayBefore() {
         Date now = new Date();
 
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.HOUR, -1);
-        Date hMinus1 = cal.getTime();
+        cal.setTime(now);
+        cal.add(Calendar.DAY_OF_MONTH, 1);
 
-        List<Pengajuan> pengajuanList = pengajuanService.findByTenggatWaktuBetween(hMinus1, now);
+        Date tomorrow = cal.getTime();
+
+        List<Pengajuan> pengajuanList = pengajuanService.findByTanggalLaporan(tomorrow);
 
         for (Pengajuan pengajuan : pengajuanList) {
-            notifikasiService.addNotifikasi(pengajuan);
+            if (pengajuan.getStatus().equals("Menunggu Laporan")) {
+                notifikasiService.addNotifikasi(pengajuan);
+            }
         }
     }
 

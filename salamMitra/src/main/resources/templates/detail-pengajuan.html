@@ -376,28 +376,21 @@
 
 
                                 <!-- UPLOAD LAPORAN JIKA DANA PENCAIRAN TELAH SELESAI DICAIRKAN KE REKENING MITRA -->
-                                <div th:if="${pengajuan.status == 'Menunggu Laporan'}"
-                                    style="margin-top: 30px; text-align: left;">
+                                <div th:if="${pengajuan.status == 'Menunggu Laporan'}" style="margin-top: 30px; text-align: left;">
                                     <h5 style="margin-bottom: 5px;">Upload Laporan</h5>
                                     <div style="text-align: left;">
-                                        <small class="form-text text-muted"
-                                            style="margin-bottom: 5px; color: red; margin-left: 0;">Mohon untuk
-                                            mengumpulkan laporan sebelum <span
-                                                th:text="${#dates.format(pengajuan.tanggalLaporan, 'dd/MM/yyyy')}"></span>23:59</small>
-                                        <form id="submitLaporan" th:action="@{/submit-laporan-{id}(id=${pengajuan.id})}"
-                                            method="post" enctype="multipart/form-data"
-                                            style="margin-bottom: 5px; margin-left: 0;">
-                                            <input type="file" name="laporan" accept=".pdf"
-                                                class="form-control-file form-control" required
-                                                style="margin-left: -10px;" maxFileSize="25MB">
-                                            <small class="form-text text-muted" style="margin-left: -10px;">Ukuran file
-                                                pdf maximum: 25MB</small>
-                                            <div class="text-danger" id="fileSizeError"
-                                                style="display: none; color: red; margin-left: -10px;">Ukuran file pdf
-                                                tidak boleh lebih dari 25MB.</div>
-                                            <button type="submit" name="submit" value="submit" class="btn btn-success"
-                                                style="display: inline; padding: 5px 10px; margin-left: -10px;">Submit</button>
-                                        </form>
+                                        <th:block th:if="${pengajuan.tanggalLaporan.time lt #dates.createNow().time}">
+                                            <small class="form-text text-muted" style="margin-bottom: 5px; color: red; margin-left: 0;">Anda telah melewati batas waktu pengumpulan laporan!</small>
+                                        </th:block>
+                                        <th:block th:unless="${pengajuan.tanggalLaporan.time lt #dates.createNow().time}">
+                                            <small class="form-text text-muted" style="margin-bottom: 5px; color: red; margin-left: 0;">Mohon untuk mengumpulkan laporan sebelum <span th:text="${#dates.format(pengajuan.tanggalLaporan, 'dd/MM/yyyy')}"></span>23:59</small>
+                                            <form id="submitLaporan" th:action="@{/submit-laporan-{id}(id=${pengajuan.id})}" method="post" enctype="multipart/form-data" style="margin-bottom: 5px; margin-left: 0;">
+                                                <input type="file" name="laporan" accept=".pdf" class="form-control-file form-control" required style="margin-left: -10px;" maxFileSize="25MB">
+                                                <small class="form-text text-muted" style="margin-left: -10px;">Ukuran file pdf maximum: 25MB</small>
+                                                <div class="text-danger" id="fileSizeError" style="display: none; color: red; margin-left: -10px;">Ukuran file pdf tidak boleh lebih dari 25MB.</div>
+                                                <button type="submit" name="submit" value="submit" class="btn btn-success" style="display: inline; padding: 5px 10px; margin-left: -10px;">Submit</button>
+                                            </form>
+                                        </th:block>
                                     </div>
                                 </div>
                                 <br>
