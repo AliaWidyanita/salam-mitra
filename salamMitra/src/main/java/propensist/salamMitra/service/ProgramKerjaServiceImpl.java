@@ -84,7 +84,9 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
     @Override
     public List<String> getAllKategoriAsnaf() {
         List<String> kategoriAsnaf = new ArrayList<>();
+        kategoriAsnaf.add("Fakir");
         kategoriAsnaf.add("Miskin");
+        kategoriAsnaf.add("Amil");
         kategoriAsnaf.add("Mualaf");
         kategoriAsnaf.add("Riqab");
         kategoriAsnaf.add("Gharimin");
@@ -146,4 +148,34 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
         }
         return null;
     } 
+
+    public List<ProgramKerja> filterPrograms(String kategoriProgram, String kategoriAsnaf, String provinsi) {
+        if (kategoriProgram.isEmpty() && kategoriAsnaf.isEmpty() && provinsi.isEmpty()) {
+            return getAllProgramAktif();
+        }
+    
+        if (kategoriProgram.isEmpty()) {
+            if (kategoriAsnaf.isEmpty()) {
+                return programKerjaDb.findProgramKerjaByProvinsi(provinsi);
+            }
+            if (provinsi.isEmpty()) {
+                return programKerjaDb.findProgramKerjaByKategoriAsnaf(kategoriAsnaf);
+            }
+            return programKerjaDb.findProgramKerjaByKategoriAsnafAndProvinsi(kategoriAsnaf, provinsi);
+        }
+    
+        if (kategoriAsnaf.isEmpty()) {
+            if (provinsi.isEmpty()) {
+                return programKerjaDb.findProgramKerjaByKategoriProgram(kategoriProgram);
+            }
+            return programKerjaDb.findProgramKerjaByKategoriProgramAndProvinsi(kategoriProgram, provinsi);
+        }
+    
+        if (provinsi.isEmpty()) {
+            return programKerjaDb.findProgramKerjaByKategoriProgramAndKategoriAsnaf(kategoriProgram, kategoriAsnaf);
+        }
+    
+        return programKerjaDb.findProgramKerjaByKategoriProgramAndKategoriAsnafAndProvinsi(kategoriProgram, kategoriAsnaf, provinsi);
+    }
+    
 }
