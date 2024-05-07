@@ -19,5 +19,4 @@ public interface PengajuanService {
     void handleBukuTabungan(Pengajuan pengajuan);
     String formatRupiah(Long rupiah);
     List<Pengajuan> findByTanggalLaporan(Date tomorrow);
-
 }
