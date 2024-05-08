@@ -6,7 +6,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
     <style>
         /* CSS for cards */
+        /* CSS for cards */
         .card {
+            width: calc(33.333% - 40px); /* Width of the card in one row (33.333%) minus margin */
             width: calc(33.333% - 40px); /* Width of the card in one row (33.333%) minus margin */
             height: 500px;
             background-color: #f8f9fa;
@@ -16,8 +18,10 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             position: relative;
             perspective: 1000px; /* Adding perspective for 3D effect */
+            perspective: 1000px; /* Adding perspective for 3D effect */
         }
 
+        /* Layout for cards in one row */
         /* Layout for cards in one row */
         .card-container {
             display: flex;
@@ -25,9 +29,12 @@
             margin: 0 auto; 
             margin-top: 20px;
             max-width: 1300px; /* Limit maximum width to ensure 3 cards per row */
+            margin-top: 20px;
+            max-width: 1300px; /* Limit maximum width to ensure 3 cards per row */
         }
 
         .card:hover .card-inner {
+            transform: rotateY(180deg); /* Rotate card on hover */
             transform: rotateY(180deg); /* Rotate card on hover */
         }
 
@@ -37,6 +44,7 @@
             position: absolute;
             transition: transform 0.5s;
             transform-style: preserve-3d; /* Ensuring children remain 3D */
+            transform-style: preserve-3d; /* Ensuring children remain 3D */
         }
 
         .card-front,
@@ -45,12 +53,14 @@
             height: 100%;
             position: absolute;
             backface-visibility: hidden; /* Hide back of card */
+            backface-visibility: hidden; /* Hide back of card */
             display: flex;
             flex-direction: column;
             padding: 20px;
         }
 
         .card-back {
+            transform: rotateY(180deg); /* Rotate back of card */
             transform: rotateY(180deg); /* Rotate back of card */
             z-index: 1;
             display: flex;
@@ -60,6 +70,7 @@
 
         .card img {
             width: 100%;
+            height: 50%; /* Half height for image */
             height: 50%; /* Half height for image */
             object-fit: cover;
             border-radius: 10px; /* Rounded corners for the image */
@@ -125,13 +136,14 @@
         .add-program-button {
             margin-top: 10px;
             margin-bottom: 50px;
+            margin-bottom: 50px;
         }
 
         .add-program-button a {
             text-decoration: none;
             background-color: #EB316E;
             color: #fff;
-            padding: 10px 20px;
+            padding: 8px 15px;
             border-radius: 20px;
             transition: background-color 0.3s ease;
         }
@@ -238,6 +250,91 @@
             background-color: #db6e15;
         }
 
+
+        #searchInput:focus {
+            color: #f28123;
+        }
+        
+        /* Style for pop-up container */
+        .popup {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+        /* Style for pop-up content */
+        .popup-content {
+            background-color: white;
+            margin: 200px auto;
+            padding: 20px;
+            width: 40%;
+            border-radius: 10px;
+        }
+
+        /* Style for close button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .action-button {
+            color: #6c757d;
+            padding: 3px 15px;
+            border: 1px solid #ccd4db; 
+            border-radius: 5px;
+            transition: color 0.3s ease, border-color 0.3s ease; 
+            overflow: hidden;
+            cursor: pointer;
+            background: none;
+        }
+
+        .action-button:hover {
+            color: #fff;
+            background-color: #f28123;
+            border: 1px solid #f28123; 
+        }
+
+        .popup-content .form-content {
+            text-align: left;
+            padding-left: 20px;
+        }
+
+        .popup-content .form-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-button {
+            color: #fff;
+            background-color: #f28123;
+            padding: 5px 20px;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+            overflow: hidden;
+            cursor: pointer;
+            border: none;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .filter-button:hover {
+            color: #fff;
+            background-color: #db6e15;
+        }
+
     </style>
 </head>
 
@@ -245,10 +342,11 @@
     <div th:replace="~{fragments/navbar :: header(page='program')}"></div>
     <div class="container-fluid" style="padding-bottom: 5%; padding-top: 10%;">
         <div class="text-center">
-            <h2 class="m-4">Daftar Program</h2>
+            <h3 class="m-4">Daftar Program</h3>
             
             <th:block th:if="${role == 'admin_PROGRAM'}">
                 <div class="add-program-button">
+                    <a href="/tambah-program">+ Tambah Program</a>
                     <a href="/tambah-program">+ Tambah Program</a>
                 </div>
             </th:block>
@@ -257,7 +355,7 @@
             <div style="flex-wrap: wrap; margin: 0 auto; max-width: 1300px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-right: 20px; margin-left: 20px; margin-top: 80px;">
                     <div>
-                        <!-- <button class="action-button" onclick="openFilterPopup()">Filter Program</button> -->
+                        <button class="action-button" onclick="openFilterPopup()">Filter Program</button>
                         <button class="action-button" id="sortButton" onclick="toggleSort()" style="margin-left: 5px;"><i id="sortIcon" class="bi-sort-alpha-down"></i> Judul</button>
                         
                     </div>
@@ -274,19 +372,19 @@
             
             
             <th:block th:if="${listProgram.isEmpty()}">
-                <p style="display: flex; flex-direction: column; justify-content: center; height: 50vh;">Mohon maaf, belum ada program yang tersedia.</p>
+                <p style="display: flex; flex-direction: column; justify-content: center; height: 50vh;">Mohon maaf, tidak ada program yang tersedia.</p>
             </th:block>
             
-            <!-- <div id="filterPopup" class="popup">
+            <div id="filterPopup" class="popup">
                 <div class="popup-content">
-                    Close button
+                    <!-- Close button -->
                     <span class="close" onclick="closeFilterPopup()">&times;</span>
-                    Form for filtering programs
+                    <!-- Form for filtering programs -->
                     <form action="/filter-program" method="GET">
                         <h5 style="margin-bottom: 20px; margin-top: 20px;">Filter Program</h5>
-                        Container for form content
+                        <!-- Container for form content -->
                         <div class="form-content">
-                            Labels and dropdowns
+                            <!-- Labels and dropdowns -->
                             <div class="form-group">
                                 <label for="kategoriProgram">Pilih Kategori Program</label>
                                 <select class="form-control" id="kategoriProgram" name="kategoriProgram">
@@ -315,24 +413,27 @@
                                 </select>
                             </div>
                         </div>
-                        Submit button
+                        <!-- Submit button -->
                         <div>
                             <input  class="filter-button" type="submit" value="Filter" >
                         </div>
                     </form>
                 </div>
             </div>
-        </div>     -->
+        </div>    
 
         <div class="card-container">
             <!-- Iterate over programs -->
+            <!-- Iterate over programs -->
             <div th:each="program : ${listProgram}" class="card">
                 <div class="card-inner">
+                    <!-- Front and back of the card -->
                     <!-- Front and back of the card -->
                     <div class="card-front">
                         <img th:if="${program.fotoProgram != null}" th:src="'data:image/jpeg;base64,' + ${program.imageBase64}" alt="Program Image">
                         <img th:if="${program.fotoProgram == null}" src="/assets/img/placeholder-program.png" alt="Placeholder" class="img-fluid">
                         <div class="overlay">
+                            <h4 th:text="${program.judul}" class="program-title"></h4>
                             <h4 th:text="${program.judul}" class="program-title"></h4>
                             <h6 class="category" th:text="${program.kategoriProgram}"></h6>
                             <p class="description" th:text="${program.deskripsi}"></p>
@@ -340,6 +441,7 @@
                     </div>
                     <div class="card-back">
                         <a th:href="'/program-' + ${program.id}" class="overlay-button">Lihat Detail Program</a>
+                        <!-- Link to edit program -->
                         <!-- Link to edit program -->
                         <th:block th:if="${role == 'admin_PROGRAM'}">
                             <a th:href="'/edit-program-' + ${program.id}" class="overlay-button-edit">Edit Program</a>
@@ -350,6 +452,8 @@
         </div>
     </div>
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -393,9 +497,67 @@
                 }
             });
             $('.card-container').empty().append(cards);
+        // Function to open the filter pop-up
+        function openFilterPopup() {
+            $('#filterPopup').show();
+        }
+
+        // Function to close the filter pop-up
+        function closeFilterPopup() {
+            $('#filterPopup').hide();
+        }
+
+        // Function to toggle sorting button and icon
+        function toggleSort() {
+            var sortButton = $('#sortButton');
+            var sortIcon = $('#sortIcon');
+            if (sortIcon.hasClass('bi-sort-alpha-down')) {
+                sortIcon.removeClass('bi-sort-alpha-down');
+                sortIcon.addClass('bi-sort-alpha-down');
+                sortButton.html('<i id="sortIcon" class="bi-sort-alpha-down-alt"></i> Judul');
+                sortPrograms('asc');
+            } else {
+                sortIcon.removeClass('bi-sort-alpha-down-alt');
+                sortIcon.addClass('bi-sort-alpha-down');
+                sortButton.html('<i id="sortIcon" class="bi-sort-alpha-down"></i> Judul');
+                sortPrograms('desc');
+            }
+        }
+
+        // Function to sort programs
+        function sortPrograms(order) {
+            var cards = $('.card-container .card').get();
+            cards.sort(function(a, b) {
+                var titleA = $(a).find('.program-title').text().toUpperCase();
+                var titleB = $(b).find('.program-title').text().toUpperCase();
+                if (order === 'asc') {
+                    return (titleA < titleB) ? -1 : (titleA > titleB) ? 1 : 0;
+                } else {
+                    return (titleA > titleB) ? -1 : (titleA < titleB) ? 1 : 0;
+                }
+            });
+            $('.card-container').empty().append(cards);
         }
     </script>
+    </script>
 
+    <script>
+        $(document).ready(function() {
+            // Attach input event listener to the search input field
+            $('#searchInput').on('input', function() {
+                var query = $(this).val().toLowerCase(); // Get the search query
+                // Filter programs based on title and program category
+                $('.card').each(function() {
+                    var title = $(this).find('.program-title').text().toLowerCase();
+                    var category = $(this).find('.category').text().toLowerCase();
+                    if (title.includes(query) || category.includes(query)) {
+                        $(this).show(); // Show card if it matches the query
+                    } else {
+                        $(this).hide(); // Hide card if it doesn't match the query
+                    }
+                });
+            });
+        });
     <script>
         $(document).ready(function() {
             // Attach input event listener to the search input field
@@ -436,5 +598,6 @@
     <!-- main js -->
     <script src="assets/js/main.js"></script>
 </body>
+
 
 </html>

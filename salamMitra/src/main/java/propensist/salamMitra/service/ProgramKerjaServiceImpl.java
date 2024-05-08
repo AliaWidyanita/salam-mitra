@@ -85,7 +85,9 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
     public List<String> getAllKategoriAsnaf() {
         List<String> kategoriAsnaf = new ArrayList<>();
         kategoriAsnaf.add("Fakir");
+        kategoriAsnaf.add("Fakir");
         kategoriAsnaf.add("Miskin");
+        kategoriAsnaf.add("Amil");
         kategoriAsnaf.add("Amil");
         kategoriAsnaf.add("Mualaf");
         kategoriAsnaf.add("Riqab");
@@ -150,32 +152,42 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
     } 
 
     public List<ProgramKerja> filterPrograms(String kategoriProgram, String kategoriAsnaf, String provinsi) {
+        List<ProgramKerja> listProgramKerja = new ArrayList<>();
+        
         if (kategoriProgram.isEmpty() && kategoriAsnaf.isEmpty() && provinsi.isEmpty()) {
             return getAllProgramAktif();
         }
     
         if (kategoriProgram.isEmpty()) {
             if (kategoriAsnaf.isEmpty()) {
-                return programKerjaDb.findProgramKerjaByProvinsi(provinsi);
+                listProgramKerja.addAll(programKerjaDb.findProgramKerjaByProvinsi("Seluruh Indonesia"));
+                listProgramKerja.addAll(programKerjaDb.findProgramKerjaByProvinsi(provinsi));
+                return listProgramKerja;
             }
             if (provinsi.isEmpty()) {
                 return programKerjaDb.findProgramKerjaByKategoriAsnaf(kategoriAsnaf);
             }
-            return programKerjaDb.findProgramKerjaByKategoriAsnafAndProvinsi(kategoriAsnaf, provinsi);
+            listProgramKerja.addAll(programKerjaDb.findProgramKerjaByProvinsi("Seluruh Indonesia"));
+            listProgramKerja.addAll(programKerjaDb.findProgramKerjaByKategoriAsnafAndProvinsi(kategoriAsnaf, provinsi));
+            return listProgramKerja;
         }
     
         if (kategoriAsnaf.isEmpty()) {
             if (provinsi.isEmpty()) {
                 return programKerjaDb.findProgramKerjaByKategoriProgram(kategoriProgram);
             }
-            return programKerjaDb.findProgramKerjaByKategoriProgramAndProvinsi(kategoriProgram, provinsi);
+            listProgramKerja.addAll(programKerjaDb.findProgramKerjaByProvinsi("Seluruh Indonesia"));
+            listProgramKerja.addAll(programKerjaDb.findProgramKerjaByKategoriProgramAndProvinsi(kategoriProgram, provinsi));
+            return listProgramKerja;
         }
     
         if (provinsi.isEmpty()) {
             return programKerjaDb.findProgramKerjaByKategoriProgramAndKategoriAsnaf(kategoriProgram, kategoriAsnaf);
         }
-    
-        return programKerjaDb.findProgramKerjaByKategoriProgramAndKategoriAsnafAndProvinsi(kategoriProgram, kategoriAsnaf, provinsi);
+        
+        listProgramKerja.addAll(programKerjaDb.findProgramKerjaByProvinsi("Seluruh Indonesia"));
+        listProgramKerja.addAll(programKerjaDb.findProgramKerjaByKategoriProgramAndKategoriAsnafAndProvinsi(kategoriProgram, kategoriAsnaf, provinsi));
+        return listProgramKerja;
     }
     
 }
