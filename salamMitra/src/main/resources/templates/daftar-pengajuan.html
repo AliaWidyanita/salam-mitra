@@ -16,12 +16,9 @@
             <div class="row d-flex justify-content-center">
                 <div class="col-md-7">
                     <th:block th:if="${role == 'mitra'}">
-                        <h3 class="text-center m-4">Daftar Ajuan Saya</h3>
+                        <h2 class="text-center m-4">Daftar Ajuan Saya</h2>
                     </th:block>
-                    <th:block th:if="${role == 'admin_PROGRAM' || role == 'program_service'}">
-                        <h3 class="text-center m-4">Daftar Pengajuan Kerja Sama</h3>
-                    </th:block> 
-                    <th:block th:if="${role == 'manajemen'}">
+                    <th:block th:if="${role == 'admin_PROGRAM' || role == 'manajemen' || role == 'program_service'}">
                         <h3 class="text-center m-4">Daftar Pengajuan Kerja Sama</h3>
                     </th:block>
                     <div class="row">
@@ -34,8 +31,9 @@
                             </th:block>
                         </div>
                     </div>
+                    <br>
                     <div style="text-align: left; margin-bottom: 10px;">
-                        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Cari pengajuan...">
+                        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Cari pengajuan..." class="form-control">
                     </div>
                     <table class="table table-bordered" id="dataTable">
                         <thead class="bg-dark text-white text-center">

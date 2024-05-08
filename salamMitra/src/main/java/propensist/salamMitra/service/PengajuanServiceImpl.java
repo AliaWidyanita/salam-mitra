@@ -103,8 +103,8 @@ public class PengajuanServiceImpl implements PengajuanService{
     }
 
     @Override
-    public List<Pengajuan> findByTenggatWaktuBetween(Date startDate, Date endDate) {
-        return pengajuanDb.findByTanggalLaporanBetween(startDate, endDate);
+    public List<Pengajuan> findByTanggalLaporan(Date tomorrow) {
+        return pengajuanDb.findByTanggalLaporan(tomorrow);
     }
 
 }
