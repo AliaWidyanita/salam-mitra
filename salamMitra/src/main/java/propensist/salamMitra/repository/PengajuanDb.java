@@ -20,5 +20,4 @@ public interface PengajuanDb extends JpaRepository<Pengajuan, Long> {
     List<Object[]> jumlahPengajuanByStatus();
 
     List<Pengajuan> findByTanggalLaporan(Date tomorrow);
-
 }
