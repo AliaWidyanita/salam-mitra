@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import propensist.salamMitra.model.KebutuhanDana;
 import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.repository.KebutuhanDanaDb;
+import propensist.salamMitra.repository.PengajuanDb;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
