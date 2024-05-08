@@ -18,5 +18,5 @@ public interface PengajuanService {
     Map<String, Long> jumlahPengajuanByStatus();
     void handleBukuTabungan(Pengajuan pengajuan);
     String formatRupiah(Long rupiah);
-    List<Pengajuan> findByTenggatWaktuBetween(Date hMinus1, Date now);
+    List<Pengajuan> findByTanggalLaporan(Date tomorrow);
 }

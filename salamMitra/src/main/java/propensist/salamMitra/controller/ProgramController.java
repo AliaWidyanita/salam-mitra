@@ -64,7 +64,34 @@ public class ProgramController {
         }
 
         model.addAttribute("listProgram", listProgram);
+        model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
+        model.addAttribute("daftarKategoriProgram", programKerjaService.getAllKategoriProgram());
+        model.addAttribute("daftarKategoriAsnaf", programKerjaService.getAllKategoriAsnaf());
         
+        return "view-daftar-program";
+    }
+
+    @GetMapping("/filter-program")
+    public String filterProgram(@RequestParam(name = "kategoriProgram", required = false) String kategoriProgram,
+                                 @RequestParam(name = "kategoriAsnaf", required = false) String kategoriAsnaf,
+                                 @RequestParam(name = "provinsi", required = false) String provinsi,
+                                 Model model) {
+        
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
+        System.out.println("ini kategoriprogram = " + kategoriProgram);
+
+        List<ProgramKerja> filteredPrograms = programKerjaService.filterPrograms(kategoriProgram, kategoriAsnaf, provinsi);
+        model.addAttribute("listProgram", filteredPrograms);
+        model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
+        model.addAttribute("daftarKategoriProgram", programKerjaService.getAllKategoriProgram());
+        model.addAttribute("daftarKategoriAsnaf", programKerjaService.getAllKategoriAsnaf());
+
         return "view-daftar-program";
     }
 

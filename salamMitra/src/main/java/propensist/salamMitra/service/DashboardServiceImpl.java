@@ -47,9 +47,12 @@ public class DashboardServiceImpl implements DashboardService {
 
         // Menghitung jumlah program kerja untuk setiap kategori
         for (ProgramKerja programKerja : programKerjaList) {
-            String kategori = programKerja.getKategoriProgram();
-            int jumlahProgramKerja = jumlahProgramKerjaPerKategori.getOrDefault(kategori, 0);
-            jumlahProgramKerjaPerKategori.put(kategori, jumlahProgramKerja + 1);
+            if(!programKerja.isDeleted()){
+                String kategori = programKerja.getKategoriProgram();
+                int jumlahProgramKerja = jumlahProgramKerjaPerKategori.getOrDefault(kategori, 0);
+                jumlahProgramKerjaPerKategori.put(kategori, jumlahProgramKerja + 1);
+
+            }
         }
 
         return jumlahProgramKerjaPerKategori;

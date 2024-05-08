@@ -19,6 +19,5 @@ public interface PengajuanDb extends JpaRepository<Pengajuan, Long> {
     @Query("SELECT p.status, COUNT(p) FROM Pengajuan p GROUP BY p.status")
     List<Object[]> jumlahPengajuanByStatus();
 
-    List<Pengajuan> findByTanggalLaporanBetween(Date startDate, Date endDate);
-
+    List<Pengajuan> findByTanggalLaporan(Date tomorrow);
 }
