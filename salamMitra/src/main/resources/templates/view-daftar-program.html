@@ -1,247 +1,98 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
-    <style>
-        /* CSS for cards */
-        .card {
-            width: calc(33.333% - 40px); /* Width of the card in one row (33.333%) minus margin */
-            height: 500px;
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: relative;
-            perspective: 1000px; /* Adding perspective for 3D effect */
-        }
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
 
-        /* Layout for cards in one row */
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 0 auto; 
-            margin-top: 20px;
-            max-width: 1300px; /* Limit maximum width to ensure 3 cards per row */
-        }
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
 
-        .card:hover .card-inner {
-            transform: rotateY(180deg); /* Rotate card on hover */
-        }
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
 
-        .card-inner {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            transition: transform 0.5s;
-            transform-style: preserve-3d; /* Ensuring children remain 3D */
-        }
+    <title>Vertical Layouts - Forms | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
 
-        .card-front,
-        .card-back {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            backface-visibility: hidden; /* Hide back of card */
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
+    <meta name="description" content="" />
 
-        .card-back {
-            transform: rotateY(180deg); /* Rotate back of card */
-            z-index: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
 
-        .card img {
-            width: 100%;
-            height: 50%; /* Half height for image */
-            object-fit: cover;
-            border-radius: 10px; /* Rounded corners for the image */
-            margin-bottom: 15px;
-        }
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
 
-        .overlay {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            overflow: hidden;
-        }
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
 
-        .description { 
-            display: -webkit-box; 
-            -webkit-box-orient: vertical; 
-            -webkit-line-clamp: 3; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-        } 
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="../assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="../assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="../assets/css/demo.css" />
 
-        .overlay:hover {
-            color: #000000;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
 
-        .overlay-button {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            background-color: #f28123;
-            transition: background-color 0.3s ease;
-            overflow: hidden;
-        }
+    <!-- Page CSS -->
 
-        .overlay-button:hover {
-            color: #fff;
-            background-color: #cb5f08;
-            transition: background-color 0.3s ease;
-        }
+    <!-- Helpers -->
+    <script src="../assets/vendor/js/helpers.js"></script>
 
-        .overlay-button-edit {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            background-color: #23bbf2;
-            transition: background-color 0.3s ease;
-            overflow: hidden;
-            margin-top: 15px;
-        }
-
-        .overlay-button-edit:hover {
-            color: #fff;
-            background-color: #0da4db;
-            transition: background-color 0.3s ease;
-        }
-        
-        .add-program-button {
-            margin-top: 10px;
-            margin-bottom: 50px;
-        }
-
-        .add-program-button a {
-            text-decoration: none;
-            background-color: #EB316E;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
-        }
-
-        .add-program-button a:hover {
-            background-color: #DD1F3F;
-            color: #fff;
-        }
-
-        .alert-success {
-            display: inline-block;
-            text-align: center;
-            width: auto;
-            margin-top: 30px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .category {
-            color: dimgray;
-        }
-
-        #searchInput:focus {
-            color: #f28123;
-        }
-        
-        /* Style for pop-up container */
-        .popup {
-            display: none;
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 9999;
-        }
-
-        /* Style for pop-up content */
-        .popup-content {
-            background-color: white;
-            margin: 200px auto;
-            padding: 20px;
-            width: 40%;
-            border-radius: 10px;
-        }
-
-        /* Style for close button */
-        .close {
-            color: #aaaaaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .action-button {
-            color: #6c757d;
-            padding: 3px 15px;
-            border: 1px solid #ccd4db; 
-            border-radius: 5px;
-            transition: color 0.3s ease, border-color 0.3s ease; 
-            overflow: hidden;
-            cursor: pointer;
-            background: none;
-        }
-
-        .action-button:hover {
-            color: #fff;
-            background-color: #f28123;
-            border: 1px solid #f28123; 
-        }
-
-        .popup-content .form-content {
-            text-align: left;
-            padding-left: 20px;
-        }
-
-        .popup-content .form-group {
-            margin-bottom: 15px;
-        }
-
-        .filter-button {
-            color: #fff;
-            background-color: #f28123;
-            padding: 5px 20px;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
-            overflow: hidden;
-            cursor: pointer;
-            border: none;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-
-        .filter-button:hover {
-            color: #fff;
-            background-color: #db6e15;
-        }
-    </style>
-</head>
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="../assets/js/config.js"></script>
+  </head>
 
 <body>
-    <div th:replace="~{fragments/navbar :: header(page='program')}"></div>
+    <!-- <div th:replace="~{fragments/navbar :: header(page='program')}"></div> -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+   <a class="navbar-brand" href="javascript:void(0)">Primary</a>
+   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-ex-7">
+   <span class="navbar-toggler-icon"></span>
+   </button>
+
+   <div class="collapse navbar-collapse" id="navbar-ex-7">
+   <div class="navbar-nav me-auto">
+      <a class="nav-item nav-link active" href="javascript:void(0)">Home</a>
+      <a class="nav-item nav-link" href="javascript:void(0)">About</a>
+      <a class="nav-item nav-link" href="javascript:void(0)">Contact</a>
+      <a class="nav-item nav-link disabled" href="javascript:void(0)">Disabled</a>
+   </div>
+   <ul class="navbar-nav ms-lg-auto">
+      <li class="nav-item">
+         <a class="nav-link" href="javascript:void(0)"><i class="tf-icons navbar-icon bx bx-user"></i> Profile</a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link" href="javascript:void(0)"><i class="tf-icons navbar-icon bx bx-cog"></i> Settings</a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link" href="javascript:void(0)"><i class="tf-icons navbar-icon bx bx-lock-open-alt"></i> Logout</a>
+      </li>
+   </ul>
+   </div>
+  </div>
+</nav>    
     <div class="container-fluid" style="padding-bottom: 5%; padding-top: 10%;">
         <div class="text-center">
             <h3 class="m-4">Daftar Program</h3>
@@ -471,26 +322,25 @@
         });
     </script>
 
-    <!-- jquery -->
-    <script src="assets/js/jquery-1.11.3.min.js"></script>
-    <!-- bootstrap -->
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <!-- count down -->
-    <script src="assets/js/jquery.countdown.js"></script>
-    <!-- isotope -->
-    <script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
-    <!-- waypoints -->
-    <script src="assets/js/waypoints.js"></script>
-    <!-- owl carousel -->
-    <script src="assets/js/owl.carousel.min.js"></script>
-    <!-- magnific popup -->
-    <script src="assets/js/jquery.magnific-popup.min.js"></script>
-    <!-- mean menu -->
-    <script src="assets/js/jquery.meanmenu.min.js"></script>
-    <!-- sticker js -->
-    <script src="assets/js/sticker.js"></script>
-    <!-- main js -->
-    <script src="assets/js/main.js"></script>
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="../assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../assets/vendor/libs/popper/popper.js"></script>
+    <script src="../assets/vendor/js/bootstrap.js"></script>
+    <script src="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+
+    <script src="../assets/vendor/js/menu.js"></script>
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+
+    <!-- Main JS -->
+    <script src="../assets/js/main.js"></script>
+
+    <!-- Page JS -->
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 
 </html>
