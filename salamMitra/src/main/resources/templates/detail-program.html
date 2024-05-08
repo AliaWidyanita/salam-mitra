@@ -61,28 +61,6 @@
             display: table;
         }
 
-        /* Style untuk modal konfirmasi */
-        #deleteModal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            border-radius: 10px;
-            width: 50%;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-            text-align: end;
-        }
-
         .close {
             color: rgb(144, 144, 144);
             float: left;
@@ -96,37 +74,6 @@
             text-decoration: none;
             cursor: pointer;
         }
-
-        .modal-content p {
-            padding: 10px 0;
-            text-align: center;
-            font-size: 20px;
-        }
-
-        .modal-content button {
-            margin: 5px;
-            padding: 10px 20px;
-            border-radius: 10px; 
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .modal-content button:hover {
-            background-color: #9c9c9c;
-            color: #fff;
-        }
-
-        .modal-content button:first-child {
-            background-color: #9c9c9c; /* Warna abu tua */
-            color: #fff;
-        }
-
-        .modal-content button:last-child {
-            background-color: #f23d3d;
-            color: #fff;
-        }
-
         /* Style untuk pesan program dihapus */
         .program-deleted-message {
             text-align: center;
@@ -141,7 +88,7 @@
             background-color: #f23d3d;
             color: #fff;
             border: none;
-            border-radius: 10px;
+            border-radius: 5px;
             width: 40px;
             height: 40px;
             display: flex;
@@ -149,10 +96,6 @@
             align-items: center;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .delete-button:hover {
-            background-color: rgb(219, 54, 54);
         }
 
         .edit-button {
@@ -199,6 +142,43 @@
 
         .back-button:hover  {
             color: black;
+        }
+
+        /* Style for pop-up container */
+        .popup {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+            z-index: 9999;
+            overflow-y: auto;
+        }
+
+        /* Style for pop-up content */
+        .popup-content {
+            background-color: white;
+            margin: 200px auto;
+            padding: 20px;
+            width: 60%;
+            border-radius: 10px;
+        }
+
+        /* Style for close button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
         }
 
     </style>
@@ -254,7 +234,7 @@
                                 </p>
                                 </div>
                                 <div style="margin-bottom: 10px;">
-                                    <p style="font-weight: bold;">Kategori Asnaf</p>
+                                    <p style="font-weight: bold;">Kategori Asnaf <sup><i class="bi bi-info-circle" style="margin-left: 2px; font-size: 13px; cursor: pointer; color: #f28123;" onclick="showInfoPopup()"></i></sup></p>
                                     <div style="margin-left: 10px;">
                                         <span th:each="kategoriAsnaf : ${program.kategoriAsnaf}" class="iterate-item"  th:text="${kategoriAsnaf}"></span>
                                     </div>
@@ -300,18 +280,127 @@
     </div>
 
     <!-- Modal konfirmasi penghapusan -->
-    <div id="deleteModal" class="modal">
-        <div class="modal-content">
+    <div id="deleteModal" class="popup">
+        <div class="popup-content" style="height: 250px;">
             <span class="close" onclick="closeDeleteModal()">&times;</span>
-            <p>Apakah Anda yakin ingin menghapus program ini?</p>
-            <div class="button-row-modal">
-                <!-- Tombol untuk membatalkan penghapusan -->
-                <button onclick="closeDeleteModal()">Batal</button>
-                <!-- Tombol untuk mengonfirmasi penghapusan -->
-                <form id="deleteForm" th:action="@{/hapus-program-{id}(id=${program.id})}" method="post">
-                    <button type="submit">Hapus</button>
-                </form>
-            </div>
+            <h5 style="text-align: center; margin-top: 50px; margin-bottom: 50px;">Apakah Anda yakin ingin menghapus program ini?</h5>
+            <!-- Tombol untuk mengonfirmasi penghapusan -->
+            <form id="deleteForm" th:action="@{/hapus-program-{id}(id=${program.id})}" method="post">
+                <div style="display: flex;">
+                    <button type="button" onclick="closeDeleteModal()" style="margin-right: 15px; font-weight: bold; background-color: #a9a9a9; color: #fff; border: none; border-radius: 25px; padding: 10px 20px; cursor: pointer; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#828282'" onmouseout="this.style.backgroundColor='#a9a9a9'">Batal</button>
+                    <button style="margin-left: 15px; text-transform: none; background-color: #f23d3d; color: #fff; border: none; padding: 10px 20px; cursor: pointer; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#d32f2f'" onmouseout="this.style.backgroundColor='#f23d3d'" type="submit">Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="infoPopup" class="popup">
+        <div class="popup-content" style="padding: 30px;">
+            <span class="close" onclick="closeInfoPopup()">&times;</span>
+            <h5>Penjelasan Kategori Asnaf</h5>
+            
+            <h6>A. Fakir</h6>
+                <div style="margin: 20px;">
+                    <p>
+                        Merupakan orang yang sama sekali tidak mempunyai sumber mata penghasilan untuk memenuhi kebutuhan dasar.
+                        <ul>
+                            <li>Lansia yang tidak bisa bekerja</li>
+                            <li>Anak yang belum baligh</li>
+                            <li>Orang yang sakit atau cacat fisik/mental</li>
+                            <li>Orang yang berjuang di jalan Allah tanpa menerima bayaran</li>
+                            <li>Korban bencana alam dan/atau bencana sosial baik muslim maupun non-muslim</li>
+                        </ul>
+                    </p>
+                </div>
+
+            <h6>B. Miskin</h6>
+                <div style="margin: 20px;">
+                    <p>
+                        Merupakan orang yang mempunyai sumber mata pencaharian tetapi tidak mempunya kemampuan kebutuhan dasar yang layak bagi 
+                        kehidupan dirinya dan atau keluarga yang menjadi tanggungannya.
+                        <ul>
+                            <li>Orang yang tidak/kurang memiliki pengetahuan dan keterampilan</li>
+                            <li>Orang yang tidak/kurang memiliki modal usaha</li>
+                            <li>Orang yang tidak/kurang memiliki akses terhadap pasar</li>
+                            <li>Orang yang tidak/kurang memiliki akses terhadap fasilitas pendidikan dan kesehatan</li>
+                            <li>Orang yang tidak/kurang memiliki akses untuk beribadah</li>
+                        </ul>
+                    </p>
+                </div>
+            
+            <h6>C. Amil</h6>
+                <div style="margin: 20px;">
+                    <p>
+                        Merupakan seseorang atau sekelompok orang yang diangkat dan atau diberi kewenangan oleh pemerintah, 
+                        pemerindah daerab, badan, lembaga yang diberikan izin oleh pemerintah dan atau pemerintah daerah dan/atau 
+                        seseorang yang mendapat mandat dari pimpinan Pengelola Zakat untuk mengelola zakat.
+                        <ul>
+                            <li>Petugas amil zakat</li>
+                        </ul>
+                    </p>
+                </div>
+
+            <h6>D. Mualaf</h6>
+                <div style="margin: 20px;">
+                    <p>
+                        Merupakan orang yang sedang dikuatkan keyakinannya karena baru masuk Islam.
+                        <ul>
+                            <li>Orang yang baru masuk Islam</li>
+                            <li>Orang yang rentan permutadan</li>
+                            <li>Orang non-muslim yang tertarik mempelajari agama Islam</li>
+                        </ul>
+                    </p>
+                </div>
+
+            <h6>E. Riqab</h6>
+                <div style="margin: 20px;">
+                    <p>
+                        Merupakan orang yang kehilangan kemerdekaannya atau tersandera kebebasannya yang menyebabkan
+                        tidak bisa beribadah dan atau bermuamalah.
+                        <ul>
+                            <li>Orang yang menjadi korban perdagangan manusia</li>
+                            <li> Orang yang ditahan oleh musuh Islam</li>
+                            <li>Orang yang terjajah dan atau teraniaya</li>
+                        </ul>
+                    </p>
+                </div>
+            
+            <h6>F. Gharimin</h6>
+                <div style="margin: 20px;">
+                    <p>Merupakan orang yang berhutang untuk melaksanakan maslahat dan atau menghindari mudarat sesuai dengan syariat Islam                        
+                        <ul>
+                            <li>Orang yang berhutang untuk kemaslahatan diri dan keluarga secara tidak berlebihan seperti untuk nafkah, mengobati orang sakit, membangun rumah dan lain sebagainya</li>
+                            <li>Orang yang berhutang untuk kemaslahatan umum seperti biaya mendamaikan dua orang muslim atau lebih yang beselisih</li>
+                            <li>Orang yang berhutang untuk kemaslahatan umum lainnya, seperti membangun sarana ibadah</li>
+                        </ul>
+                    </p>
+                </div>
+
+            <h6>G. Fi Sabilillah</h6>
+                <div style="margin: 20px;">
+                    <p>
+                        Merupakan orang yang sedang berjuang menegakkan syariat Islam, mengupayaka kemaslahatan dan
+                        atau menjauhkan umat Islam dari kemudharatan.
+                        <ul>
+                            <li>Orang atau kelompok/lembaga yang sedang berjuang menegakkan kalimat Allah SWT</li>
+                            <li>Orang yang secara ikhlas melaksanakan tuntutan agama baik tntutan wajib, sunnah, dan berbagai kebaikan lainnya dalam rangka mendekatkan diri kepada Allah SWT</li>
+                            <li>Orang atau kelompok/lembaga yang secara ikhlas dan bersungguh-sungguh dalam menuntut ilmu yang bermanfaat bagi umat</li>
+                            <li>Orang atau kelompok/lembaga yang sedang berjuang memperbaiki kondisi kemaslahatan bangsa dan umat Islam</li>
+                        </ul>
+                    </p>
+                </div>
+
+            <h6>H. Ibnu Sabil</h6>
+                <div style="margin: 20px;">
+                    <p>
+                        Merupakan orang yang kehabisan biaya atau bekal dalam melakukan perjalanan dalam rangka melakukan sesuatu yang baik
+                        <ul>
+                            <li>Orang yang terlantar di perjalanan</li>
+                            <li> Orang asing (pengungsi) beragama Islam yang terlantar di wilayah NKRI akibat perang, genosida dan bencana sosial yang terjadi di negara asalnya</li>
+                        </ul>
+                    </p>
+                </div>
         </div>
     </div>
 
@@ -330,8 +419,25 @@
         window.onclick = function(event) {
             if (event.target == deleteModal) {
                 closeDeleteModal();
-            }
+            } 
         }
+
+        var infoPopup = document.getElementById("infoPopup");
+
+        function showInfoPopup() {
+            infoPopup.style.display = "block";
+        }
+
+        function closeInfoPopup() {
+            infoPopup.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+        if (event.target == infoPopup) {
+            closeInfoPopup();
+        } 
+    }
+
     </script>
 
     <!-- jquery -->

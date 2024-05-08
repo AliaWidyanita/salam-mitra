@@ -37,7 +37,7 @@ dependencies {
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 	implementation "jakarta.xml.bind:jakarta.xml.bind-api:4.0.0"
 	implementation "org.glassfish.jaxb:jaxb-runtime:4.0.2"
-
+	compileOnly("org.springframework.boot:spring-boot-devtools");
 }
 
 tasks.named('bootBuildImage') {
