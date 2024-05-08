@@ -223,7 +223,7 @@
                             </div>
                         </th:block>
                         <th:block th:unless="${pengajuan.status == 'Dibatalkan'}">                                
-                            <th:block th:unless="${pengajuan.status == 'Perlu Direvisi'}">
+                            <th:block th:unless="${pengajuan.status == 'Perlu Revisi'}">
                                 <div>
                                     <span class="round"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-clipboard2-data-fill" viewBox="0 0 16 16">
@@ -235,7 +235,7 @@
                                 </div>
                             </th:block>
 
-                            <th:block th:if="${pengajuan.status == 'Perlu Direvisi'}">
+                            <th:block th:if="${pengajuan.status == 'Perlu Revisi'}">
                                 <div>
                                     <span class="round"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-question-circle-fill" viewBox="0 0 16 16">
@@ -295,13 +295,13 @@
                         </th:block>
 
                         <th:block th:unless="${pengajuan.status == 'Dibatalkan'}">
-                            <th:block th:unless="${pengajuan.status == 'Perlu Direvisi'}">
+                            <th:block th:unless="${pengajuan.status == 'Perlu Revisi'}">
                                 <div>
                                     <span class="status-label">Sedang Diperiksa</span>
                                 </div>
                             </th:block>
 
-                            <th:block th:if="${pengajuan.status == 'Perlu Direvisi'}">
+                            <th:block th:if="${pengajuan.status == 'Perlu Revisi'}">
                                 <div>
                                     <span class="status-label">Perlu Direvisi</span>
                                 </div>
@@ -693,7 +693,7 @@
                                                 </div>     
                                                 <div  class="col-auto">
                                                     <button type="submit" name="action" value="perlu-revisi" class="boxed-btn"
-                                                        style="width: 200px; ">Perlu Revisi</button>
+                                                        style="width: 200px; ">Perlu Direvisi</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -732,7 +732,7 @@
                                             </div>     
                                             <div  class="col-auto">
                                                 <button type="submit" name="action" value="perlu-revisi" class="boxed-btn"
-                                                    style="width: 200px; ">Perlu Revisi</button>
+                                                    style="width: 200px; ">Perlu Direvisi</button>
                                             </div>
                                         </div>
                                     </div>
@@ -746,13 +746,13 @@
                         <div th:if="${role eq 'mitra'}" class="col-auto">
                             <a class="boxed-btn" style="width: 200px;text-align: center; font-weight: bold;"
                                 th:href="@{/submit-revisi-{id}(id=${pengajuan.id})}"
-                                th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}">REVISI AJUAN
+                                th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}">Revisi Ajuan
                             </a>
                         </div>
                         <div th:if="${role eq 'mitra'}" class="col-auto">
                             <a class="boxed-btn" style="width: 200px;text-align: center; font-weight: bold;"
                                 onclick="showPembatalanModal()"
-                                th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}">BATALKAN AJUAN</a>
+                                th:if="${pengajuan.status == 'Diajukan' || pengajuan.status == 'Perlu Revisi'}">Batalkan Ajuan</a>
                         </div>
                     </div>
                 </div>
@@ -832,7 +832,7 @@
                 "Menunggu Pencairan Dana oleh Program Service": 3,
                 "Menunggu Pencairan Dana oleh Admin Finance": 3,
                 "Ditolak": 3,
-                "Perlu Direvisi": 3,
+                "Perlu Revisi": 3,
                 "Menunggu Laporan": 4,
                 "Selesai": 5
             };
