@@ -237,7 +237,6 @@
             color: #fff;
             background-color: #db6e15;
         }
-
     </style>
 </head>
 
@@ -245,7 +244,7 @@
     <div th:replace="~{fragments/navbar :: header(page='program')}"></div>
     <div class="container-fluid" style="padding-bottom: 5%; padding-top: 10%;">
         <div class="text-center">
-            <h2 class="m-4">Daftar Program</h2>
+            <h3 class="m-4">Daftar Program</h3>
             
             <th:block th:if="${role == 'admin_PROGRAM'}">
                 <div class="add-program-button">
@@ -253,40 +252,36 @@
                 </div>
             </th:block>
 
-            
             <div style="flex-wrap: wrap; margin: 0 auto; max-width: 1300px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-right: 20px; margin-left: 20px; margin-top: 80px;">
                     <div>
-                        <!-- <button class="action-button" onclick="openFilterPopup()">Filter Program</button> -->
+                        <button class="action-button" onclick="openFilterPopup()">Filter Program</button>
                         <button class="action-button" id="sortButton" onclick="toggleSort()" style="margin-left: 5px;"><i id="sortIcon" class="bi-sort-alpha-down"></i> Judul</button>
                         
                     </div>
                     <div style="display: inline-block; width: 70%;">
                         <input type="text" id="searchInput" name="query" placeholder="Cari berdasarkan judul atau kategori program..." class="form-control">
                     </div>
-
                     <div class="action-button" onmouseover="this.querySelector('a').style.color='#fff'" onmouseout="this.querySelector('a').style.color='#6c757d'">
                         <a style="color: #6c757d;" href="/program">Reset Filter</a>
-                    </div>
-                                                            
+                    </div>                         
                 </div>
             </div>
-            
             
             <th:block th:if="${listProgram.isEmpty()}">
                 <p style="display: flex; flex-direction: column; justify-content: center; height: 50vh;">Mohon maaf, tidak ada program yang tersedia.</p>
             </th:block>
             
-            <!-- <div id="filterPopup" class="popup">
+            <div id="filterPopup" class="popup">
                 <div class="popup-content">
-                    Close button
+                    <!-- Close button -->
                     <span class="close" onclick="closeFilterPopup()">&times;</span>
-                    Form for filtering programs
+                    <!-- Form for filtering programs -->
                     <form action="/filter-program" method="GET">
                         <h5 style="margin-bottom: 20px; margin-top: 20px;">Filter Program</h5>
-                        Container for form content
+                        <!-- Container for form content -->
                         <div class="form-content">
-                            Labels and dropdowns
+                            <!-- Labels and dropdowns -->
                             <div class="form-group">
                                 <label for="kategoriProgram">Pilih Kategori Program</label>
                                 <select class="form-control" id="kategoriProgram" name="kategoriProgram">
@@ -315,14 +310,14 @@
                                 </select>
                             </div>
                         </div>
-                        Submit button
+                        <!-- Submit button -->
                         <div>
                             <input  class="filter-button" type="submit" value="Filter" >
                         </div>
                     </form>
                 </div>
             </div>
-        </div>     -->
+        </div>    
 
         <div class="card-container">
             <!-- Iterate over programs -->
@@ -350,6 +345,8 @@
         </div>
     </div>
 
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -394,9 +391,68 @@
             });
             $('.card-container').empty().append(cards);
         }
+
+        // Function to open the filter pop-up
+        function openFilterPopup() {
+            $('#filterPopup').show();
+        }
+
+        // Function to close the filter pop-up
+        function closeFilterPopup() {
+            $('#filterPopup').hide();
+        }
+
+        // Function to toggle sorting button and icon
+        function toggleSort() {
+            var sortButton = $('#sortButton');
+            var sortIcon = $('#sortIcon');
+            if (sortIcon.hasClass('bi-sort-alpha-down')) {
+                sortIcon.removeClass('bi-sort-alpha-down');
+                sortIcon.addClass('bi-sort-alpha-down');
+                sortButton.html('<i id="sortIcon" class="bi-sort-alpha-down-alt"></i> Judul');
+                sortPrograms('asc');
+            } else {
+                sortIcon.removeClass('bi-sort-alpha-down-alt');
+                sortIcon.addClass('bi-sort-alpha-down');
+                sortButton.html('<i id="sortIcon" class="bi-sort-alpha-down"></i> Judul');
+                sortPrograms('desc');
+            }
+        }
+
+        // Function to sort programs
+        function sortPrograms(order) {
+            var cards = $('.card-container .card').get();
+            cards.sort(function(a, b) {
+                var titleA = $(a).find('.program-title').text().toUpperCase();
+                var titleB = $(b).find('.program-title').text().toUpperCase();
+                if (order === 'asc') {
+                    return (titleA < titleB) ? -1 : (titleA > titleB) ? 1 : 0;
+                } else {
+                    return (titleA > titleB) ? -1 : (titleA < titleB) ? 1 : 0;
+                }
+            });
+            $('.card-container').empty().append(cards);
+        }
     </script>
 
     <script>
+        $(document).ready(function() {
+            // Attach input event listener to the search input field
+            $('#searchInput').on('input', function() {
+                var query = $(this).val().toLowerCase(); // Get the search query
+                // Filter programs based on title and program category
+                $('.card').each(function() {
+                    var title = $(this).find('.program-title').text().toLowerCase();
+                    var category = $(this).find('.category').text().toLowerCase();
+                    if (title.includes(query) || category.includes(query)) {
+                        $(this).show(); // Show card if it matches the query
+                    } else {
+                        $(this).hide(); // Hide card if it doesn't match the query
+                    }
+                });
+            });
+        });
+        
         $(document).ready(function() {
             // Attach input event listener to the search input field
             $('#searchInput').on('input', function() {

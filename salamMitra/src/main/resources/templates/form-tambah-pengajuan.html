@@ -49,7 +49,7 @@
 	<div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
 		<div class="container" data-aos="fade-up">
 			<div class="row d-flex justify-content-center">
-				<h2 class="text-center m-4">Formulir Pengajuan Kerja Sama</h2>
+				<h3 class="text-center m-4">Formulir Pengajuan Kerja Sama</h3>
 				<div class="container">
                     <form th:action="@{/tambah-pengajuan}" th:object="${listPengajuanKebutuhanDanaDTO}" method="POST" enctype="multipart/form-data">
 						<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>

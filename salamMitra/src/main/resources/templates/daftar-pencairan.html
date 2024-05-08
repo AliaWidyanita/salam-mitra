@@ -17,15 +17,19 @@
             style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
             <div class="container" data-aos="fade-up">
                 <div class="row d-flex justify-content-center">
-                    <h3 class="text-center m-4">Daftar Pencairan</h3>
-
-                    <div class="row">
-                        <div class="col">
-                            <div class="alert alert-success" role="alert" th:text="${successMessage}"
-                                th:if="${successMessage}"></div>
+                    <div class="col-md-7">
+                        <h3 class="text-center m-4">Daftar Pencairan</h3>
+                        <div class="row">
+                            <div class="col">
+                                <div class="alert alert-success" role="alert" th:text="${successMessage}"
+                                    th:if="${successMessage}"></div>
+                            </div>
+                        </div>
+                        <br>
+                        <div style="text-align: left; margin-bottom: 10px;">
+                            <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Cari pengajuan..." class="form-control">
                         </div>
                     </div>
-
                     <table class="table table-bordered" id="dataTable">
                         <thead class="bg-dark text-white text-center">
                             <tr>
@@ -45,6 +49,9 @@
                             </tr>
                         </tbody>
                         <tbody class="text-center" th:unless="${listPencairan.isEmpty()}">
+                            <tr id="noResultRow" style="display: none;">
+                                <td colspan="7">Pengajuan pencairan dana tidak ditemukan.</td>
+                            </tr>
                             <tr th:each="pencairan, iterationStatus: ${listPencairan}">
                                 <td class="text-center" th:text="${iterationStatus.count}"></td>
                                 <td th:text="${pencairan.id}"></td>
@@ -104,6 +111,42 @@
         setTimeout(function () {
             document.getElementById("successMessage").style.display = "none";
         }, 3000); // 3000 milliseconds = 3 seconds
+    </script>
+    <script>
+        function searchTable() {
+            // Mendapatkan nilai input pencarian
+            var input, filter, table, tr, td, i, txtValue, noResultRow;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("dataTable");
+            tr = table.getElementsByTagName("tr");
+            noResultRow = document.getElementById("noResultRow"); // Baris pesan "pengajuan tidak ditemukan"
+    
+            // Loop melalui semua baris tabel, sembunyikan yang tidak sesuai dengan query pencarian
+            var found = false; // Menandakan apakah ada hasil pencarian yang ditemukan
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td");
+                for (var j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            found = true; // Ada hasil pencarian yang ditemukan
+                            break;
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+    
+            // Tampilkan atau sembunyikan pesan "pengajuan tidak ditemukan" tergantung pada hasil pencarian
+            if (!found) {
+                noResultRow.style.display = ""; // Tampilkan pesan jika tidak ada hasil pencarian
+            } else {
+                noResultRow.style.display = "none"; // Sembunyikan pesan jika ada hasil pencarian
+            }
+        }
     </script>
 
     <!-- jquery -->

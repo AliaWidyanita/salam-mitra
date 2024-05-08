@@ -12,14 +12,17 @@
 		<div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
 			<div class="container" data-aos="fade-up">
 				<div class="row d-flex justify-content-center">
-                    <h2 class="text-center m-4">Daftar Pengguna</h2>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+                    <div class="col-md-7">
+                        <h3 class="text-center m-4">Daftar Pengguna</h3>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+                            </div>
+                            <div class="col-sm-6 text-right">
+                                <a type="button" class="boxed-btn" href="/pengguna-tambah-admin">+ Tambah Admin</a>
+                            </div>
                         </div>
-                        <div class="col-sm-6 text-right">
-                            <a type="button" class="btn btn-primary" href="/pengguna-tambah-admin">+ Tambah Admin</a>
-                        </div>
+                        <br>
                     </div>
                     <table class="table table-bordered" id="dataTable">
                         <thead class="bg-dark text-white text-center">
@@ -44,7 +47,10 @@
                                 <span th:if="${pengguna.getRole() == 'manajemen'}">Manajemen</span>
                             </td>
                             <td>
-                                <a type="button" class="btn btn-danger" th:href="@{/pengguna-hapus-{id}(id=${pengguna.id})}">Hapus</a>
+                                <a type="button" class="boxed-btn" th:href="@{/pengguna-hapus-{id}(id=${pengguna.id})}"
+                                    style="background-color: gray; color: white;"
+                                    onmouseover="this.style.backgroundColor='red';"
+                                    onmouseout="this.style.backgroundColor='gray';">Hapus</a>
                             </td>
                         </tr>
                         </tbody>
