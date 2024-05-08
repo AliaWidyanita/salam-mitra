@@ -47,8 +47,8 @@
                             <p class="text-center" th:if="${#maps.isEmpty(totalPengajuanPerMonth)}">Tidak ada data pengajuan untuk bulan ini.</p>
                             <div th:unless="${#maps.isEmpty(totalPengajuanPerMonth)}">
                                 <div th:each="entry : ${totalPengajuanPerMonth}">
-                                    <h2 class="text-center" th:text="${entry.key}"></h2>
-                                    <h1 class="text-center" th:text="${entry.value}"></h1>
+                                    <h3 class="text-center" th:text="${entry.key}"></h3>
+                                    <h2 class="text-center" th:text="${entry.value}"></h2>
                                 </div>
                             </div>
                         </div>

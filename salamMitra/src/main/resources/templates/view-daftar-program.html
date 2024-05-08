@@ -6,9 +6,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
     <style>
         /* CSS for cards */
-        /* CSS for cards */
         .card {
-            width: calc(33.333% - 40px); /* Width of the card in one row (33.333%) minus margin */
             width: calc(33.333% - 40px); /* Width of the card in one row (33.333%) minus margin */
             height: 500px;
             background-color: #f8f9fa;
@@ -18,10 +16,8 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             position: relative;
             perspective: 1000px; /* Adding perspective for 3D effect */
-            perspective: 1000px; /* Adding perspective for 3D effect */
         }
 
-        /* Layout for cards in one row */
         /* Layout for cards in one row */
         .card-container {
             display: flex;
@@ -29,12 +25,9 @@
             margin: 0 auto; 
             margin-top: 20px;
             max-width: 1300px; /* Limit maximum width to ensure 3 cards per row */
-            margin-top: 20px;
-            max-width: 1300px; /* Limit maximum width to ensure 3 cards per row */
         }
 
         .card:hover .card-inner {
-            transform: rotateY(180deg); /* Rotate card on hover */
             transform: rotateY(180deg); /* Rotate card on hover */
         }
 
@@ -44,7 +37,6 @@
             position: absolute;
             transition: transform 0.5s;
             transform-style: preserve-3d; /* Ensuring children remain 3D */
-            transform-style: preserve-3d; /* Ensuring children remain 3D */
         }
 
         .card-front,
@@ -53,14 +45,12 @@
             height: 100%;
             position: absolute;
             backface-visibility: hidden; /* Hide back of card */
-            backface-visibility: hidden; /* Hide back of card */
             display: flex;
             flex-direction: column;
             padding: 20px;
         }
 
         .card-back {
-            transform: rotateY(180deg); /* Rotate back of card */
             transform: rotateY(180deg); /* Rotate back of card */
             z-index: 1;
             display: flex;
@@ -70,7 +60,6 @@
 
         .card img {
             width: 100%;
-            height: 50%; /* Half height for image */
             height: 50%; /* Half height for image */
             object-fit: cover;
             border-radius: 10px; /* Rounded corners for the image */
@@ -136,14 +125,13 @@
         .add-program-button {
             margin-top: 10px;
             margin-bottom: 50px;
-            margin-bottom: 50px;
         }
 
         .add-program-button a {
             text-decoration: none;
             background-color: #EB316E;
             color: #fff;
-            padding: 8px 15px;
+            padding: 10px 20px;
             border-radius: 20px;
             transition: background-color 0.3s ease;
         }
@@ -249,92 +237,6 @@
             color: #fff;
             background-color: #db6e15;
         }
-
-
-        #searchInput:focus {
-            color: #f28123;
-        }
-        
-        /* Style for pop-up container */
-        .popup {
-            display: none;
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 9999;
-        }
-
-        /* Style for pop-up content */
-        .popup-content {
-            background-color: white;
-            margin: 200px auto;
-            padding: 20px;
-            width: 40%;
-            border-radius: 10px;
-        }
-
-        /* Style for close button */
-        .close {
-            color: #aaaaaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .action-button {
-            color: #6c757d;
-            padding: 3px 15px;
-            border: 1px solid #ccd4db; 
-            border-radius: 5px;
-            transition: color 0.3s ease, border-color 0.3s ease; 
-            overflow: hidden;
-            cursor: pointer;
-            background: none;
-        }
-
-        .action-button:hover {
-            color: #fff;
-            background-color: #f28123;
-            border: 1px solid #f28123; 
-        }
-
-        .popup-content .form-content {
-            text-align: left;
-            padding-left: 20px;
-        }
-
-        .popup-content .form-group {
-            margin-bottom: 15px;
-        }
-
-        .filter-button {
-            color: #fff;
-            background-color: #f28123;
-            padding: 5px 20px;
-            border-radius: 20px;
-            transition: background-color 0.3s ease;
-            overflow: hidden;
-            cursor: pointer;
-            border: none;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-
-        .filter-button:hover {
-            color: #fff;
-            background-color: #db6e15;
-        }
-
     </style>
 </head>
 
@@ -347,11 +249,9 @@
             <th:block th:if="${role == 'admin_PROGRAM'}">
                 <div class="add-program-button">
                     <a href="/tambah-program">+ Tambah Program</a>
-                    <a href="/tambah-program">+ Tambah Program</a>
                 </div>
             </th:block>
 
-            
             <div style="flex-wrap: wrap; margin: 0 auto; max-width: 1300px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-right: 20px; margin-left: 20px; margin-top: 80px;">
                     <div>
@@ -362,14 +262,11 @@
                     <div style="display: inline-block; width: 70%;">
                         <input type="text" id="searchInput" name="query" placeholder="Cari berdasarkan judul atau kategori program..." class="form-control">
                     </div>
-
                     <div class="action-button" onmouseover="this.querySelector('a').style.color='#fff'" onmouseout="this.querySelector('a').style.color='#6c757d'">
                         <a style="color: #6c757d;" href="/program">Reset Filter</a>
-                    </div>
-                                                            
+                    </div>                         
                 </div>
             </div>
-            
             
             <th:block th:if="${listProgram.isEmpty()}">
                 <p style="display: flex; flex-direction: column; justify-content: center; height: 50vh;">Mohon maaf, tidak ada program yang tersedia.</p>
@@ -424,16 +321,13 @@
 
         <div class="card-container">
             <!-- Iterate over programs -->
-            <!-- Iterate over programs -->
             <div th:each="program : ${listProgram}" class="card">
                 <div class="card-inner">
-                    <!-- Front and back of the card -->
                     <!-- Front and back of the card -->
                     <div class="card-front">
                         <img th:if="${program.fotoProgram != null}" th:src="'data:image/jpeg;base64,' + ${program.imageBase64}" alt="Program Image">
                         <img th:if="${program.fotoProgram == null}" src="/assets/img/placeholder-program.png" alt="Placeholder" class="img-fluid">
                         <div class="overlay">
-                            <h4 th:text="${program.judul}" class="program-title"></h4>
                             <h4 th:text="${program.judul}" class="program-title"></h4>
                             <h6 class="category" th:text="${program.kategoriProgram}"></h6>
                             <p class="description" th:text="${program.deskripsi}"></p>
@@ -441,7 +335,6 @@
                     </div>
                     <div class="card-back">
                         <a th:href="'/program-' + ${program.id}" class="overlay-button">Lihat Detail Program</a>
-                        <!-- Link to edit program -->
                         <!-- Link to edit program -->
                         <th:block th:if="${role == 'admin_PROGRAM'}">
                             <a th:href="'/edit-program-' + ${program.id}" class="overlay-button-edit">Edit Program</a>
