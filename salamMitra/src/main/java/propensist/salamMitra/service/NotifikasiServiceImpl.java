@@ -194,14 +194,15 @@ public class NotifikasiServiceImpl implements NotifikasiService {
                     """
                         Halo, %s!
 
-
                         Melalui email ini, kami ingin menyampaikan bahwa terdapat pemberitahuan baru yang perlu Anda perhatikan terkait dengan kerja sama yang Anda ajukan. %s.
+
+                        Kunjungi Situs https://salam-mitra.up.railway.app/ untuk mendapatkan informasi lebih lanjut.
 
                         Demikian informasi ini kami sampaikan. Terima kasih atas perhatian dan kerja samanya.
 
                         Salam,
                         Salam Setara
-                        """,
+                    """,
                     notifikasi.getPengguna().getUsername(), message);
 
             details.setMessageBody(messageBody);
@@ -215,12 +216,14 @@ public class NotifikasiServiceImpl implements NotifikasiService {
                         Halo, %s!
 
                         Melalui email ini, kami ingin menyampaikan bahwa terdapat pemberitahuan baru yang perlu Anda perhatikan terkait dengan kerja sama yang Anda ajukan. %s.
+                        
+                        Kunjungi situs https://salam-mitra.up.railway.app/ untuk mendapatkan informasi lebih lanjut.
 
                         Demikian informasi ini kami sampaikan. Terima kasih atas perhatian dan kerja samanya.
 
                         Salam,
                         Salam Setara
-                        """,
+                    """,
                     notifikasi.getPengguna().getUsername(), message);
 
             details.setMessageBody(messageBody);
