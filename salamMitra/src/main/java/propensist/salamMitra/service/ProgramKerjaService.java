@@ -9,6 +9,7 @@ public interface ProgramKerjaService {
     List<ProgramKerja> getAllProgramKerja();
     List<ProgramKerja> getTigaProgramKerja();
     List<ProgramKerja> getAllProgramAktif();
+    List<ProgramKerja> filterDeletedPrograms(List<ProgramKerja> programKerjaList);
     ProgramKerja findProgramKerjaById(Long id);
     List<String> getAllKategoriProgram(); 
     List<String> getAllKategoriAsnaf();

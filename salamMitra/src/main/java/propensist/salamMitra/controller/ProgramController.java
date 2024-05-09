@@ -84,9 +84,16 @@ public class ProgramController {
         model.addAttribute("role", role);
         model.addAttribute("user", user);
 
-        System.out.println("ini kategoriprogram = " + kategoriProgram);
+        List<ProgramKerja> filteredPrograms = programKerjaService.filterDeletedPrograms(programKerjaService.filterPrograms(kategoriProgram, kategoriAsnaf, provinsi));
+    
+        // Memeriksa setiap program apakah memiliki foto
+        for(ProgramKerja program : filteredPrograms) {
+            if (program.getFotoProgram() != null) {
+                programKerjaService.handleFotoProgram(program);
+            }
+        }
 
-        List<ProgramKerja> filteredPrograms = programKerjaService.filterPrograms(kategoriProgram, kategoriAsnaf, provinsi);
+
         model.addAttribute("listProgram", filteredPrograms);
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
         model.addAttribute("daftarKategoriProgram", programKerjaService.getAllKategoriProgram());

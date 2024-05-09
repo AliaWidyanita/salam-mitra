@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import propensist.salamMitra.model.ProgramKerja;
 import propensist.salamMitra.repository.ProgramKerjaDb;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
+
 import java.util.Base64;
 
 
@@ -61,6 +64,20 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
     }
 
     @Override
+    public List<ProgramKerja> filterDeletedPrograms(List<ProgramKerja> programKerjaList) {
+        List<ProgramKerja> activePrograms = new ArrayList<>();
+    
+        for (ProgramKerja programKerja : programKerjaList) {
+            if (!programKerja.isDeleted()) {
+                activePrograms.add(programKerja);
+            }
+        }
+    
+        return activePrograms;
+    }
+    
+
+    @Override
     public ProgramKerja findProgramKerjaById(Long id) {
         for (ProgramKerja programKerja : getAllProgramKerja()) {
             if (programKerja.getId().equals(id)) {
@@ -85,9 +102,7 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
     public List<String> getAllKategoriAsnaf() {
         List<String> kategoriAsnaf = new ArrayList<>();
         kategoriAsnaf.add("Fakir");
-        kategoriAsnaf.add("Fakir");
         kategoriAsnaf.add("Miskin");
-        kategoriAsnaf.add("Amil");
         kategoriAsnaf.add("Amil");
         kategoriAsnaf.add("Mualaf");
         kategoriAsnaf.add("Riqab");
@@ -151,6 +166,8 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
         return null;
     } 
 
+    @Override
+    @Transactional
     public List<ProgramKerja> filterPrograms(String kategoriProgram, String kategoriAsnaf, String provinsi) {
         List<ProgramKerja> listProgramKerja = new ArrayList<>();
         

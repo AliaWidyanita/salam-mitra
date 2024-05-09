@@ -1,5 +1,17 @@
 <!DOCTYPE html>
 
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
 <html
   lang="en"
   class="light-style customizer-hide"
@@ -15,7 +27,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Login | Salam Mitra</title>
+    <title>Register | Salam Mitra</title>
 
     <meta name="description" content="" />
 
@@ -55,10 +67,10 @@
   <body>
     <!-- Content -->
 
-    <div class="container-xxl">
+    <div class="container-xxl" >
       <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner">
-          <!-- Register -->
+          <!-- Register Card -->
           <div class="card">
             <div class="card-body">
               <!-- Logo -->
@@ -69,64 +81,99 @@
                   <span class="app-brand-text demo text-body fw-bolder" style="text-transform: capitalize;">Salam Mitra</span>
               </div>
               <h4 class="mb-2">Selamat datang di Salam Mitra!</h4>
-              <p class="mb-4">Silakan masuk ke akun Anda</p>
+              <p class="mb-4">Buat akun baru Anda sekarang</p>
 
-              <form id="formAuthentication" class="mb-3" th:action="@{/login}" method="POST">
-				<div class="alert alert-success alert-dismissible" role="alert" th:text="${successMessage}" th:if="${successMessage}">
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
-				<div class="alert alert-danger alert-dismissible" role="alert" th:text="${error}" th:if="${error}">
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
+              <form id="formAuthentication" class="mb-3" th:action="@{/register}" th:object="${mitraDTO}" method="POST">
                 <div class="mb-3">
-                  <label for="username-label" class="form-label">Username</label>
-                  <input class="form-control" type="text" for="username" id="username" name="username" placeholder="Masukkan username" required autofocus/>
+                  <label for="username" class="form-label">Username</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="username"
+                    name="username"
+                    th:field="*{username}"
+                    placeholder="Masukkan username"
+                    required
+                    autofocus
+                  />
                 </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="emailInput"
+                    name="email" 
+                    th:field="*{email}"
+                    placeholder="Masukkan alamat email yang valid"
+                    required />
+                </div>
+                <div class="mb-3">
+                  <label for="namaPerusahaan" class="form-label">Nama Perusahaan</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="namaPerusahaan"
+                    name="namaPerusahaan" 
+                    th:field="*{companyName}"
+                    placeholder="Masukkan nama perusahaan" 
+                    required />
+                </div>
+                <div class="mb-3">
+                  <label for="lokasi" class="form-label">Lokasi</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="lokasi" 
+                    name="lokasi"
+                    th:field="*{location}"
+                    placeholder="Masukkan lokasi Anda" 
+                    required />
+                </div>
+                <div>
+                  <label for="number" class="form-label">Nomor Kontak</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    id="kontak" 
+                    name="kontak"
+                    th:field="*{contact}"
+                    placeholder="Masukkan nomor yang dapat dihubungi" 
+                    required />
+                </div>
+                <div id="defaultFormControlHelp" class="form-text mb-3">Nomor harus diawali 08 dan terdiri dari 10-13 digit.</div>
                 <div class="mb-3 form-password-toggle">
-                  <div class="d-flex justify-content-between">
-                    <label class="form-label" for="password-label">Password</label>
-                  </div>
+                  <label class="form-label" for="password">Kata Sandi</label>
                   <div class="input-group input-group-merge">
                     <input
-					  type="password" for="password" id="password" name="password"
-					  class="form-control"
+                      type="password"
+                      id="passwordField"
+                      class="form-control"
+                      name="password"
+                      pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
                       placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                       aria-describedby="password"
-					  required
-                    />
+					  th:field="*{password}"
+                      required />
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                   </div>
+                  <div id="defaultFormControlHelp" class="form-text">Kata sandi harus minimal 8 karakter dan harus memiliki huruf besar, huruf kecil, dan angka.</div>
                 </div>
-                <div class="mb-3">
-                  <button class="btn btn-primary d-grid w-100" type="submit">Masuk</button>
-                </div>
+                <button class="btn btn-primary d-grid w-100" type="submit">Simpan</button>
               </form>
 
               <p class="text-center">
-                <span>Belum memiliki akun?</span>
-                <a href="/register">
-                  <span>Buat akun baru</span>
+                <span>Sudah memiliki akun?</span>
+                <a href="login.html">
+                  <span>Masuk</span>
                 </a>
               </p>
             </div>
           </div>
-          <!-- /Register -->
+          <!-- Register Card -->
         </div>
       </div>
     </div>
-
-	<script>
-		function removeAlerts() {
-			setTimeout(function () {
-				jQuery('.alert').fadeOut('fast', function () {
-					jQuery(this).remove();
-				});
-			}, 3000); // Adjust the timeout duration (in milliseconds) as needed
-		}
-	
-		removeAlerts();
-	</script>
-	
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
@@ -142,6 +189,8 @@
 
     <!-- Main JS -->
     <script src="../assets/js/main.js"></script>
+
+    <!-- Page JS -->
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>

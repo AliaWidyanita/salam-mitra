@@ -97,6 +97,20 @@ public class HomeController {
         }
     }
 
+    @GetMapping("/register")
+    public String getRegisterPage(Model model, @RequestParam(name = "error", required = false) String error) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+
+        model.addAttribute("mitraDTO", new CreateMitraRequestDTO());
+
+        return "register.html";
+    }
+
     @PostMapping("/register")
     public String registerMitra(@Valid @ModelAttribute CreateMitraRequestDTO mitraDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
@@ -106,7 +120,7 @@ public class HomeController {
         } else {
             if (penggunaService.authenticate(mitraDTO.getUsername()) != null) {
                 if (penggunaService.authenticate(mitraDTO.getUsername()).isDeleted() == false) {
-                    redirectAttributes.addFlashAttribute("error", "Username sudah terpakai! Apakah anda memiliki akun?");
+                    redirectAttributes.addFlashAttribute("error", "Username sudah terpakai! Apakah Anda memiliki akun?");
                     return "redirect:/login";
                 }
             }
@@ -121,7 +135,7 @@ public class HomeController {
                 penggunaService.saveMitra(mitra);
 
                 // Menyimpan pesan sukses
-                redirectAttributes.addFlashAttribute("successMessage", "Selamat, anda berhasil mendaftarkan akun!");
+                redirectAttributes.addFlashAttribute("successMessage", "Akun Anda berhasil didaftarkan!");
             }
         }
         return "redirect:/login";
@@ -142,7 +156,7 @@ public class HomeController {
             model.addAttribute("error", "Username atau password salah!");
         }
         
-        return "form-layouts-vertical";
+        return "login.html";
     }
     
     @GetMapping("/logout")
