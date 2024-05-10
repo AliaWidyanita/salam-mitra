@@ -64,6 +64,18 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
     }
 
     @Override
+    @Transactional
+    public List<ProgramKerja> getListProgramJudulAsc() {
+        return programKerjaDb.findAllByOrderByJudulIgnoreCaseAsc();
+    }
+
+    @Override
+    @Transactional
+    public List<ProgramKerja> getListProgramJudulDesc() {
+        return programKerjaDb.findAllByOrderByJudulIgnoreCaseDesc();
+    }
+
+    @Override
     public List<ProgramKerja> filterDeletedPrograms(List<ProgramKerja> programKerjaList) {
         List<ProgramKerja> activePrograms = new ArrayList<>();
     

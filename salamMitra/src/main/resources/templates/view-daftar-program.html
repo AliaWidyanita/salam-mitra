@@ -48,14 +48,23 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../assets/js/config.js"></script>
+
+    <style>
+        .card-img-top {
+            width: 100%;
+            height: 300px; /* Adjust the height as per your requirement */
+            object-fit: cover; /* Ensures the image covers the entire space allocated */
+        }
+        .description-program {
+            height: 70px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Limit to three lines */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Add ellipsis for overflow text */
+        }
+    </style>
   </head>
-  <style>
-    .card-img-top {
-        width: 100%;
-        height: 300px; /* Adjust the height as per your requirement */
-        object-fit: cover; /* Ensures the image covers the entire space allocated */
-    }
-  </style>
 
 <body>
     <!-- <div th:replace="~{fragments/navbar :: header(page='program')}"></div> -->
@@ -92,36 +101,46 @@
             <h1 class="display-3"><strong>Daftar Program</strong></h1>
             
             <th:block th:if="${role == 'admin_PROGRAM'}">
-                <a type="button" class="btn rounded-pill me-2 btn-info" href="/tambah-program">+ Tambah Program</a>
+                <a type="button" class="btn rounded-pill me-2 btn-info mb-3" href="/tambah-program">+ Tambah Program</a>
             </th:block>
 
-            <div style="flex-wrap: wrap; margin: 0 auto; max-width: 1300px; margin-bottom: 50px;">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-right: 20px; margin-left: 20px; margin-top: 80px;">
-                    <div>
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
-                            Filter Program
-                        </button>
-                        <button class="btn btn-outline-primary" id="sortButton" onclick="toggleSort()" style="margin-left: 5px;"><i id="sortIcon" class="bx bx-sort-a-z"></i> Judul</button>
-                        
-                    </div>
-                    <div style="display: inline-block; width: 65%;">
-                        <input type="text" id="searchInput" name="query" placeholder="Cari berdasarkan judul atau kategori program..." class="form-control">
-                    </div>
-                    <div>
-                        <a class="btn btn-outline-primary" href="/program">Reset Filter</a>
-                    </div>                         
+            <div class="alert alert-success" style="margin-left: 40px; margin-right: 40px;" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+            <div class="alert alert-danger" style="margin-left: 40px; margin-right: 40px;" role="alert" th:text="${error}" th:if="${error}"></div>
+
+            <div class="d-flex flex-wrap mt-4" style="margin-left: 40px; margin-right: 40px;">
+                <!-- Filter button -->
+                <button type="button" class="btn btn-outline-primary mb-3" data-bs-toggle="modal" data-bs-target="#filterModal">Filter</button>
+    
+                <!-- Button dropdown for sorting -->
+                <div class="btn-group mb-3" style="margin-left: 5px;">
+                    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Urutkan
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/program-judul-desc">Judul: A-Z</a></li>
+                        <li><a class="dropdown-item" href="/program-judul-asc">Judul: Z-A</a></li>
+                    </ul>
                 </div>
+
+                <!-- Reset filter button -->
+                <a class="btn btn-outline-primary mb-3" href="/program" style="margin-left: 5px;"><i class="bx bx-reset"></i></a>
+    
+                <!-- Search input -->
+                <div class="input-group mb-3">
+                    <input type="search" id="searchInput" name="query" placeholder="Cari berdasarkan judul atau kategori program..." class="form-control">
+                </div>
+
             </div>
             
+            <!-- Empty program list message -->
             <th:block th:if="${listProgram.isEmpty()}">
-                <p style="display: flex; flex-direction: column; justify-content: center; height: 50vh;">Mohon maaf, tidak ada program yang tersedia.</p>
+                <p style="display: flex; flex-direction: column; justify-content: center; height: 25vh;">Mohon maaf, tidak ada program yang tersedia.</p>
             </th:block>
-
-        </div>    
+        </div>
 
         <div class="row row row-cols-1 row-cols-md-3 g-4" style="margin-left: 30px; margin-right: 30px;">
             <!-- Iterate over programs -->
-            <div th:each="program : ${listProgram}">
+            <div th:each="program : ${listProgram}" >
                 <div class="col">
                     <div class="card h-100">
                         <img class="card-img-top" th:if="${program.fotoProgram != null}" th:src="'data:image/jpeg;base64,' + ${program.imageBase64}" alt="Program Image">
@@ -129,14 +148,14 @@
                         <div class="card-header text-info category" th:text="${program.kategoriProgram}"></div>
                         <div class="card-body">
                             <h5 class="card-title program-title" th:text="${program.judul}"></h5>
-                            <p class="card-text" th:text="${program.deskripsi}"></p>
+                            <p class="card-text description-program" th:text="${program.deskripsi}"></p>
                             
                             <div class="d-flex justify-content-between">
                                 <span>
                                     <a th:href="'/program-' + ${program.id}" class="card-link">Lihat detail</a>
                                 </span>
                                 <span th:if="${role == 'admin_PROGRAM'}">
-                                    <a th:href="'/edit-program-' + ${program.id}" class="btn btn-primary">Edit Program</a>
+                                    <a th:href="'/edit-program-' + ${program.id}" class="btn btn-primary"><i class="bx bx-edit"></i></a>
                                 </span>
                             </div>                            
                             
@@ -215,20 +234,36 @@
 
         // Function to toggle sorting button and icon
         function toggleSort() {
-            var sortButton = $('#sortButton');
             var sortIcon = $('#sortIcon');
-            if (sortIcon.hasClass('bx bx-sort-a-z')) {
-                sortIcon.removeClass('bx bx-sort-a-z');
-                sortIcon.addClass('bx bx-sort-a-zbx-sort-a-z');
-                sortButton.html('<i id="sortIcon" class="bx bx-sort-z-a"></i> Judul');
-                sortPrograms('asc');
+            var cardsContainer = $('.row-cols-1');
+            var cards = $('.card');
+
+            // Check the current sorting order
+            var ascendingOrder = sortIcon.hasClass('bx-sort-a-z');
+
+            // Sort the cards based on program titles
+            cards.sort(function(a, b) {
+                var titleA = $(a).find('.program-title').text().toLowerCase();
+                var titleB = $(b).find('.program-title').text().toLowerCase();
+
+                if (ascendingOrder) {
+                    return titleA.localeCompare(titleB); // Sort alphabetically in ascending order
+                } else {
+                    return titleB.localeCompare(titleA); // Sort alphabetically in descending order
+                }
+            });
+
+            // Update the DOM with the sorted cards
+            cardsContainer.empty().append(cards);
+
+            // Toggle sorting icon and order
+            if (ascendingOrder) {
+                sortIcon.removeClass('bx-sort-a-z').addClass('bx-sort-z-a');
             } else {
-                sortIcon.removeClass('bx bx-sort-z-a');
-                sortIcon.addClass('bx bx-sort-a-z');
-                sortButton.html('<i id="sortIcon" class="bx bx-sort-a-z"></i> Judul');
-                sortPrograms('desc');
+                sortIcon.removeClass('bx-sort-z-a').addClass('bx-sort-a-z');
             }
         }
+
 
         // Function to open the filter pop-up
         function openFilterPopup() {
@@ -238,23 +273,6 @@
         // Function to close the filter pop-up
         function closeFilterPopup() {
             $('#filterPopup').hide();
-        }
-
-        // Function to toggle sorting button and icon
-        function toggleSort() {
-            var sortButton = $('#sortButton');
-            var sortIcon = $('#sortIcon');
-            if (sortIcon.hasClass('bx bx-sort-a-z')) {
-                sortIcon.removeClass('bx bx-sort-a-z');
-                sortIcon.addClass('bx bx-sort-a-z');
-                sortButton.html('<i id="sortIcon" class="bx bx-sort-z-a"></i> Judul');
-                sortPrograms('asc');
-            } else {
-                sortIcon.removeClass('bx bx-sort-z-a');
-                sortIcon.addClass('bx bx-sort-a-z');
-                sortButton.html('<i id="sortIcon" class="bx bx-sort-a-z"></i> Judul');
-                sortPrograms('desc');
-            }
         }
     </script>
 
@@ -292,6 +310,17 @@
                 });
             });
         });
+    </script>
+    <script>
+        function removeAlerts() {
+            setTimeout(function () {
+                jQuery('.alert').fadeOut('fast', function () {
+                    jQuery(this).remove();
+                });
+            }, 3000);
+        }
+
+        removeAlerts();
     </script>
 
     <!-- Core JS -->

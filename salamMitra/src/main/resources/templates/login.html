@@ -68,16 +68,15 @@
               <div class="app-brand justify-content-center">
                   <span class="app-brand-text demo text-body fw-bolder" style="text-transform: capitalize;">Salam Mitra</span>
               </div>
+
+              <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+              <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+
               <h4 class="mb-2">Selamat datang di Salam Mitra!</h4>
               <p class="mb-4">Silakan masuk ke akun Anda</p>
 
               <form id="formAuthentication" class="mb-3" th:action="@{/login}" method="POST">
-				<div class="alert alert-success alert-dismissible" role="alert" th:text="${successMessage}" th:if="${successMessage}">
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
-				<div class="alert alert-danger alert-dismissible" role="alert" th:text="${error}" th:if="${error}">
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
+    
                 <div class="mb-3">
                   <label for="username-label" class="form-label">Username</label>
                   <input class="form-control" type="text" for="username" id="username" name="username" placeholder="Masukkan username" required autofocus/>
@@ -88,12 +87,12 @@
                   </div>
                   <div class="input-group input-group-merge">
                     <input
-					  type="password" for="password" id="password" name="password"
-					  class="form-control"
-                      placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                      aria-describedby="password"
-					  required
-                    />
+                        type="password" for="password" id="password" name="password"
+                        class="form-control"
+                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                        aria-describedby="password"
+                        required
+                                />
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                   </div>
                 </div>
@@ -102,6 +101,7 @@
                 </div>
               </form>
 
+              <!-- /Register -->
               <p class="text-center">
                 <span>Belum memiliki akun?</span>
                 <a href="/register">
@@ -110,7 +110,6 @@
               </p>
             </div>
           </div>
-          <!-- /Register -->
         </div>
       </div>
     </div>

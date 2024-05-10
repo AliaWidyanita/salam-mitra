@@ -10,6 +10,8 @@ public interface ProgramKerjaService {
     List<ProgramKerja> getTigaProgramKerja();
     List<ProgramKerja> getAllProgramAktif();
     List<ProgramKerja> filterDeletedPrograms(List<ProgramKerja> programKerjaList);
+    List<ProgramKerja> getListProgramJudulAsc();
+    List<ProgramKerja> getListProgramJudulDesc();
     ProgramKerja findProgramKerjaById(Long id);
     List<String> getAllKategoriProgram(); 
     List<String> getAllKategoriAsnaf();

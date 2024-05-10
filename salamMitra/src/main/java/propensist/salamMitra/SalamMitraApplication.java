@@ -42,6 +42,8 @@ public class SalamMitraApplication {
             lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dua", "Kota 2", "Kec. DO"));
             lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dua", "Kota 2", "Kec. DI"));
 
+
+
             // Simpan lokasi ke database menggunakan LokasiService
             if (lokasiService.getAllLokasi().isEmpty()) {
                 for (CreateLokasiRequestDTO lokasiDTO : lokasiDTOs) {

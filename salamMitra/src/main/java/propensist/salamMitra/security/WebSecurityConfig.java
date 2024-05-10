@@ -49,6 +49,7 @@ public class WebSecurityConfig {
                             .requestMatchers(new AntPathRequestMatcher("/getKabupatenKotaByProvinsi")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/getKecamatanByProvinsiKabupatenKota")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/filter-program**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/program-judul-**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/pencairan**")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
                             .requestMatchers(new AntPathRequestMatcher("/tambah-pencairan")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")

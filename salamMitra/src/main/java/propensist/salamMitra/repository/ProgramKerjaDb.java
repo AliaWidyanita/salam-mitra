@@ -3,6 +3,7 @@ package propensist.salamMitra.repository;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import propensist.salamMitra.model.ProgramKerja;
@@ -17,4 +18,10 @@ public interface ProgramKerjaDb extends JpaRepository<ProgramKerja, Long> {
     List<ProgramKerja> findProgramKerjaByKategoriProgram(String kategoriProgram);
     List<ProgramKerja> findProgramKerjaByKategoriAsnaf(String kategoriAsnaf);
     List<ProgramKerja> findProgramKerjaByProvinsi(String provinsi);
+
+    @Query(value = "SELECT * FROM program_kerja ORDER BY LOWER(judul) ASC", nativeQuery = true)
+    List<ProgramKerja> findAllByOrderByJudulIgnoreCaseAsc();
+    
+    @Query(value = "SELECT * FROM program_kerja ORDER BY LOWER(judul) DESC", nativeQuery = true)
+    List<ProgramKerja> findAllByOrderByJudulIgnoreCaseDesc();
 }
