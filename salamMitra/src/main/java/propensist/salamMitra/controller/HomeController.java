@@ -142,7 +142,7 @@ public class HomeController {
             model.addAttribute("error", "Username atau password salah!");
         }
         
-        return "form-layouts-vertical";
+        return "login";
     }
     
     @GetMapping("/logout")
