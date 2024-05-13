@@ -1,8 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
-<head>
-    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
-    <link rel="stylesheet" href="" th:href="@{/css/style.css}"/>
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <object
+      th:include="~{fragments/common :: fragment}"
+      th:remove="tag"
+    ></object>
+    <title>Revisi Pengajuan | Salam Mitra</title>
 	<style>
 		.btn-follow-text-width {
 			display: inline-block;
@@ -33,6 +44,7 @@
 		}
 	</style>
 </head>
+
 <body>
 	<div th:replace="~{fragments/navbar :: header(page='pengajuan')}"></div>
 <div class="container">

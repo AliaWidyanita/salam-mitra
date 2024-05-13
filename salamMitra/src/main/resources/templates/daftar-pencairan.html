@@ -31,10 +31,15 @@
           <nav th:replace="~{fragments/navbar :: navbar('pencairan')}"></nav>
           <div class="content-wrapper">
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="display-3"><strong>Pencairan</strong></h4>
+              <div
+                class="text-center"
+                style="padding-top: 3%; padding-bottom: 3%"
+              >
+                <h1 class="display-3"><strong>Daftar Pencairan</strong></h1>
+              </div>
 
               <div class="card">
-                <div class="card table-responsive text-nowrap">
+                <div class="card table-responsive">
                   <table
                     class="datatables-basic table table-bordered table-hover"
                     id="dataTable"
@@ -128,32 +133,36 @@
             </div>
           </div>
 
-          <div id="toast-container" class="toast-bottom-right">
-            <div
-              id="successMessage"
-              class="toast toast-success"
-              aria-live="polite"
-              style="display: block"
-            >
-              <div class="toast-body" th:text="${successMessage}"></div>
-            </div>
-          </div>
+          <div
+            class="alert alert-success"
+            role="alert"
+            th:text="${successMessage}"
+            th:if="${successMessage}"
+          ></div>
+
         </div>
       </div>
     </div>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var successMessage = document.getElementById("successMessage");
-        if (successMessage.textContent.trim().length > 0) {
-          var toastContainer = document.getElementById("toast-container");
-          toastContainer.style.display = "block";
-
-          setTimeout(function () {
-            toastContainer.style.display = "none";
-          }, 3000);
-        }
-      });
+      // Menampilkan pesan sukses
+      document.getElementById("successMessage").style.display = "block";
+      // Mengatur waktu tampilan pesan sebelum menghilang
+      setTimeout(function () {
+        document.getElementById("successMessage").style.display = "none";
+      }, 2000); // 3000 milliseconds = 3 seconds
     </script>
+
+    <script>
+      function removeAlerts() {
+        setTimeout(function () {
+          jQuery(".alert").fadeOut("fast", function () {
+            jQuery(this).remove();
+          });
+        }, 2000); // Adjust the timeout duration (in milliseconds) as needed
+      }
+      removeAlerts();
+    </script>
+    
   </body>
 </html>
