@@ -1,46 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
-
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
 <head>
-    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
-        integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <style>
-        .card {
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            margin-bottom: 20px;
-            align-items: center;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .shape-text {
-            border-radius: 10px;
-            background-color: rgba(253, 126, 20, 0.5);
-            width: fit-content;
-            height: fit-content;
-            padding: 2%;
-            margin: 0 auto;
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <title>Dashboard | Salam Mitra</title>
 </head>
 
 <body>
-
-          <nav th:replace="~{fragments/navbar :: navbar('dashboard')}"></nav>
-    <div class="container mx-auto">
-    <div class="container mx-auto">
-        <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%;">
-            <div class="container" data-aos="fade-up">
-                <div class="row justify-content-center">
-                    <div class="col-md-12">
-                        <div class="justify-content-center mb-2 mt-3">
-                            <h3 class="text-center">Dashboard <span
-                                    th:text="${user.username}"></span></h3>
+    <div class="layout-wrapper layout-content-navbar layout-without-menu">
+        <div class="layout-container">
+            <div class="layout-page">
+                <nav th:replace="~{fragments/navbar :: navbar('home')}"></nav>
+                <div class="content-wrapper">
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="text-center" style="padding-top: 3%; padding-bottom: 3%;">
+                            <h1 class="display-3"><strong>Dashboard <span th:text="${user.username}"></span></strong></h1>
                         </div>
-                        <br>
 
                         <div class="shape-text text-center">
                             <h5 class="text-center">Total Pengajuan Per Bulan</h5>
@@ -54,79 +29,59 @@
                         </div>
                         
                         <br>
-                        <div class="row" >
-                            <div class="col-md-15 mb-5">
-                                <div class="card text-center" style="width: 850px;">
-                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                        <div class="row">
+                            <div class="col-md-12 mb-4">
+                                <div class="card" style="padding: 3%;">
+                                    <div class="card-body">
                                         <h5 class="card-title">Jumlah Pengajuan tiap Status</h5>
-                                        <div th:if="${not #maps.isEmpty(jumlahPengajuanByStatus)}">
-                                            <canvas id="pengajuanChart" width="850" height="400"></canvas>
+                                        <div>
+                                            <canvas id="pengajuanChart" height="400"></canvas>
                                         </div>
                                         <div th:unless="${not #maps.isEmpty(jumlahPengajuanByStatus)}">
                                             <p class="text-center">Belum ada pengajuan.</p>
                                         </div>
-                                        <a href="/pengajuan">See Details</a>
+                                        <a href="/pengajuan">Lihat detail</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-3 mx-auto">
-                                <div class="card">
+                                <div class="card" style="padding: 3%;">
                                     <div class="card-body">
                                         <h5 class="card-title">Program</h5>
-                                        <div th:if="${not #maps.isEmpty(jumlahProgramKerjaPerKategori)}">
-                                            <canvas id="pieChart" width="400" height="400"></canvas>      
+                                        <div style="max-width: 400px;">
+                                            <canvas id="pieChart" width="400" height="500" style="padding: 3%;"></canvas>
                                         </div>
                                         <div th:unless="${not #maps.isEmpty(jumlahProgramKerjaPerKategori)}">
                                             <p class="text-center">Belum ada program yang terdaftar.</p>
                                         </div>
-                                        <a href="/program">See Details</a>
+                                        <a href="/program">Lihat Detail</a>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-3 mx-auto">
-                                <div class="card">
+                                <div class="card" style="padding: 3%;">
                                     <div class="card-body">
-                                        <h5 class="card-title">Laporan Chart</h5>
-                                        <div th:if="${jumlahPengajuanByStatus.containsKey('Menunggu Laporan') or jumlahPengajuanByStatus.containsKey('Selesai')}">
+                                        <h5 class="card-title">Status Laporan</h5>
+                                        <div style="max-width: 400px;">
                                             <canvas id="laporanChart" width="400" height="400"></canvas>
                                         </div>
                                         <div th:unless="${jumlahPengajuanByStatus.containsKey('Menunggu Laporan') or jumlahPengajuanByStatus.containsKey('Selesai')}">
                                             <p class="text-center">Belum ada pengajuan yang perlu melampirkan laporan.</p>
                                         </div>
-                                        <a href="/pengajuan">See Details</a>
+                                        <a href="/pengajuan">Lihat Detail</a>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- jquery -->
-    <script src="assets/js/jquery-1.11.3.min.js"></script>
-    <!-- bootstrap -->
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <!-- count down -->
-    <script src="assets/js/jquery.countdown.js"></script>
-    <!-- isotope -->
-    <script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
-    <!-- waypoints -->
-    <script src="assets/js/waypoints.js"></script>
-    <!-- owl carousel -->
-    <script src="assets/js/owl.carousel.min.js"></script>
-    <!-- magnific popup -->
-    <script src="assets/js/jquery.magnific-popup.min.js"></script>
-    <!-- mean menu -->
-    <script src="assets/js/jquery.meanmenu.min.js"></script>
-    <!-- sticker js -->
-    <script src="assets/js/sticker.js"></script>
-    <!-- main js -->
-    <script src="assets/js/main.js"></script>
 
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -166,7 +121,8 @@
                 }]
             },
             options: {
-                responsive: false,
+                responsive: true,
+                maintainAspectRatio: false,
                 tooltips: {
                     callbacks: {
                         label: function (tooltipItem, data) {
@@ -174,7 +130,7 @@
                             var total = dataset.data.reduce((acc, cur) => acc + cur, 0);
                             var currentValue = dataset.data[tooltipItem.index];
                             var percentage = ((currentValue / total) * 100).toFixed(2) + "%";
-                            return label = dataset.labels[tooltipItem.index] + ': ' + percentage;
+                            return dataset.labels[tooltipItem.index] + ': ' + percentage;
                         }
                     }
                 }
@@ -245,6 +201,11 @@
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    position: 'right'
+                },
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -288,7 +249,8 @@
                 }]
             },
             options: {
-
+                responsive: true,
+                maintainAspectRatio: false,
             }
         });
         /*]]>*/

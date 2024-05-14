@@ -84,14 +84,102 @@ public class ProgramController {
         model.addAttribute("role", role);
         model.addAttribute("user", user);
 
-        System.out.println("ini kategoriprogram = " + kategoriProgram);
+        List<ProgramKerja> filteredPrograms = programKerjaService.filterDeletedPrograms(programKerjaService.filterPrograms(kategoriProgram, kategoriAsnaf, provinsi));
+    
+        // Memeriksa setiap program apakah memiliki foto
+        for(ProgramKerja program : filteredPrograms) {
+            if (program.getFotoProgram() != null) {
+                programKerjaService.handleFotoProgram(program);
+            }
+        }
 
-        List<ProgramKerja> filteredPrograms = programKerjaService.filterPrograms(kategoriProgram, kategoriAsnaf, provinsi);
+
         model.addAttribute("listProgram", filteredPrograms);
         model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
         model.addAttribute("daftarKategoriProgram", programKerjaService.getAllKategoriProgram());
         model.addAttribute("daftarKategoriAsnaf", programKerjaService.getAllKategoriAsnaf());
 
+        return "view-daftar-program";
+    }
+
+    @GetMapping("/program-judul-asc")
+    public String viewProgramJudulAsc(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+        
+        List<ProgramKerja> listProgram = programKerjaService.filterDeletedPrograms(programKerjaService.getListProgramJudulAsc());
+        Collections.reverse(listProgram);
+
+        // Memeriksa setiap program apakah memiliki foto
+        for(ProgramKerja program : listProgram) {
+            if (program.getFotoProgram() != null) {
+                programKerjaService.handleFotoProgram(program);
+            }
+        }
+
+        model.addAttribute("listProgram", listProgram);
+        model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
+        model.addAttribute("daftarKategoriProgram", programKerjaService.getAllKategoriProgram());
+        model.addAttribute("daftarKategoriAsnaf", programKerjaService.getAllKategoriAsnaf());
+        
+        return "view-daftar-program";
+    }
+
+    @GetMapping("/program-judul-desc")
+    public String viewProgramJudulDesc(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+        
+        List<ProgramKerja> listProgram = programKerjaService.filterDeletedPrograms(programKerjaService.getListProgramJudulDesc());
+        Collections.reverse(listProgram);
+
+        // Memeriksa setiap program apakah memiliki foto
+        for(ProgramKerja program : listProgram) {
+            if (program.getFotoProgram() != null) {
+                programKerjaService.handleFotoProgram(program);
+            }
+        }
+
+        model.addAttribute("listProgram", listProgram);
+        model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
+        model.addAttribute("daftarKategoriProgram", programKerjaService.getAllKategoriProgram());
+        model.addAttribute("daftarKategoriAsnaf", programKerjaService.getAllKategoriAsnaf());
+        
+        return "view-daftar-program";
+    }
+
+    @GetMapping("/program-cari")
+    public String viewSearchProgram(@RequestParam("query") String query, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+        
+        List<ProgramKerja> listProgram = programKerjaService.filterDeletedPrograms(programKerjaService.getPencarianProgram(query));
+        Collections.reverse(listProgram);
+
+        // Memeriksa setiap program apakah memiliki foto
+        for(ProgramKerja program : listProgram) {
+            if (program.getFotoProgram() != null) {
+                programKerjaService.handleFotoProgram(program);
+            }
+        }
+
+        model.addAttribute("listProgram", listProgram);
+        model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
+        model.addAttribute("daftarKategoriProgram", programKerjaService.getAllKategoriProgram());
+        model.addAttribute("daftarKategoriAsnaf", programKerjaService.getAllKategoriAsnaf());
+        
         return "view-daftar-program";
     }
 
