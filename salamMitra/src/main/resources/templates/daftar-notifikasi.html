@@ -14,6 +14,17 @@
       th:remove="tag"
     ></object>
     <title>Daftar Notifikasi | Salam Mitra</title>
+    <style>
+      a {
+        color: #435971;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: #435971;
+        text-decoration: none;
+      }
+    </style>
   </head>
 
   <body>
@@ -38,26 +49,28 @@
                 </div>
               </div>
 
-              <table class="table table-hover">
-                <tr
-                  th:unless="${listNotifikasi.isEmpty()}"
-                  th:each="notifikasi, iterationStatus: ${listNotifikasi}"
-                  th:classappend="${notifikasi.read} ? '' : 'table-warning'"
-                >
-                  <td th:data-read="${notifikasi.read}">
-                    <a
-                      th:href="@{/notifikasi/markAsRead/{id}(id=${notifikasi.id})}"
-                    >
-                      <p th:text="${notifikasi.message}"></p>
-                      <p style="font-size: smaller">
-                        <span
-                          th:text="${#dates.format(notifikasi.notifiedDate, 'HH:mm:ss dd/MM/yyyy')}"
-                        ></span>
-                      </p>
-                    </a>
-                  </td>
-                </tr>
-              </table>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <tr
+                    th:unless="${listNotifikasi.isEmpty()}"
+                    th:each="notifikasi, iterationStatus: ${listNotifikasi}"
+                    th:classappend="${notifikasi.read} ? '' : 'table-warning'"
+                  >
+                    <td th:data-read="${notifikasi.read}">
+                      <a
+                        th:href="@{/notifikasi/markAsRead/{id}(id=${notifikasi.id})}"
+                      >
+                        <p th:text="${notifikasi.message}"></p>
+                        <p style="font-size: smaller">
+                          <span
+                            th:text="${#dates.format(notifikasi.notifiedDate, 'HH:mm:ss dd/MM/yyyy')}"
+                          ></span>
+                        </p>
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
             </div>
           </div>
         </div>

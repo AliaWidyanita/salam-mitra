@@ -15,34 +15,43 @@
     ></object>
     <title>Revisi Pengajuan | Salam Mitra</title>
 	<style>
-		.btn-follow-text-width {
-			display: inline-block;
-			width: auto;
-			padding-left: 15px;
-			padding-right: 15px;
-		}
+      .removeRow {
+        font-size: smaller;
+      }
 
-		.removeRow {
-			font-size: smaller; /* Anda dapat menyesuaikan nilai ini jika diperlukan */
-		}
-		
-		.form-checkbox {
-			display: inline-block;
-			vertical-align: middle;
-		}
-		
-		.form-checkbox label {
-			display: inline-block;
-			margin-bottom: 0;
-		}
-		
-		.form-checkbox p {
-			display: inline;
-			vertical-align: middle;
-			margin-bottom: 0;
-			margin-right: 5px; /* Jarak antara teks dan kotak centang */
-		}
-	</style>
+      .img-fluid {
+        max-width: 200px;
+        height: auto;
+      }
+      .img-fluid2 {
+        max-width: auto;
+        height: 200px;
+      }
+      .card.table-responsive {
+        text-align: center;
+        margin-top: 1rem;
+        margin-left: 0rem;
+        margin-right: 0rem;
+        margin-bottom: 1rem;
+      }
+      .table:not(.table-dark) th {
+        color: white;
+      }
+      .card {
+        margin-bottom: 2%;
+        margin-left: 4%;
+        margin-right: 4%;
+      }
+      .input-group-text {
+        border-top-left-radius: 0.375rem;
+        border-top-right-radius: 0rem;
+        border-bottom-right-radius: 0rem;
+        border-bottom-left-radius: 0.375rem;
+      }
+      .input-group {
+        flex-wrap: nowrap;
+      }
+    </style>
 </head>
 
 <body>
@@ -53,7 +62,9 @@
 			<div class="row d-flex justify-content-center">
 				<h3 class="text-center m-4">Revisi Pengajuan Kerja Sama</h3>
 				<div class="container">
-                    <form th:action="@{/submit-revisi-{id}(id=${pengajuan.id})}" th:object="${updateListPengajuanKebutuhanDanaDTO}" method="POST" enctype="multipart/form-data">
+                    
+					
+					<form th:action="@{/submit-revisi-{id}(id=${pengajuan.id})}" th:object="${updateListPengajuanKebutuhanDanaDTO}" method="POST" enctype="multipart/form-data">
 						<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
 						<div id="form-total">
 
