@@ -7,10 +7,10 @@
   <head>
     <meta charset="UTF-8" />
     <object
-      th:insert="~{fragments/common :: fragment}"
+      th:include="~{fragments/common :: fragment}"
       th:remove="tag"
     ></object>
-    <title>Detail Pencairan</title>
+    <title>Detail Pencairan | Salam Setara</title>
     <style>
       .btn {
         padding: 0.375rem 0.75rem;
@@ -36,7 +36,7 @@
   </head>
 
   <body>
-    <div th:replace="~{fragments/navbar :: header(page='pencairan')}"></div>
+    <nav th:replace="~{fragments/navbar :: navbar('pencairan')}"></nav>
     <div class="container">
       <div
         class="container-fluid"
@@ -218,9 +218,7 @@
                       Finance.</span
                     >
                   </th:block>
-                  <th:block
-                    th:if="${pengajuan.status == 'Menunggu Laporan'}"
-                  >
+                  <th:block th:if="${pengajuan.status == 'Menunggu Laporan'}">
                     <tr class="no-border">
                       <td>Tanggal Pencairan</td>
                       <td>

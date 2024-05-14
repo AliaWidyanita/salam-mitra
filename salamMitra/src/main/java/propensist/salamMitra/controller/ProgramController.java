@@ -156,6 +156,33 @@ public class ProgramController {
         return "view-daftar-program";
     }
 
+    @GetMapping("/program-cari")
+    public String viewSearchProgram(@RequestParam("query") String query, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String role = auth.getAuthorities().iterator().next().getAuthority();
+        Pengguna user = penggunaService.authenticate(auth.getName());
+        
+        model.addAttribute("role", role);
+        model.addAttribute("user", user);
+        
+        List<ProgramKerja> listProgram = programKerjaService.filterDeletedPrograms(programKerjaService.getPencarianProgram(query));
+        Collections.reverse(listProgram);
+
+        // Memeriksa setiap program apakah memiliki foto
+        for(ProgramKerja program : listProgram) {
+            if (program.getFotoProgram() != null) {
+                programKerjaService.handleFotoProgram(program);
+            }
+        }
+
+        model.addAttribute("listProgram", listProgram);
+        model.addAttribute("daftarProvinsi", lokasiService.getAllProvinsi());
+        model.addAttribute("daftarKategoriProgram", programKerjaService.getAllKategoriProgram());
+        model.addAttribute("daftarKategoriAsnaf", programKerjaService.getAllKategoriAsnaf());
+        
+        return "view-daftar-program";
+    }
+
     @GetMapping("/tambah-program")
     public String formTambahProgram(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

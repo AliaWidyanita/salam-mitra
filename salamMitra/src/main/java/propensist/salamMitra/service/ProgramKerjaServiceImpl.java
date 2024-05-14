@@ -76,6 +76,13 @@ public class ProgramKerjaServiceImpl implements ProgramKerjaService{
     }
 
     @Override
+    @Transactional
+    public List<ProgramKerja> getPencarianProgram(String query) {
+        return programKerjaDb.searchByTitleOrCategory(query);
+    }
+
+
+    @Override
     public List<ProgramKerja> filterDeletedPrograms(List<ProgramKerja> programKerjaList) {
         List<ProgramKerja> activePrograms = new ArrayList<>();
     

@@ -120,12 +120,12 @@ public class HomeController {
         } else {
             if (penggunaService.authenticate(mitraDTO.getUsername()) != null) {
                 if (penggunaService.authenticate(mitraDTO.getUsername()).isDeleted() == false) {
-                    redirectAttributes.addFlashAttribute("error", "Username sudah terpakai! Apakah Anda memiliki akun?");
+                    redirectAttributes.addFlashAttribute("error", "Username sudah terpakai! Apakah Anda sudah memiliki akun?");
                     return "redirect:/login";
                 }
             }
             if (penggunaService.getAkunByEmail(mitraDTO.getEmail()) != null) {
-                redirectAttributes.addFlashAttribute("error", "Email sudah terpakai! Apakah anda memiliki akun?");
+                redirectAttributes.addFlashAttribute("error", "Email sudah terpakai! Apakah Anda sudah memiliki akun?");
                 return "redirect:/login";
             } else { // mitra
                 String encodedPassword = encoder.encode(mitraDTO.getPassword());
@@ -156,7 +156,7 @@ public class HomeController {
             model.addAttribute("error", "Username atau password salah!");
         }
         
-        return "login.html";
+        return "login";
     }
     
     @GetMapping("/logout")
@@ -184,15 +184,21 @@ public class HomeController {
     public String gantiPassword(@RequestParam String userId,
                                 @RequestParam String passwordLama,
                                 @RequestParam String newPassword,
-                                Model model) {
+                                Model model, RedirectAttributes redirectAttributes) {
+
+        if (passwordLama.equals(newPassword)) {
+            redirectAttributes.addFlashAttribute("error", "Kata sandi baru harus berbeda dari yang lama!");
+            return "redirect:/ubah-sandi-" + userId;
+        }
 
         if (penggunaService.gantiPassword(userId, passwordLama, newPassword)) {
             // Ganti password berhasil
-            return "redirect:/";
+            redirectAttributes.addFlashAttribute("successMessage", "Kata sandi Anda berhasil diubah!");
+            return "redirect:/ubah-sandi-" + userId;
         } else {
             // Ganti password gagal
-            model.addAttribute("error", "Password lama tidak sesuai");
-            return "form-ubah-sandi";
+            redirectAttributes.addFlashAttribute("error", "Password lama Anda tidak sesuai!");
+            return "redirect:/ubah-sandi-" + userId;
         }
     }
 }
