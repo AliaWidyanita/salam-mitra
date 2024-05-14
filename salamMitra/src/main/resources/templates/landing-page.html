@@ -1,150 +1,67 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
 	<head>
-		<object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
+		<meta charset="UTF-8" />
+		<object
+		th:include="~{fragments/common :: fragment}"
+		th:remove="tag"
+		></object>
+		<title>Landing Page | Salam Mitra</title>
 	</head>
-	<style>
-        .card {
-            width: calc(33.333% - 40px);
-            height: 400px;
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: relative;
-            perspective: 1000px;
-        }
 
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 0 auto; 
-            max-width: 1200px; 
-        }
-
-        .card:hover .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card-inner {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            transition: transform 0.5s;
-            transform-style: preserve-3d;
-        }
-
-        .card-front,
-        .card-back {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        .card-back {
-            transform: rotateY(180deg);
-            z-index: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .card img {
-            width: 100%;
-            height: auto;
-            max-height: 50%;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
-        .overlay {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            overflow: hidden;
-        }
-
-        .description { 
-            display: -webkit-box; 
-            -webkit-box-orient: vertical; 
-            -webkit-line-clamp: 3; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-        } 
-
-        .overlay:hover {
-            color: #000000;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-
-        .overlay-button {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            background-color: #f28123;
-            transition: background-color 0.3s ease;
-            overflow: hidden;
-        }
-
-        .overlay-button:hover {
-            color: #fff;
-            background-color: #cb5f08;
-            transition: background-color 0.3s ease;
-        }
-
-        .overlay-button-edit {
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            background-color: #23bbf2;
-            transition: background-color 0.3s ease;
-            overflow: hidden;
-            margin-top: 15px;
-        }
-
-        .overlay-button-edit:hover {
-            color: #fff;
-            background-color: #0da4db;
-            transition: background-color 0.3s ease;
-        }
-
-        .overlay-button-delete {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: #f23d3d;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .overlay-button-delete:hover {
-            background-color: #cd1212;
-            color: #fff;
-        }
-
-        .category {
-            color: dimgray;
-        }
-    </style>
-<body>
-	
+	<body>
+		<nav th:replace="~{fragments/navbar :: navbar('home')}"></nav>
+		<!-- home page slider -->
+		<div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+			<div class="carousel-indicators">
+				<button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active"></button>
+				<button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1"></button>
+				<button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2"></button>
+			</div>
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<img class="d-block w-100 h-100" src="../assets/img/illustrations/volunteer1.jpg" alt="First slide" />
+					<div class="carousel-caption">
+						<h1>Jadilah Mitra Kami!</h1>
+						<p>Berkolaborasi Untuk Kebaikan</p>
+					</div>
+				</div>
+				<div class="carousel-item">
+					<img class="d-block w-100 h-100" src="../assets/img/illustrations/volunteer2.jpg" alt="Second slide" />
+					<div class="carousel-caption">
+						<h1>Jadi Volunteer Sekarang!</h1>
+						<p>Saling Membantu, Saling Berkolaborasi</p>
+					</div>
+				</div>
+				<div class="carousel-item">
+					<img class="d-block w-100 h-100" src="../assets/img/illustrations/volunteer3.jpg" alt="Third slide" />
+					<div class="carousel-caption">
+						<h1>Mari Bergabung Membantu Sesama</h1>
+						<p>Berkontribusi Hari Ini!</p>
+					</div>
+				</div>
+			</div>
+			<a class="carousel-control-prev" href="#carouselExample" role="button" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</a>
+			<a class="carousel-control-next" href="#carouselExample" role="button" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</a>
+		</div>
+		
 	<!-- home page slider -->
-	<div class="homepage-slider">
+	<!-- <div class="homepage-slider"> -->
 		<!-- single home slider -->
-		<div class="single-homepage-slider homepage-bg-1">
+		<!-- <div class="single-homepage-slider homepage-bg-1">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12 col-lg-7 offset-lg-1 offset-xl-0">
@@ -165,9 +82,9 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<!-- single home slider -->
-		<div class="single-homepage-slider homepage-bg-2">
+		<!-- <div class="single-homepage-slider homepage-bg-2">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-10 offset-lg-1 text-center">
@@ -188,9 +105,9 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<!-- single home slider -->
-		<div class="single-homepage-slider homepage-bg-3">
+		<!-- <div class="single-homepage-slider homepage-bg-3">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-10 offset-lg-1 text-right">
@@ -212,11 +129,11 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<!-- end home page slider -->
 
 	<!-- daftar program -->
-	<div class="latest-news pt-150 pb-150">
+	<!-- <div class="latest-news pt-150 pb-150">
 		<div class="container">
 
 			<div class="row">
@@ -231,12 +148,12 @@
 				<th:block th:if="${listProgram.isEmpty()}">
                 	<p class="text-center" style="display: flex; flex-direction: column; justify-content: center;">Mohon maaf, saat ini tidak ada program yang tersedia.</p>
             	</th:block>
-				<div class="card-container">
+				<div class="card-container"> -->
 					<!-- Iterasi Program -->
-					<div th:each="program : ${listProgram}" th:limit="3" class="card">
-							<div class="card-inner">
+					<!-- <div th:each="program : ${listProgram}" th:limit="3" class="card">
+							<div class="card-inner"> -->
 								<!-- Bagian depan dan belakang kartu -->
-								<div class="card-front">
+								<!-- <div class="card-front">
 									<img th:if="${program.fotoProgram != null}" th:src="'data:image/jpeg;base64,' + ${program.imageBase64}" alt="Program Image">
 									<img th:if="${program.fotoProgram == null}" src="/assets/img/placeholder-program.png" alt="Placeholder" class="img-fluid">
 									<div class="overlay">
@@ -246,9 +163,9 @@
 									</div>
 								</div>
 								<div class="card-back">
-									<a th:href="'/program-' + ${program.id}" class="overlay-button">Lihat Detail Program</a>
+									<a th:href="'/program-' + ${program.id}" class="overlay-button">Lihat Detail Program</a> -->
 									<!-- Tautan untuk menghapus program -->
-									<th:block th:if="${role == 'admin_PROGRAM'}">
+									<!-- <th:block th:if="${role == 'admin_PROGRAM'}">
 										<a th:href="'/hapus-program-' + ${program.id}" class="overlay-button-delete">
 											<i class="bi bi-trash"></i>
 										</a>
@@ -268,11 +185,11 @@
 				</div>
 			</th:block>
 		</div>
-	</div>
+	</div> -->
 	<!-- end daftar program -->
 
 	<!-- footer -->
-	<div class="copyright">
+	<!-- <div class="copyright">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-6 col-md-12">
@@ -283,11 +200,11 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<!-- end footer -->
 	
 	<!-- copyright -->
-	<div class="copyright">
+	<!-- <div class="copyright">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-6 col-md-12">
@@ -308,29 +225,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<!-- end copyright -->
-	
-	<!-- jquery -->
-	<script src="assets/js/jquery-1.11.3.min.js"></script>
-	<!-- bootstrap -->
-	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-	<!-- count down -->
-	<script src="assets/js/jquery.countdown.js"></script>
-	<!-- isotope -->
-	<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
-	<!-- waypoints -->
-	<script src="assets/js/waypoints.js"></script>
-	<!-- owl carousel -->
-	<script src="assets/js/owl.carousel.min.js"></script>
-	<!-- magnific popup -->
-	<script src="assets/js/jquery.magnific-popup.min.js"></script>
-	<!-- mean menu -->
-	<script src="assets/js/jquery.meanmenu.min.js"></script>
-	<!-- sticker js -->
-	<script src="assets/js/sticker.js"></script>
-	<!-- main js -->
-	<script src="assets/js/main.js"></script>
-
-</body>
+	</body>
 </html>
