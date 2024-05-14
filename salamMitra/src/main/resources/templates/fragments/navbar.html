@@ -13,6 +13,30 @@
       th:include="~{fragments/common :: fragment}"
       th:remove="tag"
     ></object>
+    <style>
+      .dropdown-user:hover .dropdown-menu {
+        display: block;
+      }
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        float: left;
+        min-width: 10rem;
+        padding: 0.5rem 0;
+        margin: 0.125rem 0 0;
+        font-size: 1rem;
+        color: #212529;
+        text-align: left;
+        list-style: none;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 0.25rem;
+      }
+    </style>
   </head>
   <body>
     <nav
@@ -20,18 +44,18 @@
       class="navbar navbar-expand-lg navbar-dark bg-primary"
     >
       <div class="container-fluid">
-        <div style="width: 50%;">
-        <a
-          class="navbar-brand"
-          th:href="@{/}"
-          style="display: flex; align-items: center"
-        >
-          <img
-            src="../../assets/img/favicon/brand.png"
-            style="width: 170px; height: auto"
-          />
-        </a>
-      </div>
+        <div style="width: 50%">
+          <a
+            class="navbar-brand"
+            th:href="@{/}"
+            style="display: flex; align-items: center"
+          >
+            <img
+              src="../../assets/img/favicon/brand.png"
+              style="width: 170px; height: auto"
+            />
+          </a>
+        </div>
         <button
           class="navbar-toggler"
           type="button"
@@ -76,7 +100,11 @@
               th:if="${role == 'admin_PROGRAM' || role == 'manajemen' || role == 'program_service'}"
               th:classappend="${page == 'pengajuan' ? 'active' : ''}"
             >
-              <a class="nav-item nav-link" th:href="@{/pengajuan}" style="text-wrap: nowrap;">
+              <a
+                class="nav-item nav-link"
+                th:href="@{/pengajuan}"
+                style="text-wrap: nowrap"
+              >
                 Ajuan Kerja Sama
               </a>
             </li>
@@ -85,7 +113,7 @@
               th:classappend="${page == 'pengguna' ? 'active' : ''}"
             >
               <a class="nav-item nav-link" th:href="@{/pengguna}">
-                Daftar Pengguna
+                Pengguna
               </a>
             </li>
             <li
@@ -105,13 +133,14 @@
               </a>
             </li>
             <li th:if="${role == 'ROLE_ANONYMOUS'}">
-              <button
+              <a
                 class="btn btn-outline-light"
                 type="button"
                 style="margin-left: 5%"
+                th:href="@{/login}"
               >
                 Login
-              </button>
+              </a>
             </li>
 
             <li
@@ -119,10 +148,8 @@
               th:if="${role != 'ROLE_ANONYMOUS'}"
             >
               <a
-                class="nav-item nav-link dropdown-toggle hide-arrow show"
+                class="nav-item nav-link dropdown-toggle hide-arrow"
                 data-bs-toggle="dropdown"
-                aria-expanded="false"
-                data-toggle="dropdown"
               >
                 <div class="avatar avatar-online">
                   <img
@@ -132,14 +159,9 @@
                   />
                 </div>
               </a>
-              <ul
-                class="dropdown-menu dropdown-menu-end"
-                data-bs-popper="static"
-              >
+              <ul class="dropdown-menu dropdown-menu-end">
                 <li>
-                  <a
-                    class="dropdown-item"
-                  >
+                  <a class="dropdown-item">
                     <div class="d-flex">
                       <div class="flex-shrink-0 me-3">
                         <div class="avatar avatar-online">

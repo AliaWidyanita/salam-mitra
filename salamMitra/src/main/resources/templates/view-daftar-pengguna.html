@@ -45,6 +45,8 @@
                 </button>
               </div>
 
+              <div class="alert alert-success" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+                  
               <div class="card">
                 <div class="card table-responsive">
                   <table
@@ -110,36 +112,30 @@
                   </table>
                 </div>
               </div>
-              <div
-                class="alert alert-success"
-                role="alert"
-                th:text="${successMessage}"
-                th:if="${successMessage}"
-              ></div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <script>
-      function removeAlerts() {
-        setTimeout(function () {
-          jQuery(".alert").fadeOut("fast", function () {
-            jQuery(this).remove();
-          });
-        }, 2000); // Adjust the timeout duration (in milliseconds) as needed
-      }
-      removeAlerts();
+<script>
+        // Menampilkan pesan sukses
+        document.getElementById("successMessage").style.display = "block";
+        // Mengatur waktu tampilan pesan sebelum menghilang
+        setTimeout(function() {
+            document.getElementById("successMessage").style.display = "none";
+        }, 2000); // 3000 milliseconds = 3 seconds
     </script>
-
     <script>
-      // Menampilkan pesan sukses
-      document.getElementById("successMessage").style.display = "block";
-      // Mengatur waktu tampilan pesan sebelum menghilang
-      setTimeout(function () {
-        document.getElementById("successMessage").style.display = "none";
-      }, 2000); // 3000 milliseconds = 3 seconds
+        function removeAlerts() {
+            setTimeout(function () {
+                jQuery('.alert').fadeOut('fast', function () {
+                    jQuery(this).remove();
+                });
+            }, 3000);
+        }
+
+        removeAlerts();
     </script>
   </body>
 </html>

@@ -76,32 +76,33 @@ public class PenggunaController {
     public String addAdmin(@Valid @ModelAttribute @RequestParam("adminRole") AdminRole adminRole , CreateAdminRequestDTO adminDTO,
             BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
 
-        if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors()
-                    .stream()
-                    .map(error -> {
-                        if (error instanceof FieldError) {
-                            FieldError fieldError = (FieldError) error;
-                            return fieldError.getField() + ": " + error.getDefaultMessage();
-                        }
-                        return error.getDefaultMessage();
-                    })
-                    .collect(Collectors.toList());
+        if (bindingResult.hasFieldErrors()) {
+            redirectAttributes.addFlashAttribute("error", "Formulir memiliki data yang tidak valid atau belum diisi.");
+            return "redirect:/login";
+        } else {
+            if (penggunaService.authenticate(adminDTO.getUsername()) != null) {
+                if (penggunaService.authenticate(adminDTO.getUsername()).isDeleted() == false) {
+                    redirectAttributes.addFlashAttribute("error",
+                            "Username sudah terpakai!");
+                    return "redirect:/pengguna-tambah-admin";
+                }
+            }
+            if (penggunaService.getAkunByEmail(adminDTO.getEmail()) != null) {
+                redirectAttributes.addFlashAttribute("error", "Email sudah terpakai!");
+                return "redirect:/pengguna-tambah-admin";
+            } else { 
+                String encodedPassword = encoder.encode(adminDTO.getPassword());
+                adminDTO.setPassword(encodedPassword);
+                adminDTO.setAdminRole(adminRole);
 
-            model.addAttribute("errors", errors);
+                var admin = adminMapper.createAdminRequestDTOToAdmin(adminDTO);
+                penggunaService.saveAdmin(admin);
+
+                // Menyimpan pesan sukses
+                redirectAttributes.addFlashAttribute("successMessage", "Admin berhasil ditambahkan!");
+            }
         }
 
-        String encodedPassword = encoder.encode(adminDTO.getPassword());
-        adminDTO.setPassword(encodedPassword);
-        adminDTO.setAdminRole(adminRole);
-
-        var admin = adminMapper.createAdminRequestDTOToAdmin(adminDTO);
-        penggunaService.saveAdmin(admin);
-
-        // Menyimpan pesan sukses
-        redirectAttributes.addFlashAttribute("successMessage", "Admin berhasil ditambahkan!");
-
-        // Mengarahkan pengguna kembali ke halaman "/pengguna"
         return "redirect:/pengguna";
     }
 

@@ -32,181 +32,195 @@
                 </h1>
               </div>
 
-              <div class="card">
-                <div class="card-body">
-                  <form
-                    th:action="@{/pengguna-tambah-admin}"
-                    th:object="${adminDTO}"
-                    method="POST"
-                  >
-                    <div class="mb-3">
-                      <label for="validationDefault01" class="form-label"
-                        >Username*</label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        th:field="*{username}"
-                        required
-                      />
-                    </div>
+              <div
+                class="alert alert-danger"
+                role="alert"
+                th:text="${error}"
+                th:if="${error}"
+              ></div>
 
-                    <div class="mb-3">
-                      <label for="validationDefault01" class="form-label"
-                        >Email*</label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="emailInput"
-                        th:field="*{email}"
-                        required
-                      />
-                      <div
-                        id="email-error"
-                        class="text-danger"
-                        style="display: none; font-size: smaller"
-                      >
-                        Masukkan alamat email yang valid
-                      </div>
-                    </div>
-
-                    <div class="form-password-toggle mb-3">
-                      <label for="validationDefault01" class="form-label"
-                        >Kata Sandi*</label
-                      >
-                      <div class="input-group">
+              <div class="container">
+                <div class="card">
+                  <div class="card-body">
+                    <form
+                      th:action="@{/pengguna-tambah-admin}"
+                      th:object="${adminDTO}"
+                      method="POST"
+                    >
+                      <div class="mb-3">
+                        <label for="validationDefault01" class="form-label"
+                          >Username*</label
+                        >
                         <input
-                          type="password"
+                          type="text"
                           class="form-control"
-                          name="password"
-                          id="password"
-                          th:field="*{password}"
-                          placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                          th:field="*{username}"
+                          placeholder="Username"
                           required
                         />
-                        <span
-                          id="togglePassword"
-                          class="input-group-text cursor-pointer"
-                          ><i class="bx bx-hide"></i
-                        ></span>
                       </div>
-                      <div
-                        id="password-error"
-                        class="text-danger"
-                        style="display: none; font-size: smaller"
-                      ></div>
-                    </div>
 
-                    <div class="mb-3">
-                      <label for="validationDefault01" class="form-label"
-                        >Name Lengkap*</label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        th:field="*{fullName}"
-                        required
-                      />
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="validationDefault01" class="form-label"
-                        >Alamat*</label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        th:field="*{address}"
-                        required
-                      />
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="validationDefault04" class="form-label"
-                        >Jenis Kelamin*</label
-                      >
-                      <br />
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="radio"
-                          name="gender"
-                          value="Pria"
-                          th:field="*{gender}"
-                          id="genderPria"
-                          checked
-                        />
-                        <label class="form-check-label" for="genderPria"
-                          >Pria</label
+                      <div class="mb-3">
+                        <label for="validationDefault01" class="form-label"
+                          >Email*</label
                         >
-                      </div>
-                      <div class="form-check">
                         <input
-                          class="form-check-input"
-                          type="radio"
-                          name="gender"
-                          value="Wanita"
-                          th:field="*{gender}"
-                          id="genderWanita"
+                          type="text"
+                          class="form-control"
+                          id="emailInput"
+                          th:field="*{email}"
+                          placeholder="example@email.com"
+                          required
                         />
-                        <label class="form-check-label" for="genderWanita"
-                          >Wanita</label
+                        <div
+                          id="email-error"
+                          class="text-danger"
+                          style="display: none; font-size: smaller"
                         >
+                          Masukkan alamat email yang valid
+                        </div>
                       </div>
-                    </div>
 
-                    <div class="mb-3">
-                      <label for="validationDefault02" class="form-label"
-                        >Kontak*</label
-                      >
-                      <input
-                        type="number"
-                        class="form-control"
-                        style="width: 100%"
-                        id="contactInput"
-                        th:field="*{contact}"
-                        required
-                      />
-                      <div
-                        id="contactError"
-                        class="text-danger"
-                        style="display: none; font-size: smaller"
-                      ></div>
-                    </div>
+                      <div class="form-password-toggle mb-3">
+                        <label for="validationDefault01" class="form-label"
+                          >Kata Sandi*</label
+                        >
+                        <div class="input-group">
+                          <input
+                            type="password"
+                            class="form-control"
+                            name="password"
+                            id="password"
+                            th:field="*{password}"
+                            placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                            required
+                          />
+                          <span
+                            id="togglePassword"
+                            class="input-group-text cursor-pointer"
+                            ><i class="bx bx-hide"></i
+                          ></span>
+                        </div>
+                        <div
+                          id="password-error"
+                          class="text-danger"
+                          style="display: none; font-size: smaller"
+                        ></div>
+                      </div>
 
-                    <div class="mb-3">
-                      <label for="validationDefault04" class="form-label"
-                        >Admin Role*</label
-                      >
-                      <select
-                        class="form-control form-select"
-                        id="validationDefault04"
-                        style="width: 100%"
-                        name="adminRole"
-                        required
-                      >
-                        <option selected disabled value="">
-                          --Pilih Role Admin--
-                        </option>
-                        <option value="PROGRAM">Program</option>
-                        <option value="FINANCE">Finance</option>
-                      </select>
-                    </div>
+                      <div class="mb-3">
+                        <label for="validationDefault01" class="form-label"
+                          >Name Lengkap*</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          th:field="*{fullName}"
+                          placeholder="Nama lengkap"
+                          required
+                        />
+                      </div>
 
-                    <div class="text-center">
-                      <button
-                        class="btn btn-danger"
-                        type="button"
-                        onclick="window.location.href='/pengguna'"
-                      >
-                        Batal
-                      </button>
-                      <button class="btn btn-primary" type="submit">
-                        Simpan
-                      </button>
-                    </div>
-                  </form>
+                      <div class="mb-3">
+                        <label for="validationDefault01" class="form-label"
+                          >Alamat*</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          th:field="*{address}"
+                          placeholder="Alamat"
+                          required
+                        />
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="validationDefault04" class="form-label"
+                          >Jenis Kelamin*</label
+                        >
+                        <br />
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="gender"
+                            value="Pria"
+                            th:field="*{gender}"
+                            id="genderPria"
+                            checked
+                          />
+                          <label class="form-check-label" for="genderPria"
+                            >Pria</label
+                          >
+                        </div>
+                        <div class="form-check">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="gender"
+                            value="Wanita"
+                            th:field="*{gender}"
+                            id="genderWanita"
+                          />
+                          <label class="form-check-label" for="genderWanita"
+                            >Wanita</label
+                          >
+                        </div>
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="validationDefault02" class="form-label"
+                          >Kontak*</label
+                        >
+                        <input
+                          type="number"
+                          class="form-control"
+                          style="width: 100%"
+                          id="contactInput"
+                          th:field="*{contact}"
+                          placeholder="08**********"
+                          required
+                        />
+                        <div
+                          id="contactError"
+                          class="text-danger"
+                          style="display: none; font-size: smaller"
+                        ></div>
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="validationDefault04" class="form-label"
+                          >Admin Role*</label
+                        >
+                        <select
+                          class="form-control form-select"
+                          id="validationDefault04"
+                          style="width: 100%"
+                          name="adminRole"
+                          required
+                        >
+                          <option selected disabled value="">
+                            --Pilih Role Admin--
+                          </option>
+                          <option value="PROGRAM">Program</option>
+                          <option value="FINANCE">Finance</option>
+                        </select>
+                      </div>
+
+                      <div class="text-center">
+                        <button
+                          class="btn btn-danger"
+                          type="button"
+                          onclick="window.location.href='/pengguna'"
+                        >
+                          Batal
+                        </button>
+                        <button class="btn btn-primary" type="submit">
+                          Simpan
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
@@ -286,6 +300,17 @@
           this.querySelector("i").classList.toggle("bx-show");
         });
       });
+    </script>
+    <script>
+      function removeAlerts() {
+        setTimeout(function () {
+          jQuery(".alert").fadeOut("fast", function () {
+            jQuery(this).remove();
+          });
+        }, 3000); // Adjust the timeout duration (in milliseconds) as needed
+      }
+
+      removeAlerts();
     </script>
 
     <!-- Sertakan referensi ke jQuery di sini -->
