@@ -33,7 +33,7 @@
                         <div class="text-center" style="padding-top: 3%; padding-bottom: 3%;">
                             <th:block th:if="${role == 'mitra'}">
                                 <h1 class="display-3"><strong>Daftar Ajuan Saya</strong></h1>
-                                <a type="button" class="btn rounded-pill me-2 btn-primary mb-3" href="/tambah-pengajuan">+ Buat Pengajuan</a>
+                                <a type="button" class="btn btn-primary mb-3" href="/tambah-pengajuan">+ Buat Pengajuan</a>
                             </th:block>
                             <th:block th:if="${role == 'admin_PROGRAM' || role == 'manajemen' || role == 'program_service'}">
                                 <h1 class="display-3"><strong>Daftar Pengajuan Kerja Sama</strong></h1>
@@ -85,7 +85,7 @@
                                                 </span>
                                                 <span 
                                                   class="badge rounded-pill bg-label-info me-1"
-                                                  th:if="${pengajuan.status eq 'Diteruskan ke Manajemen'}"
+                                                  th:if="${pengajuan.status eq 'Diteruskan ke Manajemen' or pengajuan.status eq 'Sedang Diperiksa'}"
                                                   >Sedang Diperiksa
                                                 </span>
                                                 <span 

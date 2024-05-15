@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import propensist.salamMitra.dto.MitraMapper;
 import propensist.salamMitra.dto.request.CreateMitraRequestDTO;
+import propensist.salamMitra.model.Pengajuan;
 import propensist.salamMitra.model.Pengguna;
 import propensist.salamMitra.model.ProgramKerja;
 import propensist.salamMitra.service.DashboardService;
@@ -92,6 +93,10 @@ public class HomeController {
 
             Map<String, Long> countPengajuanByStatus = pengajuanService.jumlahPengajuanByStatus();
             model.addAttribute("jumlahPengajuanByStatus", countPengajuanByStatus);
+
+            model.addAttribute("jumlahPengajuan", pengajuanService.getAllPengajuan().size());
+
+            model.addAttribute("jumlahProgram", programKerjaService.getAllProgramAktif().size());
 
             return "dashboard";
         }
@@ -195,10 +200,8 @@ public class HomeController {
             // Ganti password berhasil
             redirectAttributes.addFlashAttribute("successMessage", "Kata sandi Anda berhasil diubah!");
             return "redirect:/ubah-sandi-" + userId;
-        } else {
-            // Ganti password gagal
-            redirectAttributes.addFlashAttribute("error", "Password lama Anda tidak sesuai!");
-            return "redirect:/ubah-sandi-" + userId;
         }
+        redirectAttributes.addFlashAttribute("error", "Password lama Anda tidak sesuai!");
+        return "redirect:/ubah-sandi-" + userId;
     }
 }
