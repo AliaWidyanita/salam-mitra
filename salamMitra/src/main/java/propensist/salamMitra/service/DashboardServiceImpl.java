@@ -43,7 +43,7 @@ public class DashboardServiceImpl implements DashboardService {
         Map<String, Integer> jumlahProgramKerjaPerKategori = new HashMap<>();
 
         // Mendapatkan semua program kerja
-        List<ProgramKerja> programKerjaList = programKerjaService.getAllProgramKerja();
+        List<ProgramKerja> programKerjaList = programKerjaService.getAllProgramAktif();
 
         // Menghitung jumlah program kerja untuk setiap kategori
         for (ProgramKerja programKerja : programKerjaList) {

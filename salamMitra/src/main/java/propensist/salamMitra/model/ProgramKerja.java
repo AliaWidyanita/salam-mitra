@@ -34,6 +34,7 @@ public class ProgramKerja {
     @Column(name = "kategori_asnaf")
     private List<String> kategoriAsnaf;
 
+    @Lob
     @NotNull
     @Column(name = "deskripsi", nullable = false)
     private String deskripsi;

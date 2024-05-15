@@ -1,52 +1,61 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
 <head>
-    <object th:insert="~{fragments/common :: fragment}" th:remove="tag"></object>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <meta charset="UTF-8" />
+    <object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <title>Ubah Sandi | Salam Mitra</title>
 </head>
 <body>
-    <div th:replace="~{fragments/navbar :: header(page='sandi')}"></div>
-    <div class="container">
-        <div class="container-fluid" style="padding-bottom: 5%; padding-top: 15%; display: flex; align-items: center; justify-content: center;">
-            <div class="container" data-aos="fade-up">
-                <div class="row d-flex justify-content-center">
-                    <h3 class="text-center m-4">Ubah Kata Sandi</h3>
-                    <div class="container">
-                        <form th:action="@{/ubah-sandi}" method="POST" onsubmit="return validateForm()">
-                            <input type="hidden" name="userId" th:value="${pengguna.id}" />
-                            <div class="col-md-6">
-                                <label for="password-lama" class="form-label">Kata Sandi Lama</label>
-                                <div class="input-group">
-                                    <input required class="form-control" type="password" id="password-lama" name="passwordLama"/>
-                                    <span class="input-group-text" id="togglePasswordLama"><i class="bi bi-eye-slash"></i></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="new-password" class="form-label">Kata Sandi Baru</label>
-                                <div class="input-group">
-                                    <input required class="form-control" type="password" id="new-password" name="newPassword"/>
-                                    <span class="input-group-text" id="togglePassword"><i class="bi bi-eye-slash"></i></span>
-                                    <div id="passwordError" class="invalid-feedback">
-                                        Password harus terdiri dari 8-20 karakter, mengandung huruf besar dan kecil, mengandung angka, dan tidak boleh mengandung spasi, karakter khusus, atau emoji.
+    <div class="layout-wrapper layout-content-navbar layout-without-menu">
+        <div class="layout-container">
+            <div class="layout-page">
+                <nav th:replace="~{fragments/navbar :: navbar('home')}"></nav>
+                <div class="content-wrapper">
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="text-center" style="padding-top: 3%; padding-bottom: 3%;">
+                            <h1 class="display-3"><strong>Ubah Kata Sandi</strong></h1>
+                        </div>
+                        <div style="display: flex; justify-content: center;">
+                            <form class="row g-3 card" style="padding: 50px; width: 35rem;" th:action="@{/ubah-sandi}" method="POST" onsubmit="return validateForm()">
+                                <div class="alert alert-success alert-dismissible" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
+                                <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+                                <input type="hidden" name="userId" th:value="${pengguna.id}" />
+                                <div class="mb-3 form-password-toggle">
+                                    <label for="old-password" class="form-label">Kata Sandi Lama</label>
+                                    <div class="input-group">
+                                        <input required class="form-control" type="password" id="old-password" name="passwordLama"/>
+                                        <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('old-password')"><i id="old-password-toggle" class="bx bx-hide"></i></span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="confirm-password" class="form-label">Konfirmasi Kata Sandi Baru</label>
-                                <div class="input-group">
-                                    <input required class="form-control" type="password" id="confirm-password" name="confirmPassword"/>
-                                    <span class="input-group-text" id="toggleConfirmPassword"><i class="bi bi-eye-slash"></i></span>
-                                    <div id="confirmPasswordError" class="invalid-feedback">
-                                        Konfirmasi kata sandi baru harus sesuai dengan kata sandi baru.
+                                <div class="mb-3 form-password-toggle">
+                                    <label for="new-password" class="form-label">Kata Sandi Baru</label>
+                                    <div class="input-group">
+                                        <input required class="form-control" type="password" id="new-password" name="newPassword"/>
+                                        <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('new-password')"><i id="new-password-toggle" class="bx bx-hide"></i></span>
+                                    </div>
+                                        <div
+                          id="password-error"
+                          class="text-danger"
+                          style="display: none; font-size: smaller"
+                        ></div>
+                                </div>
+                                <div class="mb-3 form-password-toggle">
+                                    <label for="confirm-password" class="form-label">Konfirmasi Kata Sandi Baru</label>
+                                    <div class="input-group">
+                                        <input required class="form-control" type="password" id="confirm-password" name="confirmPassword"/>
+                                        <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('confirm-password')"><i id="confirm-password-toggle" class="bx bx-hide"></i></span>
+                                        <div id="confirmPasswordError" class="invalid-feedback">
+                                            Konfirmasi kata sandi baru harus sesuai dengan kata sandi baru.
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="mt-5 text-center">
-                                <button onclick="window.location.href='/'" class="btn" style="background-color: #dc3545; width: 110px;">Batal</button>
-                                <button class="btn" type="submit" style="width: 110px;">Simpan</button>
-                            </div>
-                        </form>
+                            
+                            
+                                <div class="mt-5 text-center">
+                                    <button class="btn btn-primary" type="submit" style="width: 110px;">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -54,41 +63,35 @@
     </div>
 
     <script>
-        const passwordInput = document.getElementById("new-password");
         const confirmPasswordInput = document.getElementById("confirm-password");
-        const passwordError = document.getElementById("passwordError");
         const confirmPasswordError = document.getElementById("confirmPasswordError");
-        const togglePassword = document.querySelector("#togglePassword");
-        const togglePasswordLama = document.querySelector("#togglePasswordLama");
-        const toggleConfirmPassword = document.querySelector("#toggleConfirmPassword");
     
-        togglePassword.addEventListener("click", togglePasswordVisibility);
-        togglePasswordLama.addEventListener("click", togglePasswordVisibility);
-        toggleConfirmPassword.addEventListener("click", togglePasswordVisibility);
-    
-        function togglePasswordVisibility() {
-            const inputField = this.closest(".input-group").querySelector("input");
-            const type = inputField.getAttribute("type") === "password" ? "text" : "password";
-            inputField.setAttribute("type", type);
-            this.querySelector("i").classList.toggle("bi-eye");
-            this.querySelector("i").classList.toggle("bi-eye-slash");
-        }
+        const passwordInput = document.getElementById("new-password");
+        const passwordError = document.getElementById("password-error");
 
-        passwordInput.addEventListener("input", function () {
-            const password = passwordInput.value;
-            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/;
-
-            if (passwordRegex.test(password)) {
-                passwordError.style.display = "none";
-            } else {
-                passwordError.style.display = "block";
-            }
+        passwordInput.addEventListener("input", () => {
+          const password = passwordInput.value;
+          if (password.length < 8 || password.length > 20) {
+            passwordError.style.display = "block";
+            passwordError.textContent =
+              "Password harus terdiri dari 8-20 karakter.";
+          } else if (!/[a-zA-Z]/.test(password) || !/\d/.test(password)) {
+            passwordError.style.display = "block";
+            passwordError.textContent =
+              "Password harus mengandung huruf dan angka.";
+          } else if (/\s/.test(password) || /[^\w\s]/.test(password)) {
+            passwordError.style.display = "block";
+            passwordError.textContent =
+              "Password tidak boleh mengandung spasi, karakter khusus, atau emoji.";
+          } else {
+            passwordError.style.display = "none";
+          }
         });
-
+    
         function validateForm() {
             const newPassword = passwordInput.value;
             const confirmNewPassword = confirmPasswordInput.value;
-
+    
             if (newPassword !== confirmNewPassword) {
                 confirmPasswordError.style.display = "block";
                 return false;
@@ -97,27 +100,32 @@
                 return true;
             }
         }
-    </script>
 
-    <!-- jquery -->
-    <script src="assets/js/jquery-1.11.3.min.js"></script>
-    <!-- bootstrap -->
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <!-- count down -->
-    <script src="assets/js/jquery.countdown.js"></script>
-    <!-- isotope -->
-    <script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
-    <!-- waypoints -->
-    <script src="assets/js/waypoints.js"></script>
-    <!-- owl carousel -->
-    <script src="assets/js/owl.carousel.min.js"></script>
-    <!-- magnific popup -->
-    <script src="assets/js/jquery.magnific-popup.min.js"></script>
-    <!-- mean menu -->
-    <script src="assets/js/jquery.meanmenu.min.js"></script>
-    <!-- sticker js -->
-    <script src="assets/js/sticker.js"></script>
-    <!-- main js -->
-    <script src="assets/js/main.js"></script>
+        // Fungsi untuk menghapus pesan kesalahan setelah 3000 ms
+        function removeAlerts() {
+            setTimeout(function () {
+                var alerts = document.querySelectorAll('.alert');
+                alerts.forEach(function(alert) {
+                    alert.remove();
+                });
+            }, 3000);
+        }
+
+        removeAlerts();
+
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(`${inputId}-toggle`);
+            if (input.type === "password") {
+                input.type = "text";
+                toggleIcon.classList.remove("bx-hide");
+                toggleIcon.classList.add("bx-show");
+            } else {
+                passwordError.style.display = "block";
+            }
+        }
+    </script>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
 </html>

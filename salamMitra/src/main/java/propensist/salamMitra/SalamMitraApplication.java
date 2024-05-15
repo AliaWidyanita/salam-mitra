@@ -42,6 +42,8 @@ public class SalamMitraApplication {
             lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dua", "Kota 2", "Kec. DO"));
             lokasiDTOs.add(new CreateLokasiRequestDTO("Provinsi Dua", "Kota 2", "Kec. DI"));
 
+
+
             // Simpan lokasi ke database menggunakan LokasiService
             if (lokasiService.getAllLokasi().isEmpty()) {
                 for (CreateLokasiRequestDTO lokasiDTO : lokasiDTOs) {
@@ -78,16 +80,27 @@ public class SalamMitraApplication {
             }
             
             if (penggunaService.getAllAdmin().isEmpty()) {
-                Admin admin = new Admin();
-                admin.setUsername("adminprogram1");
-                admin.setEmail("adminprogram@salamsetara.com");
-                admin.setPassword(new BCryptPasswordEncoder().encode("Adminprogram1"));
-                admin.setFullName("Admin Program 1");
-                admin.setAddress("Address 3");
-                admin.setGender("Pria");
-                admin.setContact(1234567890L);
-                admin.setAdminRole(Admin.AdminRole.PROGRAM);
-                penggunaService.saveAdmin(admin);
+                Admin adminProgram = new Admin();
+                adminProgram.setUsername("adminprogram1");
+                adminProgram.setEmail("adminprogram@salamsetara.com");
+                adminProgram.setPassword(new BCryptPasswordEncoder().encode("Adminprogram1"));
+                adminProgram.setFullName("Admin Program 1");
+                adminProgram.setAddress("Address 3");
+                adminProgram.setGender("Pria");
+                adminProgram.setContact(1234567890L);
+                adminProgram.setAdminRole(Admin.AdminRole.PROGRAM);
+                penggunaService.saveAdmin(adminProgram);
+
+                Admin adminFinance = new Admin();
+                adminFinance.setUsername("adminfinance1");
+                adminFinance.setEmail("adminprogram@salamsetara.com");
+                adminFinance.setPassword(new BCryptPasswordEncoder().encode("Adminfinance1"));
+                adminFinance.setFullName("Admin Finance 1");
+                adminFinance.setAddress("Address 4");
+                adminFinance.setGender("Wanita");
+                adminFinance.setContact(1234567890L);
+                adminFinance.setAdminRole(Admin.AdminRole.FINANCE);
+                penggunaService.saveAdmin(adminFinance);
             }
 		};	
 	}

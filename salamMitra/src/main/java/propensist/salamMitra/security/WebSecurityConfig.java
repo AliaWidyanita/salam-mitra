@@ -15,11 +15,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-    
+
         @Autowired
         private UserDetailsService userDetailsService;
 
-       @Bean
+        @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http
                 .csrf(Customizer.withDefaults())
@@ -27,9 +27,10 @@ public class WebSecurityConfig {
                             .requestMatchers(new AntPathRequestMatcher("/assets/**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/register")).anonymous()
                             .requestMatchers(new AntPathRequestMatcher("/login")).anonymous()
-                            .requestMatchers(new AntPathRequestMatcher("/ubah-sandi**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/ubah-sandi**")).hasAnyAuthority("mitra", "program_service", "manajemen", "admin_PROGRAM", "admin_FINANCE")
                             .requestMatchers(new AntPathRequestMatcher("/pengguna**")).hasAnyAuthority("program_service", "manajemen")
                             .requestMatchers(new AntPathRequestMatcher("/pengajuan**")).hasAnyAuthority("mitra", "program_service", "manajemen", "admin_PROGRAM")
                             .requestMatchers(new AntPathRequestMatcher("/review-pengajuan-admin-**")).hasAuthority("admin_PROGRAM")
@@ -49,7 +50,8 @@ public class WebSecurityConfig {
                             .requestMatchers(new AntPathRequestMatcher("/getKabupatenKotaByProvinsi")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/getKecamatanByProvinsiKabupatenKota")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/filter-program**")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/program-judul-**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/program-cari**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/pencairan**")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
                             .requestMatchers(new AntPathRequestMatcher("/tambah-pencairan")).hasAnyAuthority("program_service", "manajemen", "admin_FINANCE")
                             .requestMatchers(new AntPathRequestMatcher("/notifikasi**")).hasAnyAuthority("mitra", "program_service", "manajemen", "admin_PROGRAM", "admin_FINANCE")
@@ -73,7 +75,7 @@ public class WebSecurityConfig {
         }
 
         @Autowired
-        public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception{
+        public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
                 auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
         }
 }
