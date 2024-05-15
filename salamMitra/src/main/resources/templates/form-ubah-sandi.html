@@ -16,36 +16,40 @@
                             <h1 class="display-3"><strong>Ubah Kata Sandi</strong></h1>
                         </div>
                         <div style="display: flex; justify-content: center;">
-                            <form class="row g-3 card" style="padding: 50px; width: 35rem;" id="passwordChangeForm" th:action="@{/ubah-sandi}" method="POST" onsubmit="return validateForm()">
+                            <form class="row g-3 card" style="padding: 50px; width: 35rem;" th:action="@{/ubah-sandi}" method="POST" onsubmit="return validateForm()">
                                 <div class="alert alert-success alert-dismissible" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
                                 <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
                                 <input type="hidden" name="userId" th:value="${pengguna.id}" />
                                 <div class="mb-3 form-password-toggle">
                                     <label for="old-password" class="form-label">Kata Sandi Lama</label>
-                                    <div class="input-group input-group-merge">
-                                        <input required class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" type="password" id="old-password" name="oldPassword"/>
+                                    <div class="input-group">
+                                        <input required class="form-control" type="password" id="old-password" name="passwordLama"/>
                                         <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('old-password')"><i id="old-password-toggle" class="bx bx-hide"></i></span>
                                     </div>
                                 </div>
                                 <div class="mb-3 form-password-toggle">
                                     <label for="new-password" class="form-label">Kata Sandi Baru</label>
-                                    <div class="input-group input-group-merge">
-                                        <input required class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" type="password" id="new-password" name="newPassword"/>
+                                    <div class="input-group">
+                                        <input required class="form-control" type="password" id="new-password" name="newPassword"/>
                                         <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('new-password')"><i id="new-password-toggle" class="bx bx-hide"></i></span>
                                     </div>
-                                    <div id="passwordHelpText" class="form-text">Kata sandi harus minimal 8 karakter dan harus memiliki huruf besar, huruf kecil, dan angka.</div>
+                                        <div
+                          id="password-error"
+                          class="text-danger"
+                          style="display: none; font-size: smaller"
+                        ></div>
                                 </div>
                                 <div class="mb-3 form-password-toggle">
                                     <label for="confirm-password" class="form-label">Konfirmasi Kata Sandi Baru</label>
-                                    <div class="input-group input-group-merge">
-                                        <input required class="form-control" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" type="password" id="confirm-password" name="confirmPassword"/>
+                                    <div class="input-group">
+                                        <input required class="form-control" type="password" id="confirm-password" name="confirmPassword"/>
                                         <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('confirm-password')"><i id="confirm-password-toggle" class="bx bx-hide"></i></span>
-                                    </div>
-                                    <div id="confirmPasswordError" class="invalid-feedback">
-                                        Konfirmasi kata sandi baru harus sesuai dengan kata sandi baru.
+                                        <div id="confirmPasswordError" class="invalid-feedback">
+                                            Konfirmasi kata sandi baru harus sesuai dengan kata sandi baru.
+                                        </div>
                                     </div>
                                 </div>
-
+                            
                                 <div class="mt-5 text-center">
                                     <button class="btn btn-primary" type="submit" style="width: 110px;">Simpan</button>
                                 </div>
@@ -58,61 +62,42 @@
     </div>
 
     <script>
-        function togglePasswordVisibility(inputId) {
-            const input = document.getElementById(inputId);
-            const toggleIcon = document.getElementById(`${inputId}-toggle`);
-            if (input.type === "password") {
-                input.type = "text";
-                toggleIcon.classList.remove("bx-hide");
-                toggleIcon.classList.add("bx-show");
-            } else {
-                input.type = "password";
-                toggleIcon.classList.remove("bx-show");
-                toggleIcon.classList.add("bx-hide");
-            }
-        }
+        const confirmPasswordInput = document.getElementById("confirm-password");
+        const confirmPasswordError = document.getElementById("confirmPasswordError");
+    
+        const passwordInput = document.getElementById("new-password");
+        const passwordError = document.getElementById("password-error");
 
-        document.addEventListener("DOMContentLoaded", function() {
-            // Validasi formulir sebelum pengiriman
-            const form = document.getElementById("passwordChangeForm");
-
-            form.addEventListener("submit", function(event) {
-                event.preventDefault(); // Hindari pengiriman formulir secara default
-
-                // Validasi password
-                const newPassword = document.getElementById("new-password").value;
-                const confirmPassword = document.getElementById("confirm-password").value;
-                const passwordHelpText = document.getElementById("passwordHelpText");
-                const confirmPasswordError = document.getElementById("confirmPasswordError");
-
-                passwordHelpText.classList.remove("text-danger"); // Hapus warna merah dari pesan bantuan password
-
-                // Periksa apakah password baru valid
-                if (!isValidPassword(newPassword)) {
-                    passwordHelpText.classList.add("text-danger"); // Tambahkan warna merah ke pesan bantuan password
-
-                    // Periksa apakah konfirmasi password sesuai dengan password baru
-                    if (newPassword !== confirmPassword) {
-                        confirmPasswordError.style.display = "block"; // Tampilkan pesan kesalahan konfirmasi password
-                        return;
-                    }
-                    return;
-                }
-
-                // Periksa apakah konfirmasi password sesuai dengan password baru
-                if (newPassword !== confirmPassword) {
-                    confirmPasswordError.style.display = "block"; // Tampilkan pesan kesalahan konfirmasi password
-                    return;
-                }
-
-                // Kirim formulir jika semua validasi berhasil
-                form.submit();
-            });
+        passwordInput.addEventListener("input", () => {
+          const password = passwordInput.value;
+          if (password.length < 8 || password.length > 20) {
+            passwordError.style.display = "block";
+            passwordError.textContent =
+              "Password harus terdiri dari 8-20 karakter.";
+          } else if (!/[a-zA-Z]/.test(password) || !/\d/.test(password)) {
+            passwordError.style.display = "block";
+            passwordError.textContent =
+              "Password harus mengandung huruf dan angka.";
+          } else if (/\s/.test(password) || /[^\w\s]/.test(password)) {
+            passwordError.style.display = "block";
+            passwordError.textContent =
+              "Password tidak boleh mengandung spasi, karakter khusus, atau emoji.";
+          } else {
+            passwordError.style.display = "none";
+          }
         });
-
-        // Fungsi untuk memvalidasi format password
-        function isValidPassword(password) {
-            return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(password);
+    
+        function validateForm() {
+            const newPassword = passwordInput.value;
+            const confirmNewPassword = confirmPasswordInput.value;
+    
+            if (newPassword !== confirmNewPassword) {
+                confirmPasswordError.style.display = "block";
+                return false;
+            } else {
+                confirmPasswordError.style.display = "none";
+                return true;
+            }
         }
 
         // Fungsi untuk menghapus pesan kesalahan setelah 3000 ms
@@ -126,6 +111,22 @@
         }
 
         removeAlerts();
+
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(`${inputId}-toggle`);
+            if (input.type === "password") {
+                input.type = "text";
+                toggleIcon.classList.remove("bx-hide");
+                toggleIcon.classList.add("bx-show");
+            } else {
+                input.type = "password";
+                toggleIcon.classList.remove("bx-show");
+                toggleIcon.classList.add("bx-hide");
+            }
+        }
     </script>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+
 </body>
 </html>
