@@ -1,97 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirm Deletion</title>
-    <!-- Include Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        h2, p {
-            text-align: center;
-        }
-
-        form {
-            text-align: center;
-        }
-
-        .card {
-            width: 800px;
-            margin-top: 20px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        button {
-            background-color: #dc3545; /* Red color for Delete button */
-            color: #fff; /* White text */
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-        }
-
-        a {
-            background-color: #6c757d; /* Grey color for Cancel button */
-            color: #fff; /* White text */
-            padding: 10px 20px;
-            text-decoration: none;
-            margin-left: 10px; /* Add some space between buttons */
-            display: inline-block;
-        }
-    </style>
+    <meta charset="UTF-8" />
+    <object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
+    <title>Detail Program | Salam Mitra</title>
 </head>
 
 <body>
-    <!-- <div th:replace="~{fragments/navbar :: header}"></div> -->
-
-    <div class="card">
-        <div class="card-body">
-            <h2>Konfirmasi penghapusan pengguna</h2>
-            <p>Apakah Anda yakin ingin menghapus pengguna: <span th:text="${pengguna.username}"></span>?</p>
-            <form th:action="@{/pengguna-hapus-{id}(id=${pengguna.id})}" method="post">
-                <a href="/pengguna" class="btn btn-secondary">Batal</a>
-                <button type="submit" class="btn btn-danger">Hapus</button>
-            </form>
+    <div class="layout-wrapper layout-content-navbar layout-without-menu">
+        <div class="layout-container">
+            <div class="layout-page">
+                <nav th:replace="~{fragments/navbar :: navbar('home')}"></nav>
+                <div class="content-wrapper">
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <div class="text-center" style="padding-top: 3%; padding-bottom: 3%;">
+                            <h1 class="display-3"><strong>Penghapusan Pengguna</strong></h1>
+                        </div>
+                        <div style="display: flex; justify-content: center;">
+                            <div class="card" style="padding: 50px; width: 50rem;">
+                                <div class="card-body">
+                                    <h5 class="text-center" style="padding: 30px;">Apakah Anda yakin ingin menghapus pengguna: <span th:text="${pengguna.username}"></span>?</h5>
+                                    <form th:action="@{/pengguna-hapus-{id}(id=${pengguna.id})}" method="post">
+                                        <div style="display: flex; justify-content: center;">
+                                            <a href="/pengguna" class="btn btn-secondary" style="margin-right: 10px;">Batal</a>
+                                            <button type="submit" class="btn btn-danger" style="margin-left: 10px;">Hapus</button>  
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <!-- Include Bootstrap JS and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<!-- jquery -->
-<script src="assets/js/jquery-1.11.3.min.js"></script>
-<!-- bootstrap -->
-<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-<!-- count down -->
-<script src="assets/js/jquery.countdown.js"></script>
-<!-- isotope -->
-<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
-<!-- waypoints -->
-<script src="assets/js/waypoints.js"></script>
-<!-- owl carousel -->
-<script src="assets/js/owl.carousel.min.js"></script>
-<!-- magnific popup -->
-<script src="assets/js/jquery.magnific-popup.min.js"></script>
-<!-- mean menu -->
-<script src="assets/js/jquery.meanmenu.min.js"></script>
-<!-- sticker js -->
-<script src="assets/js/sticker.js"></script>
-<!-- main js -->
-<script src="assets/js/main.js"></script>
-    <div th:replace="~{fragments/footer :: footer}"></div>
-
 
 </body>
 </html>

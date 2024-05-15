@@ -50,6 +50,7 @@
                                     </div>
                                 </div>
                             
+                            
                                 <div class="mt-5 text-center">
                                     <button class="btn btn-primary" type="submit" style="width: 110px;">Simpan</button>
                                 </div>
@@ -120,9 +121,7 @@
                 toggleIcon.classList.remove("bx-hide");
                 toggleIcon.classList.add("bx-show");
             } else {
-                input.type = "password";
-                toggleIcon.classList.remove("bx-show");
-                toggleIcon.classList.add("bx-hide");
+                passwordError.style.display = "block";
             }
         }
     </script>

@@ -122,11 +122,13 @@ public class PenggunaController {
     }
 
     @PostMapping("/pengguna-hapus-{id}")
-    public String postHapusPengguna(@PathVariable("id") UUID id, Model model) {
+    public String postHapusPengguna(@PathVariable("id") UUID id, Model model, RedirectAttributes redirectAttributes) {
         Pengguna pengguna = penggunaService.findPenggunaById(id);
         penggunaService.deletePengguna(pengguna);
 
         model.addAttribute("pengguna", pengguna);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Pengguna dengan username: " + pengguna.getUsername() + " berhasil dihapus!");
 
         return "redirect:/pengguna";
     }

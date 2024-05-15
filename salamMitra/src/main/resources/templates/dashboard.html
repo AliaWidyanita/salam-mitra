@@ -4,6 +4,45 @@
     <meta charset="UTF-8" />
     <object th:include="~{fragments/common :: fragment}" th:remove="tag"></object>
     <title>Dashboard | Salam Mitra</title>
+    <style>
+        .fixed-size-card {
+            height: 200px; /* Atur tinggi tetap */
+            width: 100%; /* Atur lebar sesuai dengan kolom */
+            padding: 3%;
+            position: relative;
+        }
+        .fixed-size-card .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .fixed-size-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 5px;
+        }
+        .card-program::before {
+            background-color: rgb(53, 200, 200);
+            border-radius: 3px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .card-pengajuan-bulan::before {
+            background-color: rgba(255, 99, 132, 1);
+            border-radius: 3px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .card-pengajuan::before {
+            background-color: rgb(255, 197, 37);
+            border-radius: 3px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -14,21 +53,44 @@
                 <div class="content-wrapper">
                     <div class="container-xxl flex-grow-1 container-p-y">
                         <div class="text-center" style="padding-top: 3%; padding-bottom: 3%;">
-                            <h1 class="display-3"><strong>Dashboard <span th:text="${user.username}"></span></strong></h1>
+                            <h1 class="display-3"><strong>Dashboard</strong></h1>
                         </div>
-
-                        <div class="shape-text text-center">
-                            <h5 class="text-center">Total Pengajuan Per Bulan</h5>
-                            <p class="text-center" th:if="${#maps.isEmpty(totalPengajuanPerMonth)}">Tidak ada data pengajuan untuk bulan ini.</p>
-                            <div th:unless="${#maps.isEmpty(totalPengajuanPerMonth)}">
-                                <div th:each="entry : ${totalPengajuanPerMonth}">
-                                    <h3 class="text-center" th:text="${entry.key}"></h3>
-                                    <h2 class="text-center" th:text="${entry.value}"></h2>
+                        
+                        <!-- New Cards Row -->
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <div class="card fixed-size-card card-program">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Total Program</h5>
+                                        <h2 class="card-text" th:text="${jumlahProgram}" style="color: rgb(53, 200, 200);"></h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="card fixed-size-card card-pengajuan-bulan">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Total Pengajuan Per Bulan</h5>
+                                        <p class="text-center" th:if="${#maps.isEmpty(totalPengajuanPerMonth)}">Tidak ada data pengajuan untuk bulan ini.</p>
+                                        <div th:unless="${#maps.isEmpty(totalPengajuanPerMonth)}">
+                                            <div th:each="entry : ${totalPengajuanPerMonth}">
+                                                <h3 class="text-center" th:text="${entry.key}"></h3>
+                                                <h2 class="text-center" th:text="${entry.value}" style="color: rgba(255, 99, 132, 1);"></h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="card fixed-size-card card-pengajuan">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Total Pengajuan</h5>
+                                        <h2 class="card-text" th:text="${jumlahPengajuan}" style="color: rgb(252, 188, 13);"></h2>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <br>
+                        <!-- End New Cards Row -->
+
                         <div class="row">
                             <div class="col-md-12 mb-4">
                                 <div class="card" style="padding: 3%;">
@@ -51,8 +113,8 @@
                                 <div class="card" style="padding: 3%;">
                                     <div class="card-body">
                                         <h5 class="card-title">Program</h5>
-                                        <div style="max-width: 400px;">
-                                            <canvas id="pieChart" width="400" height="500" style="padding: 3%;"></canvas>
+                                        <div>
+                                            <canvas id="pieChart" style="padding: 3%;"></canvas>
                                         </div>
                                         <div th:unless="${not #maps.isEmpty(jumlahProgramKerjaPerKategori)}">
                                             <p class="text-center">Belum ada program yang terdaftar.</p>
@@ -66,8 +128,8 @@
                                 <div class="card" style="padding: 3%;">
                                     <div class="card-body">
                                         <h5 class="card-title">Status Laporan</h5>
-                                        <div style="max-width: 400px;">
-                                            <canvas id="laporanChart" width="400" height="400"></canvas>
+                                        <div>
+                                            <canvas id="laporanChart" style="padding: 3%;"></canvas>
                                         </div>
                                         <div th:unless="${jumlahPengajuanByStatus.containsKey('Menunggu Laporan') or jumlahPengajuanByStatus.containsKey('Selesai')}">
                                             <p class="text-center">Belum ada pengajuan yang perlu melampirkan laporan.</p>
@@ -108,14 +170,11 @@
                     label: 'Persentase Program Kerja per Kategori',
                     data: data,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 206, 86, 0.5)',
-                    ],
-                    borderColor: [
                         'rgba(255, 99, 132, 1)',
                         'rgba(54, 162, 235, 1)',
                         'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
                     ],
                     borderWidth: 1
                 }]
@@ -174,28 +233,16 @@
                     label: 'Jumlah Pengajuan per Status',
                     data: data,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 206, 86, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(153, 102, 255, 0.5)',
-                        'rgba(255, 159, 64, 0.5)',
-                        'rgba(220, 20, 60, 0.5)',
-                        'rgba(0, 128, 0, 0.5)',
-                        'rgba(255, 165, 0, 0.5)',
-                        'rgba(128, 128, 128, 0.5)'
-                    ],
-                    borderColor: [
                         'rgba(255, 99, 132, 1)',
                         'rgba(54, 162, 235, 1)',
                         'rgba(255, 206, 86, 1)',
                         'rgba(75, 192, 192, 1)',
                         'rgba(153, 102, 255, 1)',
                         'rgba(255, 159, 64, 1)',
-                        'rgba(220, 20, 60, 1)',
-                        'rgba(0, 128, 0, 1)',
-                        'rgba(255, 165, 0, 1)',
-                        'rgba(128, 128, 128, 1)'
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(153, 102, 255, 1)'
                     ],
                     borderWidth: 1
                 }]
@@ -213,7 +260,7 @@
                             precision: 0
                         }
                     }
-                }
+                },
             }
         });
         /*]]>*/
@@ -238,12 +285,8 @@
                     label: 'Jumlah Pengajuan per Status',
                     data: [jumlahSelesai, jumlahMenungguLaporan],
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)', // Warna untuk "Selesai"
-                        'rgba(54, 162, 235, 0.5)'   // Warna untuk "Menunggu laporan"
-                    ],
-                    borderColor: [
                         'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)'
+                        'rgba(255, 206, 86, 1)',
                     ],
                     borderWidth: 1
                 }]

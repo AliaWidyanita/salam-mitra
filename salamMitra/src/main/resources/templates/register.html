@@ -31,6 +31,12 @@
         .text-danger {
             color: red;
         }
+        .form-text {
+            display: none;
+        }
+        .form-text.visible {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -72,16 +78,16 @@
                                 <label for="number" class="form-label">Nomor Kontak</label>
                                 <input type="number" class="form-control" id="kontak" name="kontak" th:field="*{contact}" placeholder="Masukkan nomor yang dapat dihubungi" required />
                             </div>
-                            <div id="kontakHelpText" class="form-text mb-3">Nomor harus diawali 08 dan terdiri dari 10-13 digit.</div>
+                            <div id="kontakHelpText" class="form-text">Nomor harus diawali 08 dan terdiri dari 10-13 digit.</div>
                             <div class="mb-3 form-password-toggle">
-                                <label class="form-label" for="password">Kata Sandi</label>
+                                <label class="form-label mt-3" for="password">Kata Sandi</label>
                                 <div class="input-group input-group-merge">
                                     <input type="password" id="passwordField" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" th:field="*{password}" required />
                                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                                 </div>
                                 <div id="passwordHelpText" class="form-text">Kata sandi harus minimal 8 karakter dan harus memiliki huruf besar, huruf kecil, dan angka.</div>
                             </div>
-                            <button class="btn btn-primary d-grid w-100" type="submit">Buat Akun</button>
+                            <button class="btn btn-primary d-grid w-100" type="submit" style="margin-top: 40px;">Buat Akun</button>
                         </form>
 
                         <p class="text-center">
@@ -112,30 +118,50 @@
         document.addEventListener("DOMContentLoaded", function() {
             const form = document.getElementById("formAuthentication");
 
+            const contactInput = document.getElementById("kontak");
+            const contactHelpText = document.getElementById("kontakHelpText");
+
+            const passwordInput = document.getElementById("passwordField");
+            const passwordHelpText = document.getElementById("passwordHelpText");
+
+            contactInput.addEventListener("input", function() {
+                if (isValidContact(contactInput.value)) {
+                    contactHelpText.classList.remove("text-danger");
+                    contactHelpText.classList.remove("visible");
+                } else {
+                    contactHelpText.classList.add("text-danger");
+                    contactHelpText.classList.add("visible");
+                }
+            });
+
+            passwordInput.addEventListener("input", function() {
+                if (isValidPassword(passwordInput.value)) {
+                    passwordHelpText.classList.remove("text-danger");
+                    passwordHelpText.classList.remove("visible");
+                } else {
+                    passwordHelpText.classList.add("text-danger");
+                    passwordHelpText.classList.add("visible");
+                }
+            });
+
             form.addEventListener("submit", function(event) {
                 event.preventDefault(); // Mencegah pengiriman formulir default
 
-                // Validasi nomor kontak
-                const contactInput = document.getElementById("kontak");
-                const contact = contactInput.value;
-                const contactHelpText = document.getElementById("kontakHelpText");
-
-                // Validasi password
-                const passwordInput = document.getElementById("passwordField");
-                const password = passwordInput.value;
-                const passwordHelpText = document.getElementById("passwordHelpText");
-
                 // Reset pesan kesalahan sebelumnya
                 contactHelpText.classList.remove("text-danger");
+                contactHelpText.classList.remove("visible");
                 passwordHelpText.classList.remove("text-danger");
+                passwordHelpText.classList.remove("visible");
 
                 // Lakukan validasi
-                if (!isValidContact(contact) || !isValidPassword(password)) {
-                    if (!isValidContact(contact)) {
+                if (!isValidContact(contactInput.value) || !isValidPassword(passwordInput.value)) {
+                    if (!isValidContact(contactInput.value)) {
                         contactHelpText.classList.add("text-danger");
+                        contactHelpText.classList.add("visible");
                     }
-                    if (!isValidPassword(password)) {
+                    if (!isValidPassword(passwordInput.value)) {
                         passwordHelpText.classList.add("text-danger");
+                        passwordHelpText.classList.add("visible");
                     }
                     return;
                 }

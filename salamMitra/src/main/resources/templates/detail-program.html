@@ -34,11 +34,6 @@
                             <div th:unless="${program.isDeleted}">
         
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin: 0 35px 35px 35px;">
-                                    <!-- Button kembali -->
-                                    <a href="/program" style="display: flex; align-items: center;">
-                                        <i class="bx bx-arrow-back" style="margin-right: 5px;"></i>
-                                        <p style="margin: 0;">Daftar program</p>
-                                    </a>
                                 
                                     <div style="display: flex;">
                                         <th:block th:if="${role == 'admin_PROGRAM'}">
