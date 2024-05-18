@@ -229,7 +229,7 @@
                                     </div>
                                 </th:block>
                                 <th:block th:unless="${pengajuan.status == 'Dibatalkan'}">                                
-                                    <th:block th:unless="${pengajuan.status == 'Perlu Direvisi'}">
+                                    <th:block th:unless="${pengajuan.status == 'Perlu Revisi'}">
                                         <div>
                                             <span class="round"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-clipboard2-data-fill" viewBox="0 0 16 16">
@@ -241,7 +241,7 @@
                                         </div>
                                     </th:block>
 
-                                    <th:block th:if="${pengajuan.status == 'Perlu Direvisi'}">
+                                    <th:block th:if="${pengajuan.status == 'Perlu Revisi'}">
                                         <div>
                                             <span class="round"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-question-circle-fill" viewBox="0 0 16 16">
@@ -301,13 +301,13 @@
                                 </th:block>
 
                                 <th:block th:unless="${pengajuan.status == 'Dibatalkan'}">
-                                    <th:block th:unless="${pengajuan.status == 'Perlu Direvisi'}">
+                                    <th:block th:unless="${pengajuan.status == 'Perlu Revisi'}">
                                         <div>
                                             <span class="status-label">Sedang Diperiksa</span>
                                         </div>
                                     </th:block>
 
-                                    <th:block th:if="${pengajuan.status == 'Perlu Direvisi'}">
+                                    <th:block th:if="${pengajuan.status == 'Perlu Revisi'}">
                                         <div>
                                             <span class="status-label">Perlu Direvisi</span>
                                         </div>
@@ -356,7 +356,7 @@
                                             <span 
                                                 class="badge rounded-pill bg-label-warning me-1"
                                                 th:if="${pengajuan.status eq 'Perlu Revisi'}"
-                                                >Perlu Revisi
+                                                >Perlu Direvisi
                                             </span>
                                             <span 
                                                 class="badge rounded-pill bg-label-warning me-1"
@@ -400,7 +400,7 @@
                                               <span 
                                                 class="badge rounded-pill bg-label-warning me-1"
                                                 th:if="${pengajuan.status eq 'Perlu Revisi'}"
-                                                >Perlu Revisi
+                                                >Perlu Direvisi
                                               </span>
                                               <span 
                                                 class="badge rounded-pill bg-label-warning me-1"
@@ -780,7 +780,7 @@
                                                         </div>     
                                                         <div  class="col-auto">
                                                             <button type="submit" name="action" value="perlu-revisi" class="btn btn-warning"
-                                                                style="width: 200px; ">Perlu Revisi</button>
+                                                                style="width: 200px; ">Perlu Direvisi</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -819,7 +819,7 @@
                                                     </div>     
                                                     <div  class="col-auto">
                                                         <button type="submit" name="action" value="perlu-revisi" class="btn btn-warning"
-                                                            style="width: 200px; ">Perlu Revisi</button>
+                                                            style="width: 200px; ">Perlu Direvisi</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -890,7 +890,7 @@
             var cancelButton = document.getElementById('cancelButton');
 
 
-            if (pengajuanStatus !== 'Diajukan' && pengajuanStatus !== 'Perlu revisi') {
+            if (pengajuanStatus !== 'Diajukan' && pengajuanStatus !== 'Perlu Revisi') {
                 revisiButton.setAttribute('disabled', 'disabled');
                 cancelButton.setAttribute('disabled', 'disabled');
             }
@@ -920,7 +920,6 @@
                 "Menunggu Pencairan Dana oleh Admin Finance": 3,
                 "Ditolak": 3,
                 "Perlu Revisi": 3,
-                "Perlu Revisi": 3,
                 "Menunggu Laporan": 4,
                 "Selesai": 5
             };
@@ -939,7 +938,7 @@
             var revisiButton = document.getElementById('revisiButton');
             var cancelButton = document.getElementById('cancelButton');
 
-            if (pengajuanStatus !== 'Diajukan' && pengajuanStatus !== 'Perlu revisi') {
+            if (pengajuanStatus !== 'Diajukan' && pengajuanStatus !== 'Perlu Revisi') {
                 revisiButton.setAttribute('disabled', 'disabled');
                 cancelButton.setAttribute('disabled', 'disabled');
             }

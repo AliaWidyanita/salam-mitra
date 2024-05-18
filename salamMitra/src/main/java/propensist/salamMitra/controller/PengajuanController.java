@@ -320,7 +320,6 @@ public class PengajuanController {
                 model.addAttribute("nominalString", nominalKebutuhanDana);
                 model.addAttribute("listJumlahDana", listJumlahDana);
 
-
                 return "detail-pengajuan";
             } 
             else {
@@ -495,7 +494,6 @@ public class PengajuanController {
                     return "error-page";
             }
 
-            
             // Simpan perubahan pada pengajuan
             pengajuanService.savePengajuan(pengajuan);
             notifikasiService.addNotifikasi(pengajuan);
@@ -590,6 +588,7 @@ public class PengajuanController {
             pengajuan.setKategori(getPengajuan.getKategori());
             pengajuan.setNamaProgram(getPengajuan.getNamaProgram());
             pengajuan.setWaktuDibuat(getPengajuan.getWaktuDibuat());
+            pengajuan.setMitra((Mitra) user);
             pengajuan.setStatus("Diajukan");
 
             if (ktpPIC != null && !ktpPIC.isEmpty()) {
