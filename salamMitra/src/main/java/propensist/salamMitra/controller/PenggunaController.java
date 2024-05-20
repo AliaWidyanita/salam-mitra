@@ -45,6 +45,7 @@ public class PenggunaController {
 
         model.addAttribute("role", role);
         model.addAttribute("user", user);
+        model.addAttribute("currentUserUsername", auth.getName());
 
         List<Pengguna> listPengguna = penggunaService.getAllPengguna();
 
@@ -104,23 +105,9 @@ public class PenggunaController {
         return "redirect:/pengguna";
     }
 
-    @GetMapping("/pengguna-hapus-{id}")
-    public String hapusPengguna(@PathVariable("id") UUID id, Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String role = auth.getAuthorities().iterator().next().getAuthority();
-        Pengguna user = penggunaService.authenticate(auth.getName());
-
-        model.addAttribute("role", role);
-        model.addAttribute("user", user);
-
-        Pengguna pengguna = penggunaService.findPenggunaById(id);
-        model.addAttribute("pengguna", pengguna);
-
-        return "konfirmasi-hapus-pengguna";
-    }
-
     @PostMapping("/pengguna-hapus-{id}")
     public String postHapusPengguna(@PathVariable("id") UUID id, Model model, RedirectAttributes redirectAttributes) {
+        
         Pengguna pengguna = penggunaService.findPenggunaById(id);
         penggunaService.deletePengguna(pengguna);
 

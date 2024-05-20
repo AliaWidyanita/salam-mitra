@@ -117,7 +117,7 @@
                           th:field="*{pengajuanDTO.kategori}"
                           required
                         >
-                          <option value="">--Pilih Kategori--</option>
+                          <option value="">Pilih kategori</option>
                           <option
                             th:each="kategori : ${daftarKategori}"
                             th:value="${kategori}"
@@ -137,7 +137,7 @@
                           th:field="*{pengajuanDTO.namaProgram}"
                           required
                         >
-                          <option value="">--Pilih Program--</option>
+                          <option value="">Pilih program</option>
                         </select>
                       </div>
 
@@ -256,7 +256,7 @@
                                   class="form-control"
                                   style="width: 130px; font-size: small"
                                 >
-                                  <option value="">--Pilih Asnaf--</option>
+                                  <option value="">Pilih asnaf</option>
                                 </select>
                               </td>
                               <td>
@@ -277,7 +277,7 @@
                                   style="width: 160px; font-size: small"
                                 >
                                   <option value="" disabled selected>
-                                    --Pilih Pilar--
+                                    Pilih pilar
                                   </option>
                                   <option value="Pendidikan">Pendidikan</option>
                                   <option value="Kesehatan">Kesehatan</option>
@@ -375,7 +375,7 @@
                           th:field="*{pengajuanDTO.bank}"
                           required
                         >
-                          <option value="">--Pilih Bank--</option>
+                          <option value="">Pilih bank</option>
                           <option value="Bank Central Asia (BCA)">
                             Bank Central Asia (BCA)
                           </option>
@@ -591,7 +591,7 @@
                           th:field="*{pengajuanDTO.provinsi}"
                           required
                         >
-                          <option value="">--Pilih Provinsi--</option>
+                          <option value="">Pilih provinsi</option>
                         </select>
                       </div>
 
@@ -606,7 +606,7 @@
                           th:field="*{pengajuanDTO.kabupatenKota}"
                           required
                         >
-                          <option value="">--Pilih Kabupaten/Kota--</option>
+                          <option value="">Pilih kabupaten/kota</option>
                           <!-- Tambahkan atribut "value" kosong di sini -->
                         </select>
                       </div>
@@ -622,7 +622,7 @@
                           th:field="*{pengajuanDTO.kecamatan}"
                           required
                         >
-                          <option value="">--Pilih Kecamatan--</option>
+                          <option value="">Pilih kecamatan</option>
                           <!-- Tambahkan atribut "value" kosong di sini -->
                         </select>
                       </div>
@@ -779,7 +779,7 @@
             var kabupatenKotaDropdown =
               document.getElementById("kabupatenKota");
             kabupatenKotaDropdown.innerHTML =
-              '<option value="">--Pilih Kabupaten/Kota--</option>';
+              '<option value="">Pilih kabupaten/kota</option>';
 
             // Isi dropdown "Kabupaten/Kota" dengan opsi yang diterima dari server
             data.forEach(function (kabKota) {
@@ -813,7 +813,7 @@
               // Menambahkan opsi "--Pilih Kecamatan--" di dropdown kecamatan jika belum ada kabupaten/kota yang dipilih
               if (kabupatenKota === "") {
                 $("#kecamatan").append(
-                  $("<option>").text("--Pilih Kecamatan--").attr("value", "")
+                  $("<option>").text("Pilih kecamatan").attr("value", "")
                 );
               }
 
@@ -927,7 +927,7 @@
             '" name="listKebutuhanDanaDTO[' +
             rowCount +
             '].asnaf" class="form-control asnafDropdown" style="width: 130px; font-size: small;" required>' +
-            '<option value="" disabled selected>--Pilih Asnaf--</option>' +
+            '<option value="" disabled selected>Pilih asnaf</option>' +
             "</select>" +
             "</td>" +
             '<td><input type="number" name="listKebutuhanDanaDTO[' +
@@ -936,7 +936,7 @@
             '<td><select name="listKebutuhanDanaDTO[' +
             rowCount +
             '].pilar" class="form-control" style="width: 160px; font-size: small;" required>' +
-            '<option value="" disabled selected>--Pilih Pilar--</option>' +
+            '<option value="" disabled selected>Pilih pilar</option>' +
             '<option value="Pendidikan">Pendidikan</option>' +
             '<option value="Kesehatan">Kesehatan</option>' +
             '<option value="Ekonomi-Pemberdayaan">Ekonomi-Pemberdayaan</option>' +
@@ -1043,7 +1043,7 @@
 
           // Reset dropdown "Nama Program"
           programDropdown.innerHTML =
-            '<option value="">--Pilih Program--</option>';
+            '<option value="">Pilih program</option>';
 
           // Jika kategori yang dipilih tidak kosong, kirim permintaan ke endpoint REST
           if (selectedKategori !== "") {
@@ -1071,7 +1071,7 @@
           var asnafDropdown = document.getElementById("asnafDropdown");
 
           // Bersihkan dropdown "ASNaf"
-          asnafDropdown.innerHTML = '<option value="">--Pilih Asnaf--</option>';
+          asnafDropdown.innerHTML = '<option value="">Pilih asnaf</option>';
 
           // Jika nama program tidak kosong, kirim permintaan ke endpoint untuk mendapatkan ASNaf
           if (namaProgram !== "") {
@@ -1104,7 +1104,7 @@
 
           // Bersihkan dropdown "Provinsi"
           provinsiDropdown.innerHTML =
-            '<option value="">--Pilih Provinsi--</option>';
+            '<option value="">Pilih provinsi</option>';
 
           // Jika nama program tidak kosong, kirim permintaan ke endpoint untuk mendapatkan daftar provinsi
           if (namaProgram !== "") {
