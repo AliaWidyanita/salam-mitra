@@ -27,6 +27,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
+        // Memeriksa apakah pengguna telah dihapus
+        else if (user.isDeleted()) {
+            throw new UsernameNotFoundException("User with username: " + username + " has been deleted");
+        }
         Set<GrantedAuthority> grantedAuthoritySet = new HashSet<>();
 
         if (user instanceof Admin) {
