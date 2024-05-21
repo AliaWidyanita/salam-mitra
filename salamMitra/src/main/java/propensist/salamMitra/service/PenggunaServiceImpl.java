@@ -103,7 +103,14 @@ public class PenggunaServiceImpl implements PenggunaService{
 
     @Override
     public Pengguna authenticate(String username) {
-        return penggunaDb.findByUsername(username);
+        Pengguna pengguna = penggunaDb.findByUsername(username);
+    
+        // Cek apakah pengguna ditemukan dan tidak dihapus
+        if (pengguna != null && !pengguna.isDeleted()) {
+            return pengguna;
+        } else {
+            return null; // Pengguna tidak ditemukan atau dihapus, kembalikan null
+        }
     }
 
     @Override

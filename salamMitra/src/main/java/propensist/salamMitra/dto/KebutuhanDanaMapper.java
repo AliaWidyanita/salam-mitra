@@ -1,5 +1,6 @@
 package propensist.salamMitra.dto;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 
 import propensist.salamMitra.dto.request.CreateKebutuhanDanaDTO;
