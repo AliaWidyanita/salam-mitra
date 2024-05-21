@@ -79,14 +79,13 @@ public class PenggunaController {
             redirectAttributes.addFlashAttribute("error", "Formulir memiliki data yang tidak valid atau belum diisi.");
             return "redirect:/login";
         } else {
-            if (penggunaService.authenticate(adminDTO.getUsername()) != null) {
-                if (penggunaService.authenticate(adminDTO.getUsername()).isDeleted() == false) {
-                    redirectAttributes.addFlashAttribute("error",
-                            "Username sudah terpakai!");
-                    return "redirect:/pengguna-tambah-admin";
-                }
+            var existingUser = penggunaService.authenticate(adminDTO.getUsername());
+            if (existingUser != null && !existingUser.isDeleted()) {
+                redirectAttributes.addFlashAttribute("error", "Username sudah terpakai!");
+                return "redirect:/pengguna-tambah-admin";
             }
-            if (penggunaService.getAkunByEmail(adminDTO.getEmail()) != null) {
+            var existingUserByEmail = penggunaService.getAkunByEmail(adminDTO.getEmail());
+            if (existingUserByEmail != null && !existingUserByEmail.isDeleted()) {
                 redirectAttributes.addFlashAttribute("error", "Email sudah terpakai!");
                 return "redirect:/pengguna-tambah-admin";
             } else { 

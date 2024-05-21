@@ -30,7 +30,7 @@ public class Pengguna implements Serializable {
     private UUID id = UUID.randomUUID();
 
     @NotNull
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false)
     private String username;
 
     @Column(name = "waktu_dibuat", nullable = false)
