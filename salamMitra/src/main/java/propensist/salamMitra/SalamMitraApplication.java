@@ -93,7 +93,7 @@ public class SalamMitraApplication {
 
                 Admin adminFinance = new Admin();
                 adminFinance.setUsername("adminfinance1");
-                adminFinance.setEmail("adminprogram@salamsetara.com");
+                adminFinance.setEmail("adminfinance@salamsetara.com");
                 adminFinance.setPassword(new BCryptPasswordEncoder().encode("Adminfinance1"));
                 adminFinance.setFullName("Admin Finance 1");
                 adminFinance.setAddress("Address 4");
