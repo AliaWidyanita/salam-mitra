@@ -11,6 +11,7 @@ public interface PengajuanService {
     void savePengajuan(Pengajuan pengajuan);    
     List<Pengajuan> getAllPengajuan();
     Optional<Pengajuan> getPengajuanById(Long id);
+    List<Pengajuan> getPengajuanByStatus(String status);
     void handleKTP(Pengajuan pengajuan);
     void handleRAB(Pengajuan pengajuan);
     void handleDOC(Pengajuan pengajuan);

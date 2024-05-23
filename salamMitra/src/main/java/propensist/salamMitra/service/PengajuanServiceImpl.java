@@ -42,6 +42,11 @@ public class PengajuanServiceImpl implements PengajuanService{
     }
 
     @Override
+    public List<Pengajuan> getPengajuanByStatus(String status) {
+        return pengajuanDb.findByStatus(status);
+    }
+
+    @Override
     public void handleKTP(Pengajuan pengajuan) {
         byte[] ktpByte = pengajuan.getKtpPIC();
         String ktpImage = Base64.getEncoder().encodeToString(ktpByte);
