@@ -16,7 +16,7 @@
                             <h1 class="display-3"><strong>Ubah Kata Sandi</strong></h1>
                         </div>
                         <div style="display: flex; justify-content: center;">
-                            <form class="row g-3 card" style="padding: 50px; width: 35rem;" th:action="@{/ubah-sandi}" method="POST" onsubmit="return validateForm()">
+                            <form id="formUbahSandi" class="row g-3 card" style="padding: 50px; width: 35rem;" th:action="@{/ubah-sandi}" method="POST" onsubmit="return validateForm()">
                                 <div class="alert alert-success alert-dismissible" role="alert" th:text="${successMessage}" th:if="${successMessage}"></div>
                                 <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
                                 <input type="hidden" name="userId" th:value="${pengguna.id}" />
@@ -33,11 +33,11 @@
                                         <input required class="form-control" type="password" id="new-password" name="newPassword"/>
                                         <span class="input-group-text cursor-pointer" onclick="togglePasswordVisibility('new-password')"><i id="new-password-toggle" class="bx bx-hide"></i></span>
                                     </div>
-                                        <div
-                          id="password-error"
-                          class="text-danger"
-                          style="display: none; font-size: smaller"
-                        ></div>
+                                    <div
+                                        id="password-error"
+                                        class="text-danger"
+                                        style="display: none; font-size: smaller"
+                                    ></div>
                                 </div>
                                 <div class="mb-3 form-password-toggle">
                                     <label for="confirm-password" class="form-label">Konfirmasi Kata Sandi Baru</label>
@@ -79,6 +79,10 @@
             passwordError.style.display = "block";
             passwordError.textContent =
               "Password harus mengandung huruf dan angka.";
+          } else if (!/[A-Z]/.test(password)) {
+            passwordError.style.display = "block";
+            passwordError.textContent =
+              "Password harus mengandung huruf kapital";
           } else if (/\s/.test(password) || /[^\w\s]/.test(password)) {
             passwordError.style.display = "block";
             passwordError.textContent =
@@ -86,6 +90,23 @@
           } else {
             passwordError.style.display = "none";
           }
+        });
+
+        document.getElementById('formUbahSandi').addEventListener('submit', function(event) { 
+            const password = passwordInput.value;
+            if (password.length < 8 || password.length > 20) {
+                event.preventDefault();
+                return;
+            } else if (!/[a-zA-Z]/.test(password) || !/\d/.test(password)) {
+                event.preventDefault();
+                return;
+            }  else if (!/[A-Z]/.test(password)) {
+                event.preventDefault();
+                return;
+            }  else if (/\s/.test(password) || /[^\w\s]/.test(password)) {
+                event.preventDefault();
+                return;
+            }
         });
     
         function validateForm() {
