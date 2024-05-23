@@ -106,23 +106,24 @@ public class NotifikasiServiceImpl implements NotifikasiService {
             case ("Menunggu Laporan"):
                 Date tanggalLaporan = pengajuan.getTanggalLaporan();
                 Date now = new Date();
+                long difference_In_Time = tanggalLaporan.getTime() - now.getTime();
+                long difference_In_Days = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
 
-                if (now.equals(tanggalLaporan)) {
-                    String message = "Besok adalah batas waktu unggah laporan kerja sama dengan ID "
-                            + pengajuan.getId() + "!";
-
+                if (now.after(tanggalLaporan)) {
+                    String message = "Batas waktu unggah laporan kerja sama dengan ID " + pengajuan.getId() 
+                            + " sudah lewat. Segera unggah laporan kerja sama.";
                     notifikasi.setMessage(message);
                     notifikasi.setPengguna(pengajuan.getMitra());
                     notifikasiDb.save(notifikasi);
                     sendMail(notifikasi);
                 } else {
                     notifikasi.setMessage("Dana ajuan Anda dengan ID " + idPengajuan
-                            + " telah dicairkan. Silakan unggah laporan aktivitas kerja sama sesuai tenggat waktu.");
+                            + " telah dicairkan. Batas waktu unggah laporan kerja sama tinggal " 
+                            + difference_In_Days + " hari!");
                     notifikasi.setPengguna(pengajuan.getMitra());
                     notifikasiDb.save(notifikasi);
                     sendMail(notifikasi);
                 }
-
                 break;
 
             case ("Selesai"):

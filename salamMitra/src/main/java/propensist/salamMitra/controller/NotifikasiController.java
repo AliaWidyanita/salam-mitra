@@ -1,7 +1,5 @@
 package propensist.salamMitra.controller;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -70,23 +68,12 @@ public class NotifikasiController {
         return "redirect:/pengajuan-detail-" + notifikasi.getIdPengajuan();
     }
 
-    @Scheduled(cron = "0 0 * * * *")
-    public void addNotifikasiOneDayBefore() {
-        Date now = new Date();
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(now);
-        cal.add(Calendar.DAY_OF_MONTH, 1);
-
-        Date tomorrow = cal.getTime();
-
-        List<Pengajuan> pengajuanList = pengajuanService.findByTanggalLaporan(tomorrow);
+    @Scheduled(cron = "0 0 0 * * MON")
+    public void addWeeklyNotifikasiLaporan() {
+        List<Pengajuan> pengajuanList = pengajuanService.getPengajuanByStatus("Menunggu Laporan");
 
         for (Pengajuan pengajuan : pengajuanList) {
-            if (pengajuan.getStatus().equals("Menunggu Laporan")) {
-                notifikasiService.addNotifikasi(pengajuan);
-            }
+            notifikasiService.addNotifikasi(pengajuan);
         }
     }
-
 }
