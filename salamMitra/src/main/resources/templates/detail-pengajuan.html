@@ -747,12 +747,6 @@
 
                             <div class="container justify-content-center">
                                 <div th:if="${role eq 'admin_PROGRAM'}">
-                                    <h5 style="margin-top: 20px;">Komentar :</h5>
-                                    <div class="sub-heading"
-                                        style="border: 1px solid #ccc; background-color: #f9f9f9; padding: 10px;">
-                                        <hr class="mt-1 mb-4">
-                                        <p th:text="${pengajuan.komentar}" class="text-muted"></p>
-                                    </div>
 
                                     <!-- Form akan ditampilkan jika status "Sedang Diperiksa" -->
                                     <div th:if="${pengajuan.status == 'Sedang Diperiksa'}">
@@ -791,12 +785,6 @@
                                 </div>
 
                                 <div th:if="${role eq 'manajemen'}">
-                                    <h5 style="margin-top: 40px;">Komentar Pengajuan</h5>
-                                    <div class="sub-heading"
-                                        style="border: 1px solid #ccc; background-color: #f9f9f9; padding: 10px;">
-                                        <hr class="mt-1 mb-4">
-                                        <p th:text="${pengajuan.komentar}" class="text-muted"></p>
-                                    </div>
 
                                     <!-- Form akan ditampilkan jika status "Sedang Diperiksa" -->
                                     <div th:if="${pengajuan.status == 'Diteruskan ke Manajemen'}">
